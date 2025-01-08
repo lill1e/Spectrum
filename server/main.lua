@@ -1,7 +1,6 @@
 exports["pgcfx"]:ready(function()
     Wait(500)
     for _, playerId in ipairs(GetPlayers()) do
-        print(playerId)
         local identifier = GetSteamHex(playerId)
         local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { identifier })
 
@@ -17,7 +16,6 @@ exports["pgcfx"]:ready(function()
             staff = user.staff
         }
 
-        print(json.encode(Spectrum.players))
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)])
         TriggerClientEvent("Spectrum:Items", playerId, Spectrum.items)
         TriggerClientEvent("Spectrum:JobData", playerId, Spectrum.jobs)
@@ -62,7 +60,6 @@ AddEventHandler("playerJoining", function()
     if steamHex then
         local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
         if user then
-            print(json.encode(user))
             -- should i create this on join or just connect attempt? - shiii idk
             Spectrum.players[source] = {
                 id = user.id,
