@@ -13,7 +13,8 @@ Spectrum = {
             z = 31.2,
             heading = 205.8
         },
-        attributes = {}
+        attributes = {},
+        items = {},
     },
     Loaded = false,
     Spawned = false,

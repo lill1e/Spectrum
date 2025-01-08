@@ -13,7 +13,8 @@ exports["pgcfx"]:ready(function()
             position = user.position,
             ped = user.ped,
             attributes = user.attributes,
-            staff = user.staff
+            staff = user.staff,
+            items = user.inventory
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)])
