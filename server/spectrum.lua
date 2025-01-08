@@ -5,7 +5,17 @@ Spectrum = {
         ["med_kit"] = {
             displayName = "Medical Grade Equipment",
             illegal = false,
-            rare = true
+            rare = true,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function()
+                print("MedKit used")
+            end,
+            event = {
+                name = "Spectrum:SetHealth",
+                data = { 100 }
+            }
         }
     },
     jobs = {
