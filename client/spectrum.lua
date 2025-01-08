@@ -18,6 +18,6 @@ Spectrum = {
     Loaded = false,
     Spawned = false,
     DeathTimer = nil,
-    Items = {},
-    Jobs = {}
+    items = {},
+    jobs = {}
 }
