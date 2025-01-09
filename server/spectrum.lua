@@ -32,13 +32,13 @@ Spectrum = {
         ["coin"] = {
             displayName = "Gold Coin",
             illegal = false,
-            usable = false,
+            usable = true,
             rare = false,
             removeOnUse = false,
             swapOnUse = false,
             handler = function(source)
                 TriggerClientEvent("Spectrum:Notification", source,
-                    "You flip a coin and notice it landed on: ~y~" .. math.random(0, 1) and "Tails" or "Heads")
+                    "You flip a coin and notice it landed on: ~y~" .. (math.random(0, 1) == 1 and "Tails" or "Heads"))
             end,
         }
     },
