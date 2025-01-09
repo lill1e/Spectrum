@@ -4,8 +4,10 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
     if Spectrum.players[source].items[item] and Spectrum.players[source].items[item] > 0 and Spectrum.items[item].usable then
         if Spectrum.items[item] then
             if Spectrum.items[item].removeOnUse or Spectrum.items[item].swapOnUse then
-                Spectrum.players[source].items[item] = Spectrum.players[source].items[item] > 1 and
-                    Spectrum.players[source].items[item] - 1 or nil
+                local quantity = type(Spectrum.items[item].removeOnUse) == "boolean" and 1 or
+                Spectrum.items[item].removeOnUse
+                Spectrum.players[source].items[item] = Spectrum.players[source].items[item] > quantity and
+                    Spectrum.players[source].items[item] - quantity or nil
             end
             if Spectrum.items[item].swapOnUse then
                 Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] = Spectrum.players[source].items
