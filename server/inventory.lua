@@ -6,7 +6,8 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
             if Spectrum.items[item].removeOnUse or Spectrum.items[item].swapOnUse then
                 Spectrum.players[source].items[item] = Spectrum.players[source].items[item] > 1 and
                     Spectrum.players[source].items[item] - 1 or nil
-            elseif Spectrum.items[item].swapOnUse then
+            end
+            if Spectrum.items[item].swapOnUse then
                 Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] = Spectrum.players[source].items
                     [Spectrum.items[item].swapOnUse.item] and Spectrum.items[item].swapOnUse.item or
                     (Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] + Spectrum.items[item].swapOnUse.item)
