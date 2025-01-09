@@ -4,11 +4,11 @@ RegisterNetEvent("Spectrum:PlayerData", function(player_data)
 end)
 
 RegisterNetEvent("Spectrum:Items", function(items)
-    Spectrum.Items = items
+    Spectrum.items = items
 end)
 
 RegisterNetEvent("Spectrum:JobData", function(jobs)
-    Spectrum.Jobs = jobs
+    Spectrum.jobs = jobs
 end)
 
 Citizen.CreateThread(function()
