@@ -15,7 +15,7 @@ Citizen.CreateThread(function()
     while true do
         Wait(0)
         if PlayerPedId() and PlayerPedId() ~= -1 and (NetworkIsPlayerActive(PlayerId()) and Spectrum.DeathTimer or (Spectrum.Loaded and not Spectrum.Spawned)) then
-            while GetGameTimer() - Spectrum.DeathTimer < 5000 do Wait(0) end
+            while Spectrum.DeathTimer and GetGameTimer() - Spectrum.DeathTimer < 5000 do Wait(0) end
             DoScreenFadeOut(500)
             while not IsScreenFadedOut() do Wait(0) end
 
