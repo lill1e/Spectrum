@@ -8,6 +8,8 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
                 Spectrum.items[item].removeOnUse
                 Spectrum.players[source].items[item] = Spectrum.players[source].items[item] > quantity and
                     Spectrum.players[source].items[item] - quantity or nil
+                TriggerClientEvent("Spectrum:RemoveItem", source, item,
+                    quantity)
             end
             if Spectrum.items[item].swapOnUse then
                 Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] = Spectrum.players[source].items
@@ -15,6 +17,8 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
                     Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] +
                     Spectrum.items[item].swapOnUse.quantity or
                     Spectrum.items[item].swapOnUse.quantity
+                TriggerClientEvent("Spectrum:AddItem", source, Spectrum.items[item].swapOnUse.item,
+                    Spectrum.items[item].swapOnUse.quantity)
             end
             if Spectrum.items[item].handler then
                 Spectrum.items[item].handler(source)
