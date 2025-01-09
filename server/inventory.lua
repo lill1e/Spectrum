@@ -9,8 +9,10 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
             end
             if Spectrum.items[item].swapOnUse then
                 Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] = Spectrum.players[source].items
-                    [Spectrum.items[item].swapOnUse.item] and Spectrum.items[item].swapOnUse.item or
-                    (Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] + Spectrum.items[item].swapOnUse.item)
+                    [Spectrum.items[item].swapOnUse.item] and
+                    Spectrum.players[source].items[Spectrum.items[item].swapOnUse.item] +
+                    Spectrum.items[item].swapOnUse.quantity or
+                    Spectrum.items[item].swapOnUse.quantity
             end
             if Spectrum.items[item].handler then
                 Spectrum.items[item].handler(source)
