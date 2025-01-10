@@ -5,6 +5,10 @@ loadscreen_manual_shutdown "yes"
 
 author "lillie"
 description "wtf is this :smirk_cat:"
+
+shared_scripts {
+    "shared/*.lua"
+}
 version "1.0.0"
 
 client_scripts {
@@ -21,8 +25,4 @@ client_scripts {
 server_scripts {
     "server/spectrum.lua",
     "server/*.lua"
-}
-
-shared_scripts {
-    "shared/*.lua"
 }
