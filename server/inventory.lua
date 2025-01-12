@@ -5,7 +5,7 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
         if Spectrum.items[item] then
             if Spectrum.items[item].removeOnUse or Spectrum.items[item].swapOnUse then
                 local quantity = type(Spectrum.items[item].removeOnUse) == "boolean" and 1 or
-                Spectrum.items[item].removeOnUse
+                    Spectrum.items[item].removeOnUse
                 Spectrum.players[source].items[item] = Spectrum.players[source].items[item] > quantity and
                     Spectrum.players[source].items[item] - quantity or nil
                 TriggerClientEvent("Spectrum:RemoveItem", source, item,
