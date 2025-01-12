@@ -27,6 +27,7 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
     else
         -- TODO: This should not happen, maybe add some sort of protection/logging
     end
+    TriggerClientEvent("Spectrum:InventoryRelease", source)
 end)
 
 function addItem(source, item, quantity)

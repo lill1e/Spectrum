@@ -12,6 +12,10 @@ RegisterNetEvent("Spectrum:AddItem", function(item, quantity)
         quantity
 end)
 
+RegisterNetEvent("Spectrum:InventoryRelease", function()
+    Spectrum.InventoryLock = false
+end)
+
 function RageUI.PoolMenus:Inventory()
     inventoryMenu:IsVisible(function(Items)
         Items:AddButton("Clean Money", nil, { RightLabel = "~g~$" .. FormatMoney(Spectrum.PlayerData.money.clean) },
@@ -28,7 +32,8 @@ function RageUI.PoolMenus:Inventory()
 
             for k, v in pairs(Spectrum.PlayerData.items) do
                 Items:AddButton(Spectrum.items[k].displayName, nil, { RightLabel = "x" .. v }, function(onSelected)
-                    if onSelected then
+                    if onSelected and not Spectrum.InventoryLock then
+                        Spectrum.InventoryLock = true
                         TriggerServerEvent("Spectrum:UseItem", k)
                     end
                 end)
