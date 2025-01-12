@@ -19,6 +19,7 @@ Spectrum = {
     Loaded = false,
     Spawned = false,
     DeathTimer = nil,
+    InventoryLock = false,
     items = {},
     jobs = {}
 }
