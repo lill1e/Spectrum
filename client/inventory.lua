@@ -50,7 +50,7 @@ end
 
 RegisterKeyMapping("+inventory", "Inventory Menu", "keyboard", "f1")
 RegisterCommand("+inventory", function()
-    if Spectrum.HasLoaded then
+    if Spectrum.Loaded then
         RageUI.Visible(inventoryMenu, not RageUI.Visible(inventoryMenu))
     end
 end, false)
