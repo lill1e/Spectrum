@@ -8,4 +8,5 @@ function TableLength(table)
     for _, _ in pairs(table) do
         counter = counter + 1
     end
+    return counter
 end
