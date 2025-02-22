@@ -38,4 +38,18 @@ end
 function removeItem(source, item, quantity)
     Spectrum.players[source].items[item] = Spectrum.players[source].items[item] > quantity and
         Spectrum.players[source].items[item] - quantity or nil
+function HasCash(source, clean, count)
+    return Spectrum.players[source].money[clean and "clean" or "dirty"] >= count
+end
+
+function AddCash(source, clean, count)
+    Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
+        [clean and "clean" or "dirty"] + count
+end
+
+function RemoveCash(source, clean, count)
+    if HasCash(source, clean, count) then
+        Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
+            [clean and "clean" or "dirty"] - count
+    end
 end
