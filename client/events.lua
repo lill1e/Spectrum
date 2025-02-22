@@ -3,3 +3,7 @@ RegisterNetEvent("Spectrum:Notification", function(notification)
     AddTextComponentString(notification)
     DrawNotification(false, false)
 end)
+
+RegisterNetEvent("Spectrum:SetHealth", function (health)
+    SetEntityHealth(PlayerPedId(), health)
+end)
