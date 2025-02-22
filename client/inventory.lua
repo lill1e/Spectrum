@@ -32,7 +32,7 @@ function RageUI.PoolMenus:Inventory()
 
             for k, v in pairs(Spectrum.PlayerData.items) do
                 Items:AddButton(Spectrum.items[k].displayName, nil, { RightLabel = "x" .. v }, function(onSelected)
-                    if onSelected and not Spectrum.InventoryLock then
+                    if onSelected and not Spectrum.InventoryLock and Spectrum.items[k].usable and (type(Spectrum.items[k].usable) == "boolean" or Spectrum.items[k].usable > 0) then
                         Spectrum.InventoryLock = true
                         TriggerServerEvent("Spectrum:UseItem", k)
                     end
