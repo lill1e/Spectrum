@@ -9,13 +9,10 @@ Spectrum = {
             usable = true,
             removeOnUse = true,
             swapOnUse = false,
-            handler = function()
-                print("MedKit used")
-            end,
-            event = {
-                name = "Spectrum:SetHealth",
-                data = { 100 }
-            }
+            handler = function(source)
+                TriggerClientEvent("Spectrum:SetHealth",
+                    (GetEntityModel(GetPlayerPed(source)) == GetHashKey("mp_f_freemode_01")) and 175 or 200)
+            end
         },
         ["box"] = {
             displayName = "Mystery Box",
