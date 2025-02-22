@@ -10,3 +10,12 @@ function TableLength(tbl)
     end
     return counter
 end
+
+function TableIndexOf(tbl, value)
+    for i, v in ipairs(tbl) do
+        if v == value then
+            return i
+        end
+    end
+    return 0
+end
