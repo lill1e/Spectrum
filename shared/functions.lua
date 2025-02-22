@@ -3,9 +3,9 @@ function FormatMoney(n)
     return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
 
-function TableLength(table)
+function TableLength(tbl)
     local counter = 0
-    for _, _ in pairs(table) do
+    for _, _ in pairs(tbl) do
         counter = counter + 1
     end
     return counter
