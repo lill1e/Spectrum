@@ -1,0 +1,20 @@
+@font-face {
+  font-family: "bankgothic";
+  src: url("../fonts/bankgothic.ttf");
+}
+
+html {
+  overflow: hidden;
+}
+
+#inventory_notifications {
+  font-family: bankgothic;
+  position: absolute;
+  right: 40;
+  bottom: 40;
+  font-size: 2em;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+    1px 1px 0 #000;
+}
