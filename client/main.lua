@@ -14,7 +14,7 @@ end)
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        if PlayerPedId() and PlayerPedId() ~= -1 and (NetworkIsPlayerActive(PlayerId()) and Spectrum.DeathTimer or (Spectrum.Loaded and not Spectrum.Spawned)) then
+        if PlayerPedId() and PlayerPedId() ~= -1 and (NetworkIsPlayerActive(PlayerId()) and (Spectrum.DeathTimer and (Spectrum.CanRespawn or Spectrum.CanRevive)) or (Spectrum.Loaded and not Spectrum.Spawned)) then
             while Spectrum.DeathTimer and GetGameTimer() - Spectrum.DeathTimer < 5000 do Wait(0) end
             DoScreenFadeOut(500)
             while not IsScreenFadedOut() do Wait(0) end
@@ -35,7 +35,7 @@ Citizen.CreateThread(function()
             -- while not Spectrum.Spawned and not Spectrum.PlayerData.skin do Wait(0) end
 
             local coords = vector3(0, 0, 70)
-            if Spectrum.PlayerData.staff then coords = GetEntityCoords(PlayerPedId()) end
+            if Spectrum.CanRevive then coords = GetEntityCoords(PlayerPedId()) end
             if not Spectrum.Spawned then
                 coords = Spectrum.PlayerData.position
                 coords = vector3(coords.x, coords.y, coords.z)
@@ -76,6 +76,8 @@ Citizen.CreateThread(function()
             Spectrum.DeathTimer = GetGameTimer()
         elseif not IsEntityDead(PlayerPedId()) and Spectrum.DeathTimer then
             Spectrum.DeathTimer = nil
+            Spectrum.CanRespawn = false
+            Spectrum.CanRevive = false
         end
     end
 end)
