@@ -32,6 +32,38 @@ exports["pgcfx"]:ready(function()
     end
     TriggerEvent("Spectrum:PlayerJoined")
 
+    Citizen.CreateThread(function()
+        while true do
+            Wait(15000)
+            for source, playerData in pairs(Spectrum.players) do
+                Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
+            end
+        end
+    end)
+    Citizen.CreateThread(function()
+        while true do
+            Wait(60000 * 3)
+            print("tmp")
+            print(json.encode(Spectrum.players))
+            for _, playerData in pairs(Spectrum.players) do
+                print(json.encode(playerData))
+                print(json.encode(playerData.position))
+                print(json.encode(playerData.ammo))
+                exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo" },
+                    { playerData.money.clean, playerData.money.dirty,
+                        {
+                            x = playerData.position.x,
+                            y = playerData.position.y,
+                            z = playerData.position.z
+                        },
+                        playerData.items, playerData.ammo }, "id = ?", { playerData.id })
+            end
+            for weaponId, weaponData in pairs(Spectrum.weapons) do
+                exports["pgcfx"]:update("weapons", { "attachments" }, { weaponData.attachments }, "id = ?", { weaponId })
+            end
+        end
+    end)
+end)
 
 AddEventHandler("playerConnecting", function(_, _, deferrals)
     local source = source
