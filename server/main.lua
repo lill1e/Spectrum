@@ -32,11 +32,6 @@ exports["pgcfx"]:ready(function()
     end
     TriggerEvent("Spectrum:PlayerJoined")
 
-RegisterCommand("req", function(source)
-    TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[tostring(source)])
-    TriggerClientEvent("Spectrum:Items", source, Spectrum.items)
-    TriggerClientEvent("Spectrum:JobData", source, Spectrum.jobs)
-end, false)
 
 AddEventHandler("playerConnecting", function(_, _, deferrals)
     local source = source
