@@ -39,6 +39,8 @@ Spectrum = {
             end,
         }
     },
+    weapons = {},
+    weaponsData = {},
     jobs = {
         ["dealer"] = {},
         ["lspd"] = {},

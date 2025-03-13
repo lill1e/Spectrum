@@ -1,15 +1,46 @@
 local inventoryMenu = RageUI.CreateMenu("Inventory", "~b~Your belongings")
 
-RegisterNetEvent("Spectrum:RemoveItem", function(item, quantity)
-    if Spectrum.PlayerData.items[item] then
-        Spectrum.PlayerData.items[item] = Spectrum.PlayerData.items[item] > quantity and
-            Spectrum.PlayerData.items[item] - quantity or nil
+RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
+    local condFlag = true
+    if type == 1 then
+        if itemType == 1 then
+            Spectrum.PlayerData.items[item] = Spectrum.PlayerData.items[item] and
+                Spectrum.PlayerData.items[item] + quantity or
+                quantity
+        elseif itemType == 2 then
+            GiveWeaponToPed(PlayerPedId(), GetHashKey(item), 0, false, false)
+        else
+            Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] + quantity
+            SetPedAmmoByType(PlayerPedId(), GetHashKey(item),
+                GetPedAmmoByType(PlayerPedId(), GetHashKey(item)) + quantity)
+        end
+    elseif type == 2 then
+        if itemType == 1 then
+            if Spectrum.PlayerData.items[item] then
+                Spectrum.PlayerData.items[item] = (Spectrum.PlayerData.items[item] > quantity and
+                    Spectrum.PlayerData.items[item] - quantity or nil)
+            else
+                condFlag = false
+            end
+        elseif itemType == 2 then
+            RemoveWeaponFromPed(PlayerPedId(), GetHashKey(item))
+        else
+            Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] >= quantity and
+                Spectrum.PlayerData.ammo[item] - quantity or 0
+            local ammoCount = GetPedAmmoByType(PlayerPedId(), GetHashKey(item))
+            SetPedAmmoByType(PlayerPedId(), GetHashKey(item), ammoCount < 0 and quantity or ammoCount - quantity)
+        end
     end
-end)
-
-RegisterNetEvent("Spectrum:AddItem", function(item, quantity)
-    Spectrum.PlayerData.items[item] = Spectrum.PlayerData.items[item] and Spectrum.PlayerData.items[item] + quantity or
-        quantity
+    if condFlag then
+        SendNUIMessage({
+            action = "notification",
+            type = type,
+            item = (itemType == 2 or itemType == 3) and Config.Weapons[item].displayName or
+                Spectrum.items[item].displayName,
+            itemType = itemType,
+            quantity = quantity
+        })
+    end
 end)
 
 RegisterNetEvent("Spectrum:InventoryRelease", function()

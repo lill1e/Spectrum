@@ -1,8 +1,15 @@
 exports["pgcfx"]:ready(function()
     Wait(500)
+    local rawWeapons = exports["pgcfx"]:select("Weapons", { "id", "(to_jsonb(weapons) - 'id') AS data" }, nil, nil,
+        { ["GROUP BY"] = "id" })
+    for _, v in ipairs(rawWeapons) do
+        Spectrum.weapons[v.id] = v.data
+    end
     for _, playerId in ipairs(GetPlayers()) do
         local identifier = GetSteamHex(playerId)
-        local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { identifier })
+        local user = exports["pgcfx"]:selectOne("Users", { "users.*", "json_agg(weapons) AS weapons" }, "users.id = ?",
+            { identifier }, { ["GROUP BY"] = "users.id" },
+            "weapons ON weapons.owner = users.id")
 
         Spectrum.players[tostring(playerId)] = {
             id = user.id,
@@ -14,7 +21,9 @@ exports["pgcfx"]:ready(function()
             ped = user.ped,
             attributes = user.attributes,
             staff = user.staff,
-            items = user.inventory
+            items = user.inventory,
+            ammo = user.ammo,
+            weapons = user.weapons
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)])
@@ -22,7 +31,6 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:JobData", playerId, Spectrum.jobs)
     end
     TriggerEvent("Spectrum:PlayerJoined")
-end)
 
 RegisterCommand("req", function(source)
     TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[tostring(source)])
@@ -71,7 +79,10 @@ AddEventHandler("playerJoining", function()
                 position = user.position,
                 ped = user.ped,
                 attributes = user.attributes,
-                staff = user.staff
+                staff = user.staff,
+                items = user.inventory,
+                ammo = user.ammo,
+                weapons = user.weapons
             }
 
             -- maybe make items and other critical implementations

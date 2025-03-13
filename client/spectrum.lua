@@ -15,6 +15,7 @@ Spectrum = {
         },
         attributes = {},
         items = {},
+        weapons = {},
     },
     Loaded = false,
     Spawned = false,
