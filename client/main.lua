@@ -75,7 +75,6 @@ Citizen.CreateThread(function()
         if IsEntityDead(PlayerPedId()) and not Spectrum.DeathTimer then
             Spectrum.DeathTimer = GetGameTimer()
         elseif not IsEntityDead(PlayerPedId()) and Spectrum.DeathTimer then
-            -- TODO: revisit this
             Spectrum.DeathTimer = nil
         end
     end

@@ -64,7 +64,6 @@ AddEventHandler("playerJoining", function()
     if steamHex then
         local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
         if user then
-            -- should i create this on join or just connect attempt? - shiii idk
             Spectrum.players[source] = {
                 id = user.id,
                 money = {
@@ -80,14 +79,9 @@ AddEventHandler("playerJoining", function()
                 weapons = user.weapons
             }
 
-            -- maybe make items and other critical implementations
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source])
             TriggerClientEvent("Spectrum:Items", source, Spectrum.items)
             TriggerClientEvent("Spectrum:JobData", source, Spectrum.jobs)
-            -- figure out how to handle jobs/attributes
-            -- attributes: maybe keep a db of attributes and corresponding users - easy add/deletion
-            -- ^^ now this is just fucking stupid
-            -- jobs: maybe some sort of map in the database (especially seeing how the json type works)
         else
             DropPlayer(source, "There was an error fetching your data, please reconnect and try again")
         end
