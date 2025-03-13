@@ -62,7 +62,9 @@ AddEventHandler("playerJoining", function()
     local steamHex = GetSteamHex(source)
 
     if steamHex then
-        local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
+        local user = exports["pgcfx"]:selectOne("Users", { "users.*", "json_agg(weapons) AS weapons" }, "users.id = ?",
+            { steamHex }, { ["GROUP BY"] = "users.id" },
+            "weapons ON weapons.owner = users.id")
         if user then
             Spectrum.players[source] = {
                 id = user.id,
