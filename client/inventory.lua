@@ -43,6 +43,20 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
     end
 end)
 
+Citizen.CreateThread(function()
+    while true do
+        Wait(0)
+        if Spectrum.Loaded and Spectrum.Spawned and not IsPedShooting(PlayerPedId()) then
+            for k, _ in pairs(Spectrum.PlayerData.ammo) do
+                if GetPedAmmoByType(PlayerPedId(), k) ~= Spectrum.PlayerData.ammo[k] then
+                    Spectrum.PlayerData.ammo[k] = GetPedAmmoByType(PlayerPedId(), k)
+                    TriggerServerEvent("Spectrum:Ammo", k, Spectrum.PlayerData.ammo[k])
+                end
+            end
+        end
+    end
+end)
+
 RegisterNetEvent("Spectrum:InventoryRelease", function()
     Spectrum.InventoryLock = false
 end)

@@ -27,6 +27,18 @@ RegisterNetEvent("Spectrum:UseItem", function(item)
     TriggerClientEvent("Spectrum:InventoryRelease", source)
 end)
 
+RegisterNetEvent("Spectrum:Ammo", function(type, quantity)
+    local source = tostring(source)
+
+    if Spectrum.players[source] ~= nil then
+        if quantity <= Spectrum.players[source].ammo[type] then
+            Spectrum.players[source].ammo[type] = quantity
+        else
+            -- TODO: add some action here, this should not ever happen
+        end
+    end
+end)
+
 function AddItem(source, item, quantity)
     Spectrum.players[source].items[item] = Spectrum.players[source].items[item] and
         Spectrum.players[source].items[item] + quantity or quantity
