@@ -16,6 +16,14 @@ Spectrum = {
         attributes = {},
         items = {},
         weapons = {},
+        ammo = {
+            AMMO_MG = 0,
+            AMMO_SMG = 0,
+            AMMO_RIFLE = 0,
+            AMMO_PISTOL = 0,
+            AMMO_SNIPER = 0,
+            AMMO_SHOTGUN = 0
+        }
     },
     Loaded = false,
     Spawned = false,
