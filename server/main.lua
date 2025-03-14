@@ -123,3 +123,19 @@ AddEventHandler("playerJoining", function()
         DropPlayer(source, "There was an error fetching your data, please reconnect and try again")
     end
 end)
+
+AddEventHandler("playerDropped", function(reason)
+    local source = tostring(source)
+
+    if Spectrum.players[source] ~= nil then
+        if DoesEntityExist(GetPlayerPed(source)) then
+            Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
+        end
+        exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo" },
+            { Spectrum.players[source].money.clean, Spectrum.players[source].money.dirty, {
+                x = Spectrum.players[source].position.x,
+                y = Spectrum.players[source].position.y,
+                z = Spectrum.players[source].position.z
+            }, Spectrum.players[source].items, Spectrum.players[source].ammo })
+    end
+end)
