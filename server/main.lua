@@ -43,12 +43,7 @@ exports["pgcfx"]:ready(function()
     Citizen.CreateThread(function()
         while true do
             Wait(60000 * 3)
-            print("tmp")
-            print(json.encode(Spectrum.players))
             for _, playerData in pairs(Spectrum.players) do
-                print(json.encode(playerData))
-                print(json.encode(playerData.position))
-                print(json.encode(playerData.ammo))
                 exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo" },
                     { playerData.money.clean, playerData.money.dirty,
                         {
