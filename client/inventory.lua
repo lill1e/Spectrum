@@ -8,7 +8,7 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
                 Spectrum.PlayerData.items[item] + quantity or
                 quantity
         elseif itemType == 2 then
-            GiveWeaponToPed(PlayerPedId(), GetHashKey(item), 0, false, false)
+            Spectrum.PlayerData.weapons[quantity] = item
         else
             Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] + quantity
             SetPedAmmoByType(PlayerPedId(), GetHashKey(item),

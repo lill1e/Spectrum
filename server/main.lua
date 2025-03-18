@@ -7,7 +7,8 @@ exports["pgcfx"]:ready(function()
     end
     for _, playerId in ipairs(GetPlayers()) do
         local identifier = GetSteamHex(playerId)
-        local user = exports["pgcfx"]:selectOne("Users", { "users.*", "json_agg(weapons) AS weapons" }, "users.id = ?",
+        local user = exports["pgcfx"]:selectOne("Users",
+            { "users.*", "json_object_agg(weapons.id, weapons.model) AS weapons" }, "users.id = ?",
             { identifier }, { ["GROUP BY"] = "users.id" },
             "weapons ON weapons.owner = users.id")
 
@@ -89,7 +90,8 @@ AddEventHandler("playerJoining", function()
     local steamHex = GetSteamHex(source)
 
     if steamHex then
-        local user = exports["pgcfx"]:selectOne("Users", { "users.*", "json_agg(weapons) AS weapons" }, "users.id = ?",
+        local user = exports["pgcfx"]:selectOne("Users",
+            { "users.*", "json_object_agg(weapons.id, weapons.model) AS weapons" }, "users.id = ?",
             { steamHex }, { ["GROUP BY"] = "users.id" },
             "weapons ON weapons.owner = users.id")
         if user then

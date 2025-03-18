@@ -11,7 +11,7 @@
         if (itemType == 3) {
             notif += `${name} Ammo (${quantity} Rounds)`
         }
-        else if (quantity != -1) {
+        else if (itemType == 1) {
             notif += quantity + " " + name
         }
         else {

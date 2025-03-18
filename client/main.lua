@@ -52,7 +52,7 @@ Citizen.CreateThread(function()
             while not HasCollisionLoadedAroundEntity(PlayerPedId()) and GetGameTimer() - startTime < 5000 do Wait(0) end
 
             for _, v in pairs(Spectrum.PlayerData.weapons) do
-                GiveWeaponToPed(PlayerPedId(), GetHashKey(v.model), 0, false, false)
+                GiveWeaponToPed(PlayerPedId(), GetHashKey(v), 0, false, false)
             end
 
             for ammo, count in pairs(Spectrum.PlayerData.ammo) do

@@ -62,14 +62,16 @@ function SwapItem(source, itemOne, quantityOne, itemTwo, quantityTwo)
     AddItem(source, itemTwo, quantityTwo)
 end
 
-function AddWeapon(source, weapon, id)
-    if not Spectrum.players[source].weapons[weapon] then
+function AddWeapon(source, id)
+    local weapon = Spectrum.weapons[id].model
+    if Spectrum.players[source].weapons[weapon] ~= nil then
         return
     end
     Spectrum.weapons[id].owner = Spectrum.players[source].id
     Spectrum.players[source].weapons[weapon] = id
-    GiveWeaponToPed(PlayerPedId(), weapon, 0, false, false)
-    TriggerClientEvent("Spectrum:Inventory", source, weapon, -1, 1, 2)
+    GiveWeaponToPed(GetPlayerPed(source), weapon, 0, false, false)
+    exports["pgcfx"]:update("weapons", { "owner" }, { Spectrum.players[source].id }, "id = ?", { id })
+    TriggerClientEvent("Spectrum:Inventory", source, weapon, id, 1, 2)
 end
 
 function RemoveWeapon(source, weapon)
@@ -116,4 +118,11 @@ function RemoveCash(source, clean, count)
         Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
             [clean and "clean" or "dirty"] - count
     end
+end
+
+function CreateWeapon(source, name)
+    local insertion = exports["pgcfx"]:insert("weapons", { "model" }, { name }, "id, to_jsonb(weapons) - 'id' AS data")
+        [1]
+    Spectrum.weapons[insertion.id] = insertion.data
+    AddWeapon(source, insertion.id)
 end
