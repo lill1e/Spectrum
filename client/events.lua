@@ -1,7 +1,5 @@
 RegisterNetEvent("Spectrum:Notification", function(notification)
-    SetNotificationTextEntry("STRING")
-    AddTextComponentString(notification)
-    DrawNotification(false, false)
+    Notification(notification)
 end)
 
 RegisterNetEvent("Spectrum:SetHealth", function (health)
