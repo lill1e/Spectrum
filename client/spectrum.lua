@@ -33,6 +33,11 @@ Spectrum = {
     InventoryLock = false,
     items = {},
     jobs = {},
+    stores = {},
+    currentStore = {
+        current = nil,
+        currentLoc = nil
+    },
     libs = {},
     misc = {}
 }

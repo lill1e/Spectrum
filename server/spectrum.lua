@@ -66,5 +66,80 @@ Spectrum = {
         ["lspd"] = {},
         ["fib"] = {},
         ["doa"] = {}
+    },
+    stores = {
+        simple = {
+            colour = "~b~",
+            name = "SimpleStore",
+            range = 3,
+            locations = {
+                vector3(25.68324, -1347.402, 29.49702)
+            },
+            items = {
+                coin = {
+                    cost = 5,
+                    type = 1,
+                    clean = true
+                },
+                blueprint = {
+                    quantity = 4,
+                    cost = 4,
+                    type = 1,
+                    clean = false
+                }
+            },
+            blip = {
+                sprite = -1,
+                colour = -1
+            },
+            -- A Menu is:
+            -- title: String
+            -- description: String
+            -- banner: String | nil
+            menu = {
+                title = "#1",
+                description = "~y~Just a simple store",
+                banner = "shopui_title_conveniencestore"
+            }
+        },
+        dealer = {
+            colour = "~r~",
+            name = "Limited Supply",
+            range = 2,
+            locations = {
+                vector3(26.18591, -1299.739, 29.26874)
+            },
+            items = {
+                blueprint = {
+                    cost = 0,
+                    type = 1,
+                    clean = false
+                },
+                WEAPON_PISTOL = {
+                    cost = 0,
+                    type = 2,
+                    clean = true
+                },
+                AMMO_PISTOL = {
+                    quantity = 12,
+                    cost = 0,
+                    type = 3,
+                    clean = true
+                },
+                med_kit = {
+                    quantity = 1,
+                    cost = 0,
+                    type = 1,
+                    clean = false
+                }
+            },
+            blip = {
+                -- TODO
+            },
+            menu = {
+                title = "Backdoor",
+                description = "~r~keep your mouth shut"
+            }
+        }
     }
 }
