@@ -5,7 +5,7 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
     if type == 1 then
         if itemType == 0 then
             Spectrum.PlayerData.money[item and "clean" or "dirty"] = Spectrum.PlayerData.money
-            [item and "clean" or "dirty"] + quantity
+                [item and "clean" or "dirty"] + quantity
             condFlag = false
         elseif itemType == 1 then
             Spectrum.PlayerData.items[item] = Spectrum.PlayerData.items[item] and
@@ -21,7 +21,7 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
     elseif type == 2 then
         if itemType == 0 then
             Spectrum.PlayerData.money[item and "clean" or "dirty"] = Spectrum.PlayerData.money
-            [item and "clean" or "dirty"] - quantity
+                [item and "clean" or "dirty"] - quantity
             condFlag = false
         elseif itemType == 1 then
             if Spectrum.PlayerData.items[item] then
