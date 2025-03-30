@@ -3,7 +3,11 @@ local inventoryMenu = RageUI.CreateMenu("Inventory", "~b~Your belongings")
 RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
     local condFlag = true
     if type == 1 then
-        if itemType == 1 then
+        if itemType == 0 then
+            Spectrum.PlayerData.money[item and "clean" or "dirty"] = Spectrum.PlayerData.money
+            [item and "clean" or "dirty"] + quantity
+            condFlag = false
+        elseif itemType == 1 then
             Spectrum.PlayerData.items[item] = Spectrum.PlayerData.items[item] and
                 Spectrum.PlayerData.items[item] + quantity or
                 quantity
@@ -15,7 +19,11 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
                 GetPedAmmoByType(PlayerPedId(), GetHashKey(item)) + quantity)
         end
     elseif type == 2 then
-        if itemType == 1 then
+        if itemType == 0 then
+            Spectrum.PlayerData.money[item and "clean" or "dirty"] = Spectrum.PlayerData.money
+            [item and "clean" or "dirty"] - quantity
+            condFlag = false
+        elseif itemType == 1 then
             if Spectrum.PlayerData.items[item] then
                 Spectrum.PlayerData.items[item] = (Spectrum.PlayerData.items[item] > quantity and
                     Spectrum.PlayerData.items[item] - quantity or nil)

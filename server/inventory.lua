@@ -109,12 +109,14 @@ end
 function AddCash(source, clean, count)
     Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
         [clean and "clean" or "dirty"] + count
+    TriggerClientEvent("Spectrum:Inventory", source, clean, count, 1, 0)
 end
 
 function RemoveCash(source, clean, count)
     if HasCash(source, clean, count) then
         Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
             [clean and "clean" or "dirty"] - count
+        TriggerClientEvent("Spectrum:Inventory", source, clean, count, 2, 0)
     end
 end
 
