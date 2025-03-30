@@ -1,4 +1,5 @@
 Config = {
+    Libs = {},
     Inventory = {
         max = 20,
         itemWeight = 1,
