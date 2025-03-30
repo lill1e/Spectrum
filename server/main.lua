@@ -32,6 +32,7 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:JobData", playerId, Spectrum.jobs)
     end
     TriggerEvent("Spectrum:PlayerJoined")
+    Spectrum.loaded = true
 
     Citizen.CreateThread(function()
         while true do

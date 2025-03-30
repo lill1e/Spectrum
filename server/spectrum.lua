@@ -1,6 +1,14 @@
 Spectrum = {
     debug = true,
+    loaded = false,
     players = {},
+    tokens = {},
+    libs = {
+        callbacks = {},
+        callbackFunctions = {},
+        callbackCounts = {},
+        tokens = {}
+    },
     items = {
         ["med_kit"] = {
             displayName = "Medical Grade Equipment",
@@ -10,8 +18,9 @@ Spectrum = {
             removeOnUse = true,
             swapOnUse = false,
             handler = function(source)
-                TriggerClientEvent("Spectrum:SetHealth",
-                    (GetEntityModel(GetPlayerPed(source)) == GetHashKey("mp_f_freemode_01")) and 175 or 200)
+                TriggerClientEvent("Spectrum:SetHealth", source,
+                    (GetEntityModel(GetPlayerPed(source)) == GetHashKey("mp_f_freemode_01")) and 175 or 200,
+                    Spectrum.libs.Tokens.CreateToken(source))
             end
         },
         ["box"] = {

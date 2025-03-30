@@ -32,5 +32,6 @@ Spectrum = {
     CanRevive = false,
     InventoryLock = false,
     items = {},
-    jobs = {}
+    jobs = {},
+    libs = {},
 }
