@@ -14,7 +14,7 @@ RegisterNetEvent("Spectrum:Items", function(items)
     Spectrum.items = items
 end)
 
-RegisterNetEvent("Spectrum:JobData", function(jobs)
+RegisterNetEvent("Spectrum:Jobs", function(jobs)
     Spectrum.jobs = jobs
 end)
 
