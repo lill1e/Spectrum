@@ -1,6 +1,13 @@
-RegisterNetEvent("Spectrum:PlayerData", function(player_data)
-    Spectrum.Loaded = true
-    Spectrum.PlayerData = player_data
+RegisterNetEvent("Spectrum:PlayerData", function(player_data, misc)
+    if not Spectrum.Loaded then
+        Spectrum.Loaded = true
+        Spectrum.PlayerData = player_data
+        Spectrum.PlayerData.numItems = TableLength(Spectrum.PlayerData.items)
+        Spectrum.PlayerData.numWeapons = TableLength(Spectrum.PlayerData.weapons)
+        for k, v in pairs(misc) do
+            Spectrum[k] = v
+        end
+    end
 end)
 
 RegisterNetEvent("Spectrum:Items", function(items)

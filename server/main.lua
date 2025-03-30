@@ -27,7 +27,8 @@ exports["pgcfx"]:ready(function()
             weapons = user.weapons
         }
 
-        TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)])
+        TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
+            { debug = Spectrum.debug })
         TriggerClientEvent("Spectrum:Items", playerId, Spectrum.items)
         TriggerClientEvent("Spectrum:JobData", playerId, Spectrum.jobs)
     end
@@ -111,7 +112,7 @@ AddEventHandler("playerJoining", function()
                 weapons = user.weapons
             }
 
-            TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source])
+            TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
             TriggerClientEvent("Spectrum:Items", source, Spectrum.items)
             TriggerClientEvent("Spectrum:JobData", source, Spectrum.jobs)
         else

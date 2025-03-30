@@ -34,4 +34,5 @@ Spectrum = {
     items = {},
     jobs = {},
     libs = {},
+    misc = {}
 }
