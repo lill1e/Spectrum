@@ -149,6 +149,6 @@ AddEventHandler("playerDropped", function(reason)
                 x = Spectrum.players[source].position.x,
                 y = Spectrum.players[source].position.y,
                 z = Spectrum.players[source].position.z
-            }, Spectrum.players[source].items, Spectrum.players[source].ammo })
+            }, Spectrum.players[source].items, Spectrum.players[source].ammo }, "id = ?", { Spectrum.players[source].id })
     end
 end)
