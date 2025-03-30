@@ -45,7 +45,7 @@ Citizen.CreateThread(function()
             -- TODO: fix this when skin implemented
             -- while not Spectrum.Spawned and not Spectrum.PlayerData.skin do Wait(0) end
 
-            local coords = vector3(0, 0, 70)
+            local coords = vector3(0, 0, 75)
             if Spectrum.CanRevive then coords = GetEntityCoords(PlayerPedId()) end
             if not Spectrum.Spawned then
                 coords = Spectrum.PlayerData.position
