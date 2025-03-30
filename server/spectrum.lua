@@ -46,6 +46,17 @@ Spectrum = {
                 TriggerClientEvent("Spectrum:Notification", source,
                     "You flip a coin and notice it landed on: ~y~" .. (math.random(0, 1) == 1 and "Tails" or "Heads"))
             end,
+        },
+        ["blueprint"] = {
+            displayName = "(Blue)print",
+            illegal = true,
+            rare = true,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                TriggerClientEvent("Spectrum:Notification", source, "~r~there goes your blueprint")
+            end
         }
     },
     weapons = {},
