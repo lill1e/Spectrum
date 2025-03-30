@@ -39,7 +39,6 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:Items", playerId, Spectrum.items)
         TriggerClientEvent("Spectrum:Jobs", playerId, Spectrum.jobs)
     end
-    TriggerEvent("Spectrum:PlayerJoined")
     Spectrum.loaded = true
 
     Citizen.CreateThread(function()
