@@ -109,6 +109,21 @@ function RageUI.PoolMenus:Inventory()
 
             end, inventoryMenu)
         end
+
+        if Spectrum.PlayerData.numWeapons > 0 then
+            Items:AddSeparator("")
+
+            for k, v in pairs(Spectrum.PlayerData.weapons) do
+                Items:AddButton(Config.Weapons[v].displayName, "~b~Serial Number: ~s~" .. k, {}, function(onSelected)
+                    if onSelected then
+                    end
+                end)
+            end
+        else
+            Items:AddButton("No ~b~weapons.", nil, {}, function(onSelected)
+
+            end, inventoryMenu)
+        end
     end, function()
 
     end)
