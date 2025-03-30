@@ -8,10 +8,16 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
                 [item and "clean" or "dirty"] + quantity
             condFlag = false
         elseif itemType == 1 then
+            if Spectrum.PlayerData.items[item] == nil then
+                Spectrum.PlayerData.numItems = Spectrum.PlayerData.numItems + 1
+            end
             Spectrum.PlayerData.items[item] = Spectrum.PlayerData.items[item] and
                 Spectrum.PlayerData.items[item] + quantity or
                 quantity
         elseif itemType == 2 then
+            if Spectrum.PlayerData.weapons[quantity] == nil then
+                Spectrum.PlayerData.numWeapons = Spectrum.PlayerData.numWeapons + 1
+            end
             Spectrum.PlayerData.weapons[quantity] = item
         else
             Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] + quantity
@@ -27,10 +33,16 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
             if Spectrum.PlayerData.items[item] then
                 Spectrum.PlayerData.items[item] = (Spectrum.PlayerData.items[item] > quantity and
                     Spectrum.PlayerData.items[item] - quantity or nil)
+                if Spectrum.PlayerData.items[item] == nil then
+                    Spectrum.PlayerData.numItems = Spectrum.PlayerData.numItems - 1
+                end
             else
                 condFlag = false
             end
         elseif itemType == 2 then
+            if Spectrum.PlayerData.weapons[quantity] ~= nil then
+                Spectrum.PlayerData.numWeapons = Spectrum.PlayerData.numWeapons - 1
+            end
             Spectrum.PlayerData.weapons[quantity] = nil
             RemoveWeaponFromPed(PlayerPedId(), GetHashKey(item))
         else
@@ -81,7 +93,7 @@ function RageUI.PoolMenus:Inventory()
 
             end, inventoryMenu)
 
-        if TableLength(Spectrum.PlayerData.items) > 0 then
+        if Spectrum.PlayerData.numItems > 0 then
             Items:AddSeparator("")
 
             for k, v in pairs(Spectrum.PlayerData.items) do
