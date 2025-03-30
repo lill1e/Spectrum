@@ -64,23 +64,21 @@ end
 
 function AddWeapon(source, id)
     local weapon = Spectrum.weapons[id].model
-    if Spectrum.players[source].weapons[weapon] ~= nil then
-        return
-    end
     Spectrum.weapons[id].owner = Spectrum.players[source].id
-    Spectrum.players[source].weapons[weapon] = id
+    Spectrum.players[source].weapons[id] = weapon
     GiveWeaponToPed(GetPlayerPed(source), weapon, 0, false, false)
     exports["pgcfx"]:update("weapons", { "owner" }, { Spectrum.players[source].id }, "id = ?", { id })
     TriggerClientEvent("Spectrum:Inventory", source, weapon, id, 1, 2)
 end
 
 function RemoveWeapon(source, weapon)
-    if not Spectrum.players[source].weapons[weapon] then
+    if not Spectrum.weapons[weapon] or Spectrum.weapons[weapon].owner ~= Spectrum.players[source].id then
         return
     end
-    Spectrum.weapons[Spectrum.players[source].weapons[weapon]].owner = nil
-    Spectrum.players[source].weapons[weapon] = nil
-    TriggerClientEvent("Spectrum:Inventory", source, weapon, -1, 2, 2)
+    local id = Spectrum.weapons[weapon].model
+    Spectrum.weapons[weapon].owner = nil
+    Spectrum.players[source].weapons[tostring(weapon)] = nil
+    TriggerClientEvent("Spectrum:Inventory", source, id, weapon, 2, 2)
 end
 
 function HasWeapon(source, weapon)

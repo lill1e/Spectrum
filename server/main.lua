@@ -8,9 +8,16 @@ exports["pgcfx"]:ready(function()
     for _, playerId in ipairs(GetPlayers()) do
         local identifier = GetSteamHex(playerId)
         local user = exports["pgcfx"]:selectOne("Users",
-            { "users.*", "json_object_agg(weapons.id, weapons.model) AS weapons" }, "users.id = ?",
-            { identifier }, { ["GROUP BY"] = "users.id" },
+            { "users.*",
+                "COALESCE(json_object_agg(weapons.id, weapons.model) FILTER (WHERE weapons.id IS NOT NULL), '{}'::json) AS weapons" },
+            "users.id = ?",
+            { identifier }, { ["GROUP BY"] = "users.id", JOIN = "LEFT" },
             "weapons ON weapons.owner = users.id")
+
+        local weapons = {}
+        for strIndex, weapon in pairs(user.weapons) do
+            weapons[tonumber(strIndex)] = weapon
+        end
 
         Spectrum.players[tostring(playerId)] = {
             id = user.id,
@@ -24,7 +31,7 @@ exports["pgcfx"]:ready(function()
             staff = user.staff,
             items = user.inventory,
             ammo = user.ammo,
-            weapons = user.weapons
+            weapons = weapons
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
@@ -93,9 +100,17 @@ AddEventHandler("playerJoining", function()
 
     if steamHex then
         local user = exports["pgcfx"]:selectOne("Users",
-            { "users.*", "json_object_agg(weapons.id, weapons.model) AS weapons" }, "users.id = ?",
-            { steamHex }, { ["GROUP BY"] = "users.id" },
+            { "users.*",
+                "COALESCE(json_object_agg(weapons.id, weapons.model) FILTER (WHERE weapons.id IS NOT NULL), '{}'::json) AS weapons" },
+            "users.id = ?",
+            { steamHex }, { ["GROUP BY"] = "users.id", JOIN = "LEFT" },
             "weapons ON weapons.owner = users.id")
+
+        local weapons = {}
+        for strIndex, weapon in pairs(user.weapons) do
+            weapons[tonumber(strIndex)] = weapon
+        end
+
         if user then
             Spectrum.players[source] = {
                 id = user.id,
@@ -109,7 +124,7 @@ AddEventHandler("playerJoining", function()
                 staff = user.staff,
                 items = user.inventory,
                 ammo = user.ammo,
-                weapons = user.weapons
+                weapons = weapons
             }
 
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
