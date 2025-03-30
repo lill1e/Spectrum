@@ -31,6 +31,7 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
                 condFlag = false
             end
         elseif itemType == 2 then
+            Spectrum.PlayerData.weapons[quantity] = nil
             RemoveWeaponFromPed(PlayerPedId(), GetHashKey(item))
         else
             Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] >= quantity and
