@@ -54,7 +54,10 @@ exports["pgcfx"]:ready(function()
     Citizen.CreateThread(function()
         while true do
             Wait(60000 * 3)
-            for _, playerData in pairs(Spectrum.players) do
+            for source, playerData in pairs(Spectrum.players) do
+                if DoesEntityExist(GetPlayerPed(source)) then
+                    Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
+                end
                 exports["pgcfx"]:update("users",
                     { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
                     { playerData.money.clean, playerData.money.dirty,
