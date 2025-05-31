@@ -21,7 +21,8 @@ Spectrum = {
                 TriggerClientEvent("Spectrum:SetHealth", source,
                     (GetEntityModel(GetPlayerPed(source)) == GetHashKey("mp_f_freemode_01")) and 175 or 200,
                     Spectrum.libs.Tokens.CreateToken(source))
-            end
+            end,
+            max = 5
         },
         ["box"] = {
             displayName = "Mystery Box",
@@ -34,6 +35,7 @@ Spectrum = {
                 quantity = 5
             },
             handler = false,
+            max = 10
         },
         ["coin"] = {
             displayName = "Gold Coin",
@@ -46,6 +48,7 @@ Spectrum = {
                 TriggerClientEvent("Spectrum:Notification", source,
                     "You flip a coin and notice it landed on: ~y~" .. (math.random(0, 1) == 1 and "Tails" or "Heads"))
             end,
+            max = 3
         },
         ["blueprint"] = {
             displayName = "(Blue)print",
@@ -56,7 +59,8 @@ Spectrum = {
             swapOnUse = false,
             handler = function(source)
                 TriggerClientEvent("Spectrum:Notification", source, "~r~there goes your blueprint")
-            end
+            end,
+            max = 1
         }
     },
     weapons = {},
