@@ -73,8 +73,8 @@ Spectrum = {
     },
     stores = {
         simple = {
-            colour = "~b~",
-            name = "SimpleStore",
+            colour = "~g~",
+            name = "24/7",
             range = 3,
             locations = {
                 vector3(25.68324, -1347.402, 29.49702)
@@ -136,8 +136,26 @@ Spectrum = {
                     clean = false
                 }
             },
-            blip = {
-                -- TODO
+            menu = {
+                title = "Backdoor",
+                description = "~r~keep your mouth shut"
+            }
+        },
+        forumDealer = {
+            colour = "~o~",
+            name = "Backdoor (Forum)",
+            range = 3,
+            attribute = "debug",
+            blip = {},
+            locations = {
+                vector3(-256.1212, -1542.451, 31.9281)
+            },
+            items = {
+                blueprint = {
+                    cost = 0,
+                    type = 1,
+                    clean = false
+                },
             },
             menu = {
                 title = "Backdoor",
