@@ -7,6 +7,7 @@ author "lillie"
 description "wtf is this :smirk_cat:"
 
 shared_scripts {
+    "shared/config.lua",
     "shared/*.lua"
 }
 
