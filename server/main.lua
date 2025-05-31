@@ -32,6 +32,7 @@ exports["pgcfx"]:ready(function()
             items = user.inventory,
             ammo = user.ammo,
             weapons = weapons,
+            identifiers = GetAllIdentifiers(tostring(playerId)),
             skin = user.skin
         }
 
@@ -132,6 +133,7 @@ AddEventHandler("playerJoining", function()
                 items = user.inventory,
                 ammo = user.ammo,
                 weapons = weapons,
+                identifiers = GetAllIdentifiers(source),
                 skin = user.skin
             }
 

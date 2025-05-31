@@ -27,6 +27,7 @@ Spectrum = {
         skin = {
             Sex = 1,
         },
+        identifiers = {}
     },
     Loaded = false,
     Spawned = false,
