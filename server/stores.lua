@@ -1,7 +1,7 @@
 RegisterNetEvent("Spectrum:Purchase", function(store, storeLoc, item)
     local source = tostring(source)
 
-    if Spectrum.stores[store] and Spectrum.stores[store].items[item] and #(GetEntityCoords(GetPlayerPed(source)) - storeLoc) <= Spectrum.stores[store].range then
+    if Spectrum.stores[store] and Spectrum.stores[store].items[item] and #(GetEntityCoords(GetPlayerPed(source)) - storeLoc) <= Spectrum.stores[store].range and (not Spectrum.stores[store].attribute or Spectrum.players[source].attributes[Spectrum.stores[store].attribute]) then
         if HasCash(source, Spectrum.stores[store].items[item].clean, Spectrum.stores[store].items[item].cost) then
             RemoveCash(source, Spectrum.stores[store].items[item].clean, Spectrum.stores[store].items[item].cost)
             if Spectrum.stores[store].items[item].type == 0 then

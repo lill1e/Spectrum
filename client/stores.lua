@@ -4,7 +4,7 @@ end
 
 for _, storeData in pairs(Spectrum.stores) do
     for _, location in ipairs(storeData.locations) do
-        if storeData.blip == nil then
+        if storeData.blip == nil or (storeData.attribute and not Spectrum.PlayerData.attributes[storeData.attribute]) then
             goto continue
         end
         local blip = AddBlipForCoord(location)
@@ -29,7 +29,7 @@ Citizen.CreateThread(function()
         Wait(0)
         for store, storeData in pairs(Spectrum.stores) do
             for _, location in ipairs(storeData.locations) do
-                if #(GetEntityCoords(PlayerPedId()) - location) <= storeData.range then
+                if #(GetEntityCoords(PlayerPedId()) - location) <= storeData.range and (not storeData.attribute or Spectrum.PlayerData.attributes[storeData.attribute]) then
                     if Spectrum.currentStore.current == nil then
                         HelpText("Press ~INPUT_CONTEXT~ to view " ..
                             (storeData.colour and storeData.colour or "~s~") .. storeData.name)

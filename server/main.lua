@@ -19,6 +19,11 @@ exports["pgcfx"]:ready(function()
             weapons[tonumber(strIndex)] = weapon
         end
 
+        local tempAttr = {}
+        for _, a in ipairs(user.attributes) do
+            tempAttr[a] = true
+        end
+
         Spectrum.players[tostring(playerId)] = {
             id = user.id,
             money = {
@@ -27,7 +32,7 @@ exports["pgcfx"]:ready(function()
             },
             position = user.position,
             ped = user.ped,
-            attributes = user.attributes,
+            attributes = tempAttr,
             staff = user.staff,
             items = user.inventory,
             ammo = user.ammo,
@@ -119,6 +124,11 @@ AddEventHandler("playerJoining", function()
             weapons[tonumber(strIndex)] = weapon
         end
 
+        local tempAttr = {}
+        for _, a in ipairs(user.attributes) do
+            tempAttr[a] = true
+        end
+
         if user then
             Spectrum.players[source] = {
                 id = user.id,
@@ -128,7 +138,7 @@ AddEventHandler("playerJoining", function()
                 },
                 position = user.position,
                 ped = user.ped,
-                attributes = user.attributes,
+                attributes = tempAttr,
                 staff = user.staff,
                 items = user.inventory,
                 ammo = user.ammo,
