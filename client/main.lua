@@ -80,6 +80,10 @@ Citizen.CreateThread(function()
                 SetPedAmmoByType(PlayerPedId(), GetHashKey(ammo), count)
             end
 
+            if Spectrum.skin.IsEditing then
+                RageUI.Visible(SkinMenu, true)
+            end
+
             Wait(2500)
 
             ShutdownLoadingScreen()
