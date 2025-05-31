@@ -42,6 +42,16 @@ Citizen.CreateThread(function()
             SetModelAsNoLongerNeeded(Spectrum.PlayerData.ped)
             SetPedDefaultComponentVariation(PlayerPedId())
 
+            if Spectrum.PlayerData.skin == nil then
+                Spectrum.PlayerData.skin = {
+                    Sex = math.random(1, 2)
+                }
+                RandomizeSkin()
+                ApplySkin()
+                Spectrum.skin.IsEditing = true
+            else
+                ApplySkin()
+            end
             -- TODO: fix this when skin implemented
             -- while not Spectrum.Spawned and not Spectrum.PlayerData.skin do Wait(0) end
 

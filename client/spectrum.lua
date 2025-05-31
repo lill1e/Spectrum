@@ -23,7 +23,10 @@ Spectrum = {
             AMMO_PISTOL = 0,
             AMMO_SNIPER = 0,
             AMMO_SHOTGUN = 0
-        }
+        },
+        skin = {
+            Sex = 1,
+        },
     },
     Loaded = false,
     Spawned = false,
@@ -39,5 +42,8 @@ Spectrum = {
         currentLoc = nil
     },
     libs = {},
-    misc = {}
+    misc = {},
+    skin = {
+        IsEditing = false,
+    }
 }

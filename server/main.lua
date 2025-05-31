@@ -31,7 +31,8 @@ exports["pgcfx"]:ready(function()
             staff = user.staff,
             items = user.inventory,
             ammo = user.ammo,
-            weapons = weapons
+            weapons = weapons,
+            skin = user.skin
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
@@ -54,14 +55,15 @@ exports["pgcfx"]:ready(function()
         while true do
             Wait(60000 * 3)
             for _, playerData in pairs(Spectrum.players) do
-                exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo" },
+                exports["pgcfx"]:update("users",
+                    { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
                     { playerData.money.clean, playerData.money.dirty,
                         {
                             x = playerData.position.x,
                             y = playerData.position.y,
                             z = playerData.position.z
                         },
-                        playerData.items, playerData.ammo }, "id = ?", { playerData.id })
+                        playerData.items, playerData.ammo, playerData.skin }, "id = ?", { playerData.id })
             end
             for weaponId, weaponData in pairs(Spectrum.weapons) do
                 exports["pgcfx"]:update("weapons", { "attachments" }, { weaponData.attachments }, "id = ?", { weaponId })
@@ -124,7 +126,8 @@ AddEventHandler("playerJoining", function()
                 staff = user.staff,
                 items = user.inventory,
                 ammo = user.ammo,
-                weapons = weapons
+                weapons = weapons,
+                skin = user.skin
             }
 
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
@@ -146,11 +149,20 @@ AddEventHandler("playerDropped", function(reason)
         if DoesEntityExist(GetPlayerPed(source)) then
             Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
         end
-        exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo" },
+        exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
             { Spectrum.players[source].money.clean, Spectrum.players[source].money.dirty, {
                 x = Spectrum.players[source].position.x,
                 y = Spectrum.players[source].position.y,
                 z = Spectrum.players[source].position.z
-            }, Spectrum.players[source].items, Spectrum.players[source].ammo }, "id = ?", { Spectrum.players[source].id })
+            }, Spectrum.players[source].items, Spectrum.players[source].ammo, Spectrum.players[source].skin }, "id = ?",
+            { Spectrum.players[source].id })
+    end
+end)
+
+RegisterNetEvent("Spectrum:Skin", function(skin)
+    local source = tostring(source)
+
+    if Spectrum.players[source] then
+        Spectrum.players[source].skin = skin
     end
 end)
