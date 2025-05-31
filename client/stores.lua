@@ -8,6 +8,12 @@ for _, storeData in pairs(Spectrum.stores) do
             goto continue
         end
         local blip = AddBlipForCoord(location)
+        if storeData.blip.sprite then
+            SetBlipSprite(blip, storeData.blip.sprite)
+        end
+        if storeData.blip.colour then
+            SetBlipColour(blip, storeData.blip.colour)
+        end
         SetBlipAsShortRange(blip, true)
         BeginTextCommandSetBlipName("STRING")
         AddTextComponentSubstringPlayerName(storeData.name)

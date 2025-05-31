@@ -89,8 +89,7 @@ Spectrum = {
                 }
             },
             blip = {
-                sprite = -1,
-                colour = -1
+                sprite = 52
             },
             -- A Menu is:
             -- title: String
