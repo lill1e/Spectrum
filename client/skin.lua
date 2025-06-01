@@ -221,9 +221,11 @@ function ApplySkin()
     SetPedComponentVariation(PlayerPedId(), 2,
         Spectrum.PlayerData.skin.Components[tostring(2)]
         [1] - 1, 0, 0)
-    for _, prop in pairs(Config.Skin.Props) do
-        SetPedPropIndex(PlayerPedId(), prop, Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2,
-            Spectrum.PlayerData.skin.Props[tostring(prop)][2] - 1, true)
+    for k, prop in pairs(Config.Skin.Props) do
+        if Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2 ~= -1 then
+            SetPedPropIndex(PlayerPedId(), prop, Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2,
+                Spectrum.PlayerData.skin.Props[tostring(prop)][2], true)
+        end
     end
     for k, v in pairs(Config.Skin.Overlays) do
         SetPedHeadOverlay(PlayerPedId(), v.overlay, Spectrum.PlayerData.skin.Overlays[k].overlay,
