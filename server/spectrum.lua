@@ -167,6 +167,48 @@ Spectrum = {
                 title = "Backdoor",
                 description = "~r~keep your mouth shut"
             }
+        },
+        generalPurpose = {
+            colour = "~y~",
+            name = "Mega Mall",
+            range = 2,
+            blip = {
+                sprite = 52
+            },
+            locations = {
+                vector3(46.79566, -1749.575, 29.6328)
+            },
+            items = {
+                blueprint = {
+                    cost = 0,
+                    type = 1,
+                    clean = true
+                }
+            },
+            menu = {
+                title = "Mega Mall",
+                description = "~y~General Purpose Goods"
+            }
+        },
+        ltdGasoline = {
+            colour = "~b~",
+            name = "LTD Gasoline",
+            range = 3,
+            blip = {
+                sprite = 52
+            },
+            locations = {
+                vector3(-48.44455, -1757.967, 29.42103),
+                vector3(-707.4072, -914.3958, 19.21557),
+                vector3(1163.626, -323.8998, 69.20499),
+                vector3(1698.122, 4924.427, 42.06372)
+            },
+            items = {},
+            menu = {
+                title = "",
+                description = "unLTD great prices!",
+                banner = "shopui_title_gasstation"
+            }
         }
     }
 }
