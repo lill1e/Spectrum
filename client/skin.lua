@@ -232,6 +232,9 @@ function ApplySkin()
             v.opacity and
             ((k ~= "FacialHair" or Spectrum.PlayerData.skin.Sex == 1) and Spectrum.PlayerData.skin.Overlays[k].opacity or 0) or
             1)
+        if k == "Blush" then
+            SetPedHeadOverlayColor(PlayerPedId(), v.overlay, 2, 0, 0)
+        end
         if v.colour then
             SetPedHeadOverlayColor(PlayerPedId(), v.overlay, 1, Spectrum.PlayerData.skin.Overlays[k].colour[1],
                 Spectrum.PlayerData.skin.Overlays[k].colour[2])
@@ -396,6 +399,9 @@ function RageUI.PoolMenus:Skin()
                                 SetPedHeadOverlay(PlayerPedId(), Config.Skin.Overlays[v.name].overlay,
                                     Spectrum.PlayerData.skin.Overlays[v.name].overlay,
                                     Spectrum.PlayerData.skin.Overlays[v.name].opacity)
+                                if v.name == "Blush" then
+                                    SetPedHeadOverlayColor(PlayerPedId(), Config.Skin.Overlays[v.name].overlay, 2, 0, 0)
+                                end
                             end
                         end)
                 else
@@ -443,6 +449,9 @@ function RageUI.PoolMenus:Skin()
                                 SetPedHeadOverlay(PlayerPedId(), Config.Skin.Overlays[v.name].overlay,
                                     Spectrum.PlayerData.skin.Overlays[v.name].overlay,
                                     Spectrum.PlayerData.skin.Overlays[v.name].opacity)
+                                if v.name == "Blush" then
+                                    SetPedHeadOverlayColor(PlayerPedId(), Config.Skin.Overlays[v.name].overlay, 2, 0, 0)
+                                end
                             end
                         end, i)
                 end
