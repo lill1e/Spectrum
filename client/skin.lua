@@ -230,8 +230,9 @@ function ApplySkin()
     for k, v in pairs(Config.Skin.Overlays) do
         SetPedHeadOverlay(PlayerPedId(), v.overlay, Spectrum.PlayerData.skin.Overlays[k].overlay,
             v.opacity and
-            ((k ~= "FacialHair" or Spectrum.PlayerData.skin.Sex == 1) and Spectrum.PlayerData.skin.Overlays[k].opacity or 0) or
-            1)
+            ((k ~= "FacialHair" or Spectrum.PlayerData.skin.Sex == 1) and Spectrum.PlayerData.skin.Overlays[k].opacity or 0) *
+            10 / 10 or
+            1.0)
         if k == "Blush" then
             SetPedHeadOverlayColor(PlayerPedId(), v.overlay, 2, 0, 0)
         end
