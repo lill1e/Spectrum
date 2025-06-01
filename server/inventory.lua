@@ -40,9 +40,14 @@ RegisterNetEvent("Spectrum:Ammo", function(type, quantity)
 end)
 
 function AddItem(source, item, quantity)
-    Spectrum.players[source].items[item] = Spectrum.players[source].items[item] and
-        Spectrum.players[source].items[item] + quantity or quantity
-    TriggerClientEvent("Spectrum:Inventory", source, item, quantity, 1, 1)
+    if HasItemSpace(source, item, quantity) then
+        Spectrum.players[source].items[item] = Spectrum.players[source].items[item] and
+            Spectrum.players[source].items[item] + quantity or quantity
+        TriggerClientEvent("Spectrum:Inventory", source, item, quantity, 1, 1)
+    else
+        TriggerClientEvent("Spectrum:Notification", source,
+            "You are unable to hold an additional ~y~x" .. quantity .. "~s~ " .. Spectrum.items[item].displayName)
+    end
 end
 
 function RemoveItem(source, item, quantity)
@@ -57,9 +62,18 @@ function HasItemThreshold(source, item, quantity)
     return Spectrum.players[source].items[item] and Spectrum.players[source].items[item] >= quantity
 end
 
+function HasItemSpace(source, item, quantity)
+    return Spectrum.items[item].max - (Spectrum.players[source].items[item] or 0) >= quantity
+end
+
 function SwapItem(source, itemOne, quantityOne, itemTwo, quantityTwo)
-    RemoveItem(source, itemOne, quantityOne)
-    AddItem(source, itemTwo, quantityTwo)
+    if HasItemSpace(source, itemTwo, quantityTwo) then
+        RemoveItem(source, itemOne, quantityOne)
+        AddItem(source, itemTwo, quantityTwo)
+    else
+        TriggerClientEvent("Spectrum:Notification", source,
+            "You are unable to hold an additional ~y~x" .. quantityTwo .. "~s~ " .. Spectrum.items[itemTwo].displayName)
+    end
 end
 
 function AddWeapon(source, id)
