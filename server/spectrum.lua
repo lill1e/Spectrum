@@ -32,7 +32,7 @@ Spectrum = {
             removeOnUse = false,
             swapOnUse = {
                 item = "coin",
-                quantity = 5
+                quantity = 1
             },
             handler = false,
             max = 10
