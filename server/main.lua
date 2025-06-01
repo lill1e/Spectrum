@@ -47,6 +47,16 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:Items", playerId, Spectrum.items)
         TriggerClientEvent("Spectrum:Jobs", playerId, Spectrum.jobs)
         TriggerClientEvent("Spectrum:Stores", playerId, Spectrum.stores)
+        local players = {}
+        for k, v in pairs(Spectrum.players) do
+            players[k] = {
+                id = v.id,
+                position = v.position,
+                attributes = v.attributes,
+                name = v.name
+            }
+        end
+        TriggerClientEvent("Spectrum:Players", playerId, players)
     end
     Spectrum.loaded = true
 
@@ -153,6 +163,16 @@ AddEventHandler("playerJoining", function()
             TriggerClientEvent("Spectrum:Items", source, Spectrum.items)
             TriggerClientEvent("Spectrum:Jobs", source, Spectrum.jobs)
             TriggerClientEvent("Spectrum:Stores", source, Spectrum.stores)
+            local players = {}
+            for k, v in pairs(Spectrum.players) do
+                players[k] = {
+                    id = v.id,
+                    position = v.position,
+                    attributes = v.attributes,
+                    name = v.name
+                }
+            end
+            TriggerClientEvent("Spectrum:Players", source, players)
         else
             DropPlayer(source, "There was an error fetching your data, please reconnect and try again")
         end
