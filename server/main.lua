@@ -38,7 +38,8 @@ exports["pgcfx"]:ready(function()
             ammo = user.ammo,
             weapons = weapons,
             identifiers = GetAllIdentifiers(tostring(playerId)),
-            skin = user.skin
+            skin = user.skin,
+            name = GetPlayerName(playerId)
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
@@ -144,7 +145,8 @@ AddEventHandler("playerJoining", function()
                 ammo = user.ammo,
                 weapons = weapons,
                 identifiers = GetAllIdentifiers(source),
-                skin = user.skin
+                skin = user.skin,
+                name = GetPlayerName(source)
             }
 
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
