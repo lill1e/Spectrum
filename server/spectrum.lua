@@ -72,12 +72,18 @@ Spectrum = {
         ["doa"] = {}
     },
     stores = {
-        simple = {
+        twentyfourseven = {
             colour = "~g~",
             name = "24/7",
             range = 3,
             locations = {
-                vector3(25.68324, -1347.402, 29.49702)
+                vector3(25.68324, -1347.402, 29.49702),
+                vector3(373.8286, 326.4115, 103.5663),
+                vector3(2556.944, 382.0442, 108.6228),
+                vector3(2678.343, 3280.672, 55.24107),
+                vector3(1960.985, 3740.966, 32.3437),
+                vector3(547.8699, 2670.646, 42.15659),
+                vector3(1729.107, 6414.98, 35.03717)
             },
             items = {
                 coin = {
@@ -151,7 +157,7 @@ Spectrum = {
                 vector3(-256.1212, -1542.451, 31.9281)
             },
             items = {
-                blueprint = {
+                med_kit = {
                     cost = 0,
                     type = 1,
                     clean = false
