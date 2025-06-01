@@ -9,3 +9,13 @@ function Notification(text)
     AddTextComponentString(text)
     DrawNotification(false, false)
 end
+
+function Input(text)
+    AddTextEntry("input", text)
+    DisplayOnscreenKeyboard(1, "input", "", "", "", "", "", 128)
+    while UpdateOnscreenKeyboard() == 0 do Wait(0) end
+
+    local input = UpdateOnscreenKeyboard()
+
+    return GetOnscreenKeyboardResult()
+end
