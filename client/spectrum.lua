@@ -38,6 +38,7 @@ Spectrum = {
     items = {},
     jobs = {},
     stores = {},
+    players = {},
     currentStore = {
         current = nil,
         currentLoc = nil
