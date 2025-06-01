@@ -22,6 +22,10 @@ RegisterNetEvent("Spectrum:Stores", function(stores)
     Spectrum.stores = stores
 end)
 
+RegisterNetEvent("Spectrum:Players", function(players)
+    Spectrum.players = players
+end)
+
 Citizen.CreateThread(function()
     while true do
         Wait(0)
