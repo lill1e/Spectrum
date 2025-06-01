@@ -38,6 +38,9 @@ Citizen.CreateThread(function()
                             Spectrum.currentStore.currentLoc = location
                             storeMenu:SetTitle(storeData.menu.title)
                             storeMenu:SetSubtitle(storeData.menu.description)
+                            if storeData.menu.banner then
+                                storeMenu:SetBanner(storeData.menu.banner)
+                            end
                             RageUI.Visible(storeMenu, true)
                         end
                     elseif IsControlJustPressed(0, 51) then
