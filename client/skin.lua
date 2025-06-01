@@ -585,7 +585,7 @@ end)
 RegisterKeyMapping("+skin", "Skin Menu", "keyboard", "f7")
 RegisterCommand("+skin", function()
     if Spectrum.Loaded and (Spectrum.PlayerData.staff > 0 or Spectrum.debug or Spectrum.skin.IsEditing) then
-        RageUI.Visible(SkinMenu, not RageUI.Visible(SkinMenu))
+        Spectrum.skin.IsEditing = true
     end
 end, false)
 RegisterCommand("-skin", function() end, false)
