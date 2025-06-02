@@ -16,6 +16,13 @@ for _, garage in pairs(Config.Garage.Garages) do
     ::continue::
 end
 
+RegisterNetEvent("Spectrum:Garage:Reset", function(plate)
+    if Spectrum.vehicles[plate] then
+        Spectrum.vehicles[plate].active = false
+        Spectrum.vehicles[plate].garage = nil
+    end
+end)
+
 local garageMenu = RageUI.CreateMenu("Garage", "vroom")
 
 function RageUI.PoolMenus:Garage()

@@ -48,3 +48,25 @@ Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, gar
         { plate, Spectrum.players[source].id })
     return query > 0
 end
+
+Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
+    if Spectrum.players[source].staff >= 0 then
+        local query = exports["pgcfx"]:update("vehicles", { "active" }, { "false" }, "id = ?",
+            { plate })
+        if query > 0 then
+            local identifierQuery = exports["pgcfx"]:selectOne("vehicles", { "owner" }, "id = ?", { plate })
+            local identifier = identifierQuery.owner
+            for target, player in pairs(Spectrum.players) do
+                if player.id == identifier then
+                    TriggerClientEvent("Spectrum:Garage:Reset", target, plate)
+                end
+            end
+            return true
+        else
+            return false
+        end
+    else
+        return 0
+        -- TODO: add logging
+    end
+end

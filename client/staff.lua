@@ -1,5 +1,6 @@
 local staffMenu = RageUI.CreateMenu("kitty", "OwO")
 local inventoryStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Inventory")
+local vehiclesStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Vehicles")
 local playersStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Players")
 local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "kitty", "Players")
 local detailsMenu = RageUI.CreateSubMenu(staffMenu)
@@ -55,6 +56,9 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Inventory", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
 
         end, inventoryStaffMenu)
+        Items:AddButton("Vehicles", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
+
+        end, vehiclesStaffMenu)
         Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
             if onSelected then
                 Spectrum.skin.IsEditing = true
@@ -113,6 +117,26 @@ function RageUI.PoolMenus:Staff()
             end
         end)
         Items:AddSeparator("")
+    end, function()
+
+    end)
+
+    vehiclesStaffMenu:IsVisible(function(Items)
+        Items:AddButton("Restore Vehicle", "this vehicle should not be present", { RightBadge = RageUI.BadgeStyle.Car },
+            function(onSelected)
+                if onSelected then
+                    local plate = Input("Vehicle License Plate:")
+                    if plate then
+                        Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
+                            if verified then
+                                Notification("~b~" .. plate .. " ~s~was sent back to the most recent garage")
+                            else
+                                Notification("Please provide a valid ~b~License Plate")
+                            end
+                        end, plate)
+                    end
+                end
+            end)
     end, function()
 
     end)
