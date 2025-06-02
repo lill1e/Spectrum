@@ -40,6 +40,8 @@ Citizen.CreateThread(function()
                             storeMenu:SetSubtitle(storeData.menu.description)
                             if storeData.menu.banner then
                                 storeMenu:SetBanner(storeData.menu.banner)
+                            else
+                                storeMenu:ResetBanner()
                             end
                             RageUI.Visible(storeMenu, true)
                         end
