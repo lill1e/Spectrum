@@ -32,3 +32,19 @@ Spectrum.libs.callbackFunctions.verifyToken = function(source, token)
     end
     return isMatch
 end
+
+Spectrum.libs.callbackFunctions.verifyVehicle = function(source, vehicle, plate)
+    local vehicleQuery = exports["pgcfx"]:selectOne("vehicles", {},
+        "id = ? AND vehicle = ? AND owner = ? AND active = false",
+        { plate, vehicle, Spectrum.players[source].id })
+    if vehicleQuery then
+        exports["pgcfx"]:update("vehicles", { "active" }, { "true" }, "id = ?", { plate })
+    end
+    return vehicleQuery ~= nil
+end
+
+Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, garage)
+    local query = exports["pgcfx"]:update("vehicles", { "active", "garage" }, { "false", garage }, "id = ? AND owner = ?",
+        { plate, Spectrum.players[source].id })
+    return query > 0
+end

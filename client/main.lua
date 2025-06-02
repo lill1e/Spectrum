@@ -26,6 +26,11 @@ RegisterNetEvent("Spectrum:Players", function(players)
     Spectrum.players = players
 end)
 
+RegisterNetEvent("Spectrum:Vehicles", function(vehicles, vehicleCount)
+    Spectrum.vehicles = vehicles
+    Spectrum.vehicleCount = vehicleCount
+end)
+
 Citizen.CreateThread(function()
     while true do
         Wait(0)

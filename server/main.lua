@@ -14,6 +14,17 @@ exports["pgcfx"]:ready(function()
             { identifier }, { ["GROUP BY"] = "users.id", JOIN = "LEFT" },
             "weapons ON weapons.owner = users.id")
 
+        local vehicles = exports["pgcfx"]:select("vehicles", {}, "owner = ?", { identifier })
+        local vehiclesTbl = {}
+        for _, vehicle in ipairs(vehicles) do
+            vehiclesTbl[vehicle.id] = {
+                vehicle = vehicle.vehicle,
+                data = vehicle.data,
+                garage = vehicle.garage,
+                active = vehicle.active
+            }
+        end
+
         local weapons = {}
         for strIndex, weapon in pairs(user.weapons) do
             weapons[tonumber(strIndex)] = weapon
@@ -47,6 +58,7 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:Items", playerId, Spectrum.items)
         TriggerClientEvent("Spectrum:Jobs", playerId, Spectrum.jobs)
         TriggerClientEvent("Spectrum:Stores", playerId, Spectrum.stores)
+        TriggerClientEvent("Spectrum:Vehicles", playerId, vehiclesTbl, #vehicles)
         local players = {}
         for k, v in pairs(Spectrum.players) do
             players[k] = {
@@ -130,6 +142,17 @@ AddEventHandler("playerJoining", function()
             { steamHex }, { ["GROUP BY"] = "users.id", JOIN = "LEFT" },
             "weapons ON weapons.owner = users.id")
 
+        local vehicles = exports["pgcfx"]:select("vehicles", {}, "owner = ?", { steamHex })
+        local vehiclesTbl = {}
+        for _, vehicle in ipairs(vehicles) do
+            vehiclesTbl[vehicle.id] = {
+                vehicle = vehicle.vehicle,
+                data = vehicle.data,
+                garage = vehicle.garage,
+                active = vehicle.active
+            }
+        end
+
         local weapons = {}
         for strIndex, weapon in pairs(user.weapons) do
             weapons[tonumber(strIndex)] = weapon
@@ -163,6 +186,7 @@ AddEventHandler("playerJoining", function()
             TriggerClientEvent("Spectrum:Items", source, Spectrum.items)
             TriggerClientEvent("Spectrum:Jobs", source, Spectrum.jobs)
             TriggerClientEvent("Spectrum:Stores", source, Spectrum.stores)
+            TriggerClientEvent("Spectrum:Vehicles", source, vehiclesTbl, #vehicles)
             local players = {}
             for k, v in pairs(Spectrum.players) do
                 players[k] = {

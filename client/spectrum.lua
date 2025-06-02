@@ -35,10 +35,15 @@ Spectrum = {
     CanRespawn = false,
     CanRevive = false,
     InventoryLock = false,
+    Garage = {
+        current = nil
+    },
     items = {},
     jobs = {},
     stores = {},
     players = {},
+    vehicles = {},
+    vehicleCount = 0,
     currentStore = {
         current = nil,
         currentLoc = nil
