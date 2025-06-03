@@ -24,11 +24,13 @@ end
 local nTbl = {}
 local noneTbl = {}
 
-function nTable(n, none)
+function nTable(n, none, filter)
     if nTbl[n] then return (none and noneTbl[n] or nTbl[n]) end
     local t = (none and { "None" } or {})
     for i = 0, n - 1 do
-        table.insert(t, i)
+        if not filter or not IsPedComponentVariationGen9Exclusive(PlayerPedId(), filter, i) then
+            table.insert(t, i)
+        end
     end
     nTbl[n] = t
     return t
@@ -180,7 +182,7 @@ function RandomizeSkin()
     end
     for n, component in pairs(Config.Skin.Components) do
         Spectrum.PlayerData.skin.Components[tostring(component)] = {
-            GetPedDrawableVariation(PlayerPedId(), component) + 2,
+            GetPedDrawableVariation(PlayerPedId(), component),
             GetPedTextureVariation(PlayerPedId(), component) + 1
         }
     end
@@ -214,9 +216,11 @@ function ApplySkin()
         end
     end
     for n, component in pairs(Config.Skin.Components) do
-        SetPedComponentVariation(PlayerPedId(), component,
-            Spectrum.PlayerData.skin.Components[tostring(component)][1] - 2,
-            Spectrum.PlayerData.skin.Components[tostring(component)][2] - 1, 0)
+        if Spectrum.PlayerData.skin.Components[tostring(component)] then
+            SetPedComponentVariation(PlayerPedId(), component,
+                Spectrum.PlayerData.skin.Components[tostring(component)][1],
+                Spectrum.PlayerData.skin.Components[tostring(component)][2] - 1, 0)
+        end
     end
     SetPedComponentVariation(PlayerPedId(), 2,
         Spectrum.PlayerData.skin.Components[tostring(2)]
@@ -488,14 +492,31 @@ function RageUI.PoolMenus:Skin()
     apparelMenu:IsVisible(function(Items)
         for _, value in ipairs(Config.Skin.Menu.Apparel) do
             if value.type == "Component" then
+                local tbl = nTable(GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), true, value.name)
+                local revMap = {}
+                for i, v in ipairs(tbl) do
+                    if v ~= "None" then
+                        revMap[v] = i
+                    end
+                end
                 Items:AddList(value.displayName,
-                    nTable(GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), true),
-                    GetPedDrawableVariation(PlayerPedId(), value.name) + 2,
+                    tbl,
+                    GetPedDrawableVariation(PlayerPedId(), value.name) == -1 and 1 or
+                    revMap[GetPedDrawableVariation(PlayerPedId(), value.name)],
                     "Total: " .. GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), {},
                     function(Index, onSelected, onListChange)
+                        if onSelected then
+                            local input = Input("Variation:")
+                            if input and tonumber(input) and not IsPedComponentVariationGen9Exclusive(PlayerPedId(), value.name, tonumber(input)) then
+                                Spectrum.PlayerData.skin.Components[tostring(value.name)] = { tonumber(input), 1 }
+                                SetPedComponentVariation(PlayerPedId(), value.name, tonumber(input), 0, 0)
+                            end
+                        end
                         if onListChange then
-                            Spectrum.PlayerData.skin.Components[tostring(value.name)] = { Index, 1 }
-                            SetPedComponentVariation(PlayerPedId(), value.name, Index - 2, 0, 0)
+                            Spectrum.PlayerData.skin.Components[tostring(value.name)] = { tbl[Index], 1 }
+                            SetPedComponentVariation(PlayerPedId(), value.name, tbl[Index] == "None" and -1 or tbl
+                                [Index],
+                                0, 0)
                         end
                     end)
                 if GetNumberOfPedTextureVariations(PlayerPedId(), value.name, GetPedDrawableVariation(PlayerPedId(), value.name)) > 1 then
