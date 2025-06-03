@@ -19,3 +19,24 @@ function Input(text)
 
     return GetOnscreenKeyboardResult()
 end
+
+function GetClosest(pool)
+    if pool == "CVehicle" and IsPedInAnyVehicle(PlayerPedId(), true) then
+        return GetVehiclePedIsIn(PlayerPedId(), false)
+    end
+    local entPool = GetGamePool(pool)
+    local selfCoords = GetEntityCoords(PlayerPedId())
+    local minDist = nil
+    local minHandle = nil
+    for _, handle in ipairs(entPool) do
+        local entCoords = GetEntityCoords(handle)
+        local d = #(selfCoords - entCoords)
+        if minDist == nil or d < minDist then
+            minDist = d
+            minHandle = handle
+        end
+    end
+    if minHandle and minDist <= 3 then
+        return minHandle
+    end
+end
