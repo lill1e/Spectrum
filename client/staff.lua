@@ -8,6 +8,12 @@ local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "agony", "Players
 local detailsMenu = RageUI.CreateSubMenu(staffMenu)
 local detail = nil
 
+local currentGarage = 1
+local garageTbl = {}
+for garage, _ in pairs(Config.Garage.Garages) do
+    table.insert(garageTbl, garage)
+end
+
 RegisterKeyMapping("+staff", "Staff Menu", "keyboard", "f5")
 RegisterCommand("+staff", function()
     if Spectrum.Loaded and (Spectrum.PlayerData.staff > 0 or Spectrum.debug) then
@@ -41,6 +47,16 @@ function RageUI.PoolMenus:Staff()
     end)
 
     selfStaffMenu:IsVisible(function(Items)
+        Items:AddList("Teleport (Garage)", garageTbl, currentGarage, "ez", {}, function(Index, onSelected, onListChange)
+            if onSelected then
+                SetEntityCoordsNoOffset(PlayerPedId(), Config.Garage.Garages[garageTbl[currentGarage]].position, false,
+                    false, true)
+            end
+            if onListChange then
+                currentGarage = Index
+            end
+        end)
+
         Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
             if onSelected then
                 Spectrum.CanRespawn = true
