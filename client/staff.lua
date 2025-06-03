@@ -18,8 +18,11 @@ RegisterCommand("-staff", function() end, false)
 
 function RageUI.PoolMenus:Staff()
     staffMenu:IsVisible(function(Items)
-        Items:AddButton("Players", "who?", { RightLabel = "→→→" }, function(onSelected)
-
+        Items:AddButton("Players (Connected)", "who?", { RightLabel = "→→→" }, function(onSelected)
+            Spectrum.StaffMenu.playerType = 1
+        end, playersStaffMenu)
+        Items:AddButton("Players (Disconnected)", "f8?", { RightLabel = "→→→" }, function(onSelected)
+            Spectrum.StaffMenu.playerType = 2
         end, playersStaffMenu)
         Items:AddButton("Self", "me <3", { RightLabel = "→→→" }, function(onSelected)
 
@@ -91,13 +94,33 @@ function RageUI.PoolMenus:Staff()
     end)
 
     playersStaffMenu:IsVisible(function(Items)
-        for id, playerData in pairs(Spectrum.players) do
-            Items:AddButton("[" .. id .. "] " .. playerData.name, playerData.id, {}, function(onSelected)
-                if onSelected then
-                    playerStaffMenu:SetTitle(playerData.name)
-                    playerStaffMenu:SetSubtitle("ID: " .. id)
+        Items:AddButton("Search", "Inspector Gadget", {}, function(onSelected)
+            if onSelected then
+                local input = Input("ID:")
+                if input and tonumber(input) then
+                    local playerData = Spectrum.players[input]
+                    if playerData then
+                        Spectrum.StaffMenu.target = input
+                        playerStaffMenu:SetTitle(playerData.name)
+                        playerStaffMenu:SetSubtitle("ID: " .. input)
+                        RageUI.Visible(playerStaffMenu, true)
+                    else
+                        Notification("Please enter a valid ~b~ID")
+                    end
                 end
-            end, playerStaffMenu)
+            end
+        end)
+        Items:AddSeparator("")
+        for id, playerData in pairs(Spectrum.players) do
+            if (Spectrum.StaffMenu.playerType == 1 and playerData.active) or (Spectrum.StaffMenu.playerType == 2 and not playerData.active) then
+                Items:AddButton("[" .. id .. "] " .. playerData.name, playerData.id, {}, function(onSelected)
+                    if onSelected then
+                        Spectrum.StaffMenu.target = id
+                        playerStaffMenu:SetTitle(playerData.name)
+                        playerStaffMenu:SetSubtitle("ID: " .. id)
+                    end
+                end, playerStaffMenu)
+            end
         end
     end, function()
 
