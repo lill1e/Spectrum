@@ -28,3 +28,15 @@ RegisterNetEvent("Spectrum:Staff:DeleteVehicle", function()
         -- TODO: add logging
     end
 end)
+
+RegisterCommand("dv", function(source)
+    source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        local v = GetClosestVehicle(source)
+        if v then
+            DeleteEntity(v)
+        end
+    else
+        -- TODO: add logging
+    end
+end, false)
