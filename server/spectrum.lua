@@ -1,5 +1,5 @@
 Spectrum = {
-    debug = true,
+    debug = false,
     loaded = false,
     players = {},
     tokens = {},
