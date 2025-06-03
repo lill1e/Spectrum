@@ -42,6 +42,15 @@ RegisterNetEvent("Spectrum:Broadcast", function(t, token)
         end
     end, token)
 end)
+
+RegisterNetEvent("Spectrum:Player:Join", function(id, data)
+    Spectrum.players[id] = data
+end)
+
+RegisterNetEvent("Spectrum:Player:Drop", function(id)
+    Spectrum.players[id].active = false
+end)
+
 RegisterNetEvent("Spectrum:Warp", function(token, coords)
     Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
         if verified then

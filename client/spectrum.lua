@@ -38,6 +38,10 @@ Spectrum = {
     Garage = {
         current = nil
     },
+    StaffMenu = {
+        target = nil,
+        playerType = 1
+    },
     items = {},
     jobs = {},
     stores = {},

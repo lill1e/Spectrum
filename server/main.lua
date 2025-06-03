@@ -50,7 +50,8 @@ exports["pgcfx"]:ready(function()
             weapons = weapons,
             identifiers = GetAllIdentifiers(tostring(playerId)),
             skin = user.skin,
-            name = GetPlayerName(playerId)
+            name = GetPlayerName(playerId),
+            active = true
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
@@ -59,17 +60,18 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:Jobs", playerId, Spectrum.jobs)
         TriggerClientEvent("Spectrum:Stores", playerId, Spectrum.stores)
         TriggerClientEvent("Spectrum:Vehicles", playerId, vehiclesTbl, #vehicles)
-        local players = {}
-        for k, v in pairs(Spectrum.players) do
-            players[k] = {
-                id = v.id,
-                position = v.position,
-                attributes = v.attributes,
-                name = v.name
-            }
-        end
-        TriggerClientEvent("Spectrum:Players", playerId, players)
     end
+    local players = {}
+    for k, v in pairs(Spectrum.players) do
+        players[k] = {
+            id = v.id,
+            position = v.position,
+            attributes = v.attributes,
+            name = v.name,
+            active = v.active
+        }
+    end
+    TriggerClientEvent("Spectrum:Players", -1, players)
     Spectrum.loaded = true
 
     Citizen.CreateThread(function()
@@ -179,7 +181,8 @@ AddEventHandler("playerJoining", function()
                 weapons = weapons,
                 identifiers = GetAllIdentifiers(source),
                 skin = user.skin,
-                name = GetPlayerName(source)
+                name = GetPlayerName(source),
+                active = true
             }
 
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
@@ -193,8 +196,20 @@ AddEventHandler("playerJoining", function()
                     id = v.id,
                     position = v.position,
                     attributes = v.attributes,
-                    name = v.name
+                    name = v.name,
+                    active = v.active
                 }
+            end
+            for _, v in ipairs(GetPlayers()) do
+                if v ~= source then
+                    TriggerClientEvent("Spectrum:Player:Join", v, source, {
+                        id = Spectrum.players[source].id,
+                        position = Spectrum.players[source].position,
+                        attributes = Spectrum.players[source].attributes,
+                        name = Spectrum.players[source].name,
+                        active = Spectrum.players[source].active
+                    })
+                end
             end
             TriggerClientEvent("Spectrum:Players", source, players)
         else
@@ -212,6 +227,8 @@ AddEventHandler("playerDropped", function(reason)
         if DoesEntityExist(GetPlayerPed(source)) then
             Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
         end
+        Spectrum.players[source].active = false
+        TriggerClientEvent("Spectrum:Player:Drop", -1, source)
         exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
             { Spectrum.players[source].money.clean, Spectrum.players[source].money.dirty, {
                 x = Spectrum.players[source].position.x,
