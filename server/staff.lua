@@ -1,6 +1,6 @@
 RegisterNetEvent("Spectrum:Staff:Add", function(type, item, count)
     local source = tostring(source)
-    if Spectrum.players[source].staff >= 0 then
+    if Spectrum.players[source].staff > 0 then
         if type == "clean_cash" then
             AddCash(source, true, count)
         elseif type == "dirty_cash" then

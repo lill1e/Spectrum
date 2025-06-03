@@ -50,7 +50,7 @@ Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, gar
 end
 
 Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
-    if Spectrum.players[source].staff >= 0 then
+    if Spectrum.players[source].staff > 0 then
         local query = exports["pgcfx"]:update("vehicles", { "active" }, { "false" }, "id = ?",
             { plate })
         if query > 0 then
