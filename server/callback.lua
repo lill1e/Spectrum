@@ -54,6 +54,12 @@ Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
         local query = exports["pgcfx"]:update("vehicles", { "active" }, { "false" }, "id = ?",
             { plate })
         if query > 0 then
+            local paddedPlate = PadPlate(plate)
+            for _, entity in ipairs(GetAllVehicles()) do
+                if GetEntityType(entity) == 2 and GetVehicleNumberPlateText(entity) == paddedPlate then
+                    DeleteEntity(entity)
+                end
+            end
             local identifierQuery = exports["pgcfx"]:selectOne("vehicles", { "owner" }, "id = ?", { plate })
             local identifier = identifierQuery.owner
             for target, player in pairs(Spectrum.players) do
