@@ -127,7 +127,16 @@ function RageUI.PoolMenus:Staff()
     end)
 
     playerStaffMenu:IsVisible(function(Items)
-
+        Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
+            if onSelected then
+                TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)
+            end
+        end)
+        Items:AddButton("Revive", "Heroes never die!", {}, function(onSelected)
+            if onSelected then
+                TriggerServerEvent("Spectrum:Staff:Revive", Spectrum.StaffMenu.target)
+            end
+        end)
     end, function(Panels)
 
     end)

@@ -31,6 +31,17 @@ RegisterNetEvent("Spectrum:Vehicles", function(vehicles, vehicleCount)
     Spectrum.vehicleCount = vehicleCount
 end)
 
+RegisterNetEvent("Spectrum:Broadcast", function(t, token)
+    Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
+        if verified then
+            if t == 0 then
+                ApplyDamageToPed(PlayerPedId(), 200, false)
+            elseif t == 1 then
+                Spectrum.CanRevive = true
+            end
+        end
+    end, token)
+end)
 Citizen.CreateThread(function()
     while true do
         Wait(0)

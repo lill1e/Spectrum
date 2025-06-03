@@ -35,6 +35,32 @@ RegisterNetEvent("Spectrum:Staff:Remove", function(type, item, count)
         -- TODO: add logging
     end
 end)
+
+RegisterNetEvent("Spectrum:Staff:Smite", function(target)
+    local source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        if Spectrum.players[target] then
+            TriggerClientEvent("Spectrum:Broadcast", target, 0, Spectrum.libs.Tokens.CreateToken(source))
+        else
+            Notification(source, "Please revive a valid ~b~player")
+        end
+    else
+        -- TODO: add logging
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:Revive", function(target)
+    local source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        if Spectrum.players[target] then
+            TriggerClientEvent("Spectrum:Broadcast", target, 1, Spectrum.libs.Tokens.CreateToken(source))
+        else
+            Notification(source, "Please revive a valid ~b~player")
+        end
+    else
+        -- TODO: add logging
+    end
+end)
 RegisterNetEvent("Spectrum:Staff:DeleteVehicle", function()
     local source = tostring(source)
     if Spectrum.players[source].staff > 0 then
