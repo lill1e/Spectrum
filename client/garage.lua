@@ -71,7 +71,8 @@ Citizen.CreateThread(function()
                 if IsPedInAnyVehicle(PlayerPedId(), false) and Spectrum.vehicles then
                     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
                     local plate = GetVehicleNumberPlateText(vehicle)
-                    if Spectrum.vehicles[plate] then
+                    local plateStripped = StripPlate(plate)
+                    if Spectrum.vehicles[plateStripped] then
                         HelpText("Press ~INPUT_CONTEXT~ to store your ~b~" ..
                             Config.Vehicles.Names[GetEntityModel(GetVehiclePedIsIn(PlayerPedId(), false))])
                         if IsControlJustPressed(0, 51) then
@@ -79,10 +80,10 @@ Citizen.CreateThread(function()
                                 if verified then
                                     TaskLeaveVehicle(PlayerPedId(), vehicle, 0)
                                     DeleteVehicle(vehicle)
-                                    Spectrum.vehicles[plate].active = false
-                                    Spectrum.vehicles[plate].garage = k
+                                    Spectrum.vehicles[plateStripped].active = false
+                                    Spectrum.vehicles[plateStripped].garage = k
                                 end
-                            end, plate, k)
+                            end, plateStripped, k)
                         end
                     else
                         HelpText("~r~You can only store owned vehicles in the garage")

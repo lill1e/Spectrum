@@ -19,3 +19,27 @@ function TableIndexOf(tbl, value)
     end
     return 0
 end
+
+function StripPlate(plate)
+    local s = ""
+    for c in plate:gmatch(".") do
+        if c ~= " " then
+            s = s .. c
+        end
+    end
+    return s
+end
+
+function PadPlate(plate)
+    local n = string.len(plate)
+    while n < 8 do
+        if 8 - n >= 2 then
+            plate = " " .. plate .. " "
+            n = n + 2
+        else
+            plate = " " .. plate
+            n = n + 1
+        end
+    end
+    return plate
+end

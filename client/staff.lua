@@ -147,7 +147,7 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Restore Vehicle", "this vehicle should not be present", { RightBadge = RageUI.BadgeStyle.Car },
             function(onSelected)
                 if onSelected then
-                    local plate = Input("Vehicle License Plate:")
+                    local plate = Input("Vehicle License Plate:"):upper()
                     if plate then
                         Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
                             if verified then
