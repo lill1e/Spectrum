@@ -1,0 +1,29 @@
+RegisterNetEvent("Spectrum:Garage:Grant", function(target, vehicle)
+    local source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        local plate = RandomPlate()
+        local query = exports["pgcfx"]:insert("vehicles", { "id", "owner", "vehicle" },
+            { plate, Spectrum.players[target].id, vehicle })
+        if query > 0 then
+            TriggerClientEvent("Spectrum:Vehicles:Add", target, vehicle, plate)
+        end
+    end
+end)
+
+RegisterNetEvent("Spectrum:Garage:Revoke", function(target, plate)
+    print(plate)
+    local source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        local query = exports["pgcfx"]:delete("vehicles", "id = ? AND owner = ?", { plate, Spectrum.players[target].id })
+        if query > 0 then
+            for _, entity in ipairs(GetAllVehicles()) do
+                if GetEntityType(entity) == 2 and GetVehicleNumberPlateText(entity) == plate then
+                    DeleteEntity(entity)
+                end
+            end
+            TriggerClientEvent("Spectrum:Vehicles:Remove", target, plate)
+        else
+            Notification(source, "~b~" .. plate .. " ~s~does not exist for the provided player")
+        end
+    end
+end)
