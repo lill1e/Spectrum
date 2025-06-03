@@ -272,7 +272,6 @@ function RageUI.PoolMenus:Skin()
         Items:AddButton("Apparel", "", { RightLabel = "→→→" }, function(onSelected) end, apparelMenu)
         Items:AddButton("~b~Save & Continue", nil, {}, function(onSelected)
             if onSelected then
-                print(json.encode(Spectrum.PlayerData.skin.Components[tostring(2)]))
                 TriggerServerEvent("Spectrum:Skin", Spectrum.PlayerData.skin)
                 Spectrum.skin.IsEditing = false
             end
@@ -589,7 +588,3 @@ RegisterCommand("+skin", function()
     end
 end, false)
 RegisterCommand("-skin", function() end, false)
-
-RegisterCommand("c", function()
-    print(json.encode(Spectrum.PlayerData.skin))
-end, false)
