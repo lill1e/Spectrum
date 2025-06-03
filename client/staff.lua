@@ -36,11 +36,6 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Vehicles", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
 
         end, vehiclesStaffMenu)
-        Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
-            if onSelected then
-                Spectrum.skin.IsEditing = true
-            end
-        end)
     end, function()
 
     end)
@@ -70,6 +65,11 @@ function RageUI.PoolMenus:Staff()
                 TaskWarpPedIntoVehicle(PlayerPedId(),
                     CreateVehicle(GetHashKey("bmx"), GetEntityCoords(PlayerPedId()), GetEntityHeading(PlayerPedId()),
                         true, false), -1)
+            end
+        end)
+        Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
+            if onSelected then
+                Spectrum.skin.IsEditing = true
             end
         end)
     end, function()
