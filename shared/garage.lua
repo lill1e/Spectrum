@@ -1,5 +1,9 @@
 Config.Garage = {
-    Garages = {
+    PlateChars = {
+        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W",
+        "X", "Y", "Z", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0"
+    },
+    Garages    = {
         Grove = {
             displayName = "Grove Street",
             position = vector3(-56.64264, -1838.96, 26.57038),

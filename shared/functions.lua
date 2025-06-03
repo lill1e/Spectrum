@@ -43,3 +43,11 @@ function PadPlate(plate)
     end
     return plate
 end
+
+function RandomPlate()
+    local plate = ""
+    for _ = 1, 8 do
+        plate = plate .. Config.Garage.PlateChars[math.random(#Config.Garage.PlateChars)]
+    end
+    return plate
+end

@@ -147,6 +147,24 @@ function RageUI.PoolMenus:Staff()
                 TriggerServerEvent("Spectrum:Staff:Teleport", 2, Spectrum.StaffMenu.target)
             end
         end)
+        Items:AddButton("Grant Vehicle", "Shiny", {}, function(onSelected)
+            if onSelected then
+                local vehicle = Input("Vehicle:")
+                if vehicle and Config.Vehicles.Names[GetHashKey(vehicle)] then
+                    TriggerServerEvent("Spectrum:Garage:Grant", Spectrum.StaffMenu.target, vehicle)
+                else
+                    Notification("Please enter a valid ~b~Vehicle Model")
+                end
+            end
+        end)
+        Items:AddButton("Revoke Vehicle", "there goes poof", {}, function(onSelected)
+            if onSelected then
+                local vehicle = Input("Vehicle (Plate):")
+                if vehicle then
+                    TriggerServerEvent("Spectrum:Garage:Revoke", Spectrum.StaffMenu.target, PadPlate(vehicle:upper()))
+                end
+            end
+        end)
     end, function(Panels)
 
     end)

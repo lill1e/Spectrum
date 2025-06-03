@@ -22,6 +22,23 @@ RegisterNetEvent("Spectrum:Garage:Reset", function(plate)
     end
 end)
 
+RegisterNetEvent("Spectrum:Vehicles:Add", function(model, plate)
+    Spectrum.vehicles[plate] = {
+        vehicle = model,
+        data = {},
+        garage = nil,
+        active = false
+    }
+    Spectrum.vehicleCount = Spectrum.vehicleCount + 1
+    Notification("~b~" .. plate .. " ~s~has been added to your Garage")
+end)
+
+RegisterNetEvent("Spectrum:Vehicles:Remove", function(plate)
+    Spectrum.vehicles[plate] = nil
+    Spectrum.vehicleCount = Spectrum.vehicleCount - 1
+    Notification("~b~" .. plate .. " ~s~has been removed from your Garage")
+end)
+
 local garageMenu = RageUI.CreateMenu("Garage", "vroom")
 
 function RageUI.PoolMenus:Garage()
