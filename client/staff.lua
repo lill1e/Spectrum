@@ -1,4 +1,6 @@
 local staffMenu = RageUI.CreateMenu("kitty", "OwO")
+local selfStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Self")
+local selfDevStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Self (Dev)")
 local inventoryStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Inventory")
 local vehiclesStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Vehicles")
 local playersStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Players")
@@ -19,6 +21,28 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Players", "who?", { RightLabel = "→→→" }, function(onSelected)
 
         end, playersStaffMenu)
+        Items:AddButton("Self", "me <3", { RightLabel = "→→→" }, function(onSelected)
+
+        end, selfStaffMenu)
+        Items:AddButton("Self (Dev)", "f8", { RightLabel = "→→→" }, function(onSelected)
+
+        end, selfDevStaffMenu)
+        Items:AddButton("Inventory", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
+
+        end, inventoryStaffMenu)
+        Items:AddButton("Vehicles", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
+
+        end, vehiclesStaffMenu)
+        Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
+            if onSelected then
+                Spectrum.skin.IsEditing = true
+            end
+        end)
+    end, function()
+
+    end)
+
+    selfStaffMenu:IsVisible(function(Items)
         Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
             if onSelected then
                 Spectrum.CanRespawn = true
@@ -45,23 +69,21 @@ function RageUI.PoolMenus:Staff()
                         true, false), -1)
             end
         end)
+    end, function()
+
+    end)
+
+    selfDevStaffMenu:IsVisible(function(Items)
         Items:AddButton("Coordinates", "F8 to view", { RightLabel = "🗺️" }, function(onSelected)
             if onSelected then
                 print(GetEntityCoords(PlayerPedId()))
             end
         end)
         Items:AddButton("Audit Indetifiers", "ooh what's that we got there", { RightLabel = "📋" }, function(onSelected)
-            detail = "identifiers"
-        end, detailsMenu)
-        Items:AddButton("Inventory", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
-
-        end, inventoryStaffMenu)
-        Items:AddButton("Vehicles", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
-
-        end, vehiclesStaffMenu)
-        Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
             if onSelected then
-                Spectrum.skin.IsEditing = true
+                for _, identifier in ipairs(Spectrum.PlayerData.identifiers) do
+                    print(identifier)
+                end
             end
         end)
     end, function()
@@ -137,6 +159,11 @@ function RageUI.PoolMenus:Staff()
                     end
                 end
             end)
+        Items:AddButton("Delete Vehicle", "Command: ~b~/dv", { RightBadge = RageUI.BadgeStyle.Car }, function(onSelected)
+            if onSelected then
+                TriggerServerEvent("Spectrum:Staff:DeleteVehicle")
+            end
+        end)
     end, function()
 
     end)
