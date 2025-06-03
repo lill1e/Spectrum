@@ -1,10 +1,10 @@
-local staffMenu = RageUI.CreateMenu("kitty", "OwO")
-local selfStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Self")
-local selfDevStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Self (Dev)")
-local inventoryStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Inventory")
-local vehiclesStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Vehicles")
-local playersStaffMenu = RageUI.CreateSubMenu(staffMenu, "kitty", "Players")
-local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "kitty", "Players")
+local staffMenu = RageUI.CreateMenu("agony", "~o~*spiderman quote goes here*")
+local selfStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Self")
+local selfDevStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Self (Dev)")
+local inventoryStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Inventory")
+local vehiclesStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Vehicles")
+local playersStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Players")
+local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "agony", "Players")
 local detailsMenu = RageUI.CreateSubMenu(staffMenu)
 local detail = nil
 
