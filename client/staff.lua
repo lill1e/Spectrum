@@ -137,6 +137,16 @@ function RageUI.PoolMenus:Staff()
                 TriggerServerEvent("Spectrum:Staff:Revive", Spectrum.StaffMenu.target)
             end
         end)
+        Items:AddButton("Teleport (To)", "Me -> Them", {}, function(onSelected)
+            if onSelected then
+                TriggerServerEvent("Spectrum:Staff:Teleport", 1, Spectrum.StaffMenu.target)
+            end
+        end)
+        Items:AddButton("Teleport (From)", "Them -> Me", {}, function(onSelected)
+            if onSelected then
+                TriggerServerEvent("Spectrum:Staff:Teleport", 2, Spectrum.StaffMenu.target)
+            end
+        end)
     end, function(Panels)
 
     end)

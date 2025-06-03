@@ -61,6 +61,7 @@ RegisterNetEvent("Spectrum:Staff:Revive", function(target)
         -- TODO: add logging
     end
 end)
+
 RegisterNetEvent("Spectrum:Staff:DeleteVehicle", function()
     local source = tostring(source)
     if Spectrum.players[source].staff > 0 then
@@ -70,6 +71,19 @@ RegisterNetEvent("Spectrum:Staff:DeleteVehicle", function()
         end
     else
         -- TODO: add logging
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:Teleport", function(t, target)
+    local source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        if t == 1 then
+            TriggerClientEvent("Spectrum:Warp", source, Spectrum.libs.Tokens.CreateToken(source),
+                GetEntityCoords(GetPlayerPed(target)))
+        elseif t == 2 then
+            TriggerClientEvent("Spectrum:Warp", target, Spectrum.libs.Tokens.CreateToken(target),
+                GetEntityCoords(GetPlayerPed(source)))
+        end
     end
 end)
 

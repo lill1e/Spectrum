@@ -42,6 +42,21 @@ RegisterNetEvent("Spectrum:Broadcast", function(t, token)
         end
     end, token)
 end)
+RegisterNetEvent("Spectrum:Warp", function(token, coords)
+    Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
+        if verified then
+            DoScreenFadeOut(500)
+            while not IsScreenFadedOut() do Wait(0) end
+
+            SetEntityCoordsNoOffset(PlayerPedId(),
+                coords, false, false, true)
+
+            DoScreenFadeIn(500)
+            while not IsScreenFadedIn() do Wait(0) end
+        end
+    end, token)
+end)
+
 Citizen.CreateThread(function()
     while true do
         Wait(0)
