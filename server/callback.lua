@@ -72,7 +72,7 @@ Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
             return false
         end
     else
-        return 0
+        return false
         -- TODO: add logging
     end
 end
