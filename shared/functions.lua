@@ -37,7 +37,7 @@ function PadPlate(plate)
             plate = " " .. plate .. " "
             n = n + 2
         else
-            plate = " " .. plate
+            plate = plate .. " "
             n = n + 1
         end
     end
