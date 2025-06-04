@@ -11,7 +11,6 @@ RegisterNetEvent("Spectrum:Garage:Grant", function(target, vehicle)
 end)
 
 RegisterNetEvent("Spectrum:Garage:Revoke", function(target, plate)
-    print(plate)
     local source = tostring(source)
     if Spectrum.players[source].staff > 0 then
         local query = exports["pgcfx"]:delete("vehicles", "id = ? AND owner = ?", { plate, Spectrum.players[target].id })
