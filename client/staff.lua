@@ -5,8 +5,12 @@ local inventoryStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Inventory")
 local toolsStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Tools")
 local playersStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Players")
 local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "agony", "Players")
-local detailsMenu = RageUI.CreateSubMenu(staffMenu)
+local playerManageStaffMenu = RageUI.CreateSubMenu(playerStaffMenu, "agony", "Player Management")
+local detailsMenu = RageUI.CreateSubMenu(playerManageStaffMenu)
+local vehicleManageMenu = RageUI.CreateSubMenu(detailsMenu)
 local detail = nil
+local detailData = {}
+local depthReg = nil
 
 local currentGarage = 1
 local garageTbl = {}
@@ -154,6 +158,9 @@ function RageUI.PoolMenus:Staff()
     end)
 
     playerStaffMenu:IsVisible(function(Items)
+        Items:AddButton("Management", "watch it :eyes:", { RightLabel = "→→→" }, function(onSelected)
+
+        end, playerManageStaffMenu)
         if Spectrum.StaffMenu.playerType == 1 then
             Items:AddSeparator("")
             Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
@@ -178,6 +185,26 @@ function RageUI.PoolMenus:Staff()
             end)
         end
     end, function(Panels)
+
+    end)
+
+    playerManageStaffMenu:IsVisible(function(Items)
+        Items:AddSeparator("ID: ~b~" .. Spectrum.StaffMenu.target)
+        Items:AddSeparator("Name: ~b~" .. Spectrum.players[Spectrum.StaffMenu.target].name)
+        Items:AddButton("Audit Vehicles", nil, { RightLabel = "→→→" }, function(onSelected)
+            if onSelected then
+                detailData = {}
+                detail = "userVehicles"
+                Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                    if verified ~= nil then
+                        detailData = verified
+                    else
+                        Notification("There was an issue requesting this ~b~player")
+                    end
+                end, Spectrum.StaffMenu.target, 1)
+            end
+        end, detailsMenu)
+    end, function()
 
     end)
 
@@ -295,15 +322,108 @@ function RageUI.PoolMenus:Staff()
 
     detailsMenu:IsVisible(function(Items)
         if not detail then
-            RageUI.CloseAll()
+            RageUI.GoBack()
             return
         end
 
-        for _, identifier in ipairs(Spectrum.PlayerData.identifiers) do
-            Items:AddButton(identifier, nil, {}, function(onSelected)
+        for _, data in ipairs(detailData) do
+            if detail == "userVehicles" then
+                Items:AddButton(Config.Vehicles.Names[GetHashKey(data.vehicle)],
+                    (data.active and "~y~Active" or "~g~Stored") .. " ~s~| ~b~" ..
+                    (data.garage and Config.Garage.Garages[data.garage].displayName or "Global"),
+                    { RightLabel = "Plate: ~b~" .. data.plate },
+                    function(onSelected)
+                        if onSelected then
+                            depthReg = data.plate
+                        end
+                    end, vehicleManageMenu)
+            end
+        end
 
+        if detail == "userVehicles" then
+            Items:AddSeparator("")
+            Items:AddButton("Grant Vehicle", "Shiny", {}, function(onSelected)
+                if onSelected then
+                    local vehicle = Input("Vehicle:")
+                    if vehicle and Config.Vehicles.Names[GetHashKey(vehicle)] then
+                        TriggerServerEvent("Spectrum:Garage:Grant", Spectrum.StaffMenu.target, vehicle)
+                    else
+                        Notification("Please enter a valid ~b~Vehicle Model")
+                    end
+                end
             end)
         end
+    end, function()
+
+    end)
+
+    vehicleManageMenu:IsVisible(function(Items)
+        Items:AddButton("~o~Revoke Vehicle", "Be Careful", {}, function(onSelected)
+            if onSelected then
+                local input = Input("Enter \"yes\" to confirm:")
+                if input:lower() == "yes" then
+                    TriggerServerEvent("Spectrum:Garage:Revoke", Spectrum.StaffMenu.target, depthReg:upper())
+                    RageUI.GoBack()
+                    detailData = {}
+                    Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                        if verified ~= nil then
+                            detailData = verified
+                        else
+                            Notification("There was an issue refreshing this ~b~player")
+                        end
+                    end, Spectrum.StaffMenu.target, 1)
+                end
+            end
+        end)
+        Items:AddButton("~o~Restore Vehicle", "Be Careful", {}, function(onSelected)
+            if onSelected then
+                local input = Input("Enter \"yes\" to confirm:")
+                if input:lower() == "yes" then
+                    Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
+                        if verified then
+                            Notification("~b~" .. depthReg .. " ~s~was restored to the most recent Garage")
+                            for i, data in ipairs(detailData) do
+                                if data.plate == depthReg then
+                                    detailData[i].active = false
+                                end
+                            end
+                        else
+                            Notification("Please provide a valid ~b~License Plate")
+                        end
+                    end, depthReg:upper())
+                end
+            end
+        end)
+        Items:AddButton("~o~Reassign Vehicle", "Be Careful", {}, function(onSelected)
+            if onSelected then
+                local newPlate = Input("Enter New Plate (leave empty for random):")
+                if newPlate then
+                    newPlate = newPlate:upper()
+                end
+                local input = Input("Enter \"yes\" to confirm:")
+                if input:lower() == "yes" then
+                    Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
+                        if verified then
+                            Spectrum.libs.Callbacks.callback("alterPlate", function(plate)
+                                if plate ~= nil then
+                                    for i, vehicle in ipairs(detailData) do
+                                        if vehicle.plate == depthReg then
+                                            detailData[i].plate = plate
+                                        end
+                                    end
+                                    Notification("Vehicle Reassignment:\n~b~" .. depthReg .. " ~s~-> ~b~" .. plate)
+                                    depthReg = plate
+                                else
+                                    Notification("Please provide a valid ~b~License Plate")
+                                end
+                            end, Spectrum.StaffMenu.target, depthReg:upper(), newPlate)
+                        else
+                            Notification("Please provide a valid ~b~License Plate")
+                        end
+                    end, depthReg:upper())
+                end
+            end
+        end)
     end, function()
 
     end)
