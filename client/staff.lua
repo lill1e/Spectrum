@@ -2,7 +2,7 @@ local staffMenu = RageUI.CreateMenu("agony", "~o~*spiderman quote goes here*")
 local selfStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Self")
 local selfDevStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Self (Dev)")
 local inventoryStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Inventory")
-local vehiclesStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Vehicles")
+local toolsStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Tools")
 local playersStaffMenu = RageUI.CreateSubMenu(staffMenu, "agony", "Players")
 local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "agony", "Players")
 local detailsMenu = RageUI.CreateSubMenu(staffMenu)
@@ -39,9 +39,9 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Inventory", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
 
         end, inventoryStaffMenu)
-        Items:AddButton("Vehicles", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
+        Items:AddButton("Tools", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
 
-        end, vehiclesStaffMenu)
+        end, toolsStaffMenu)
     end, function()
 
     end)
@@ -287,22 +287,7 @@ function RageUI.PoolMenus:Staff()
 
     end)
 
-    vehiclesStaffMenu:IsVisible(function(Items)
-        Items:AddButton("Restore Vehicle", "this vehicle should not be present", { RightBadge = RageUI.BadgeStyle.Car },
-            function(onSelected)
-                if onSelected then
-                    local plate = Input("Vehicle License Plate:"):upper()
-                    if plate then
-                        Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
-                            if verified then
-                                Notification("~b~" .. plate .. " ~s~was sent back to the most recent garage")
-                            else
-                                Notification("Please provide a valid ~b~License Plate")
-                            end
-                        end, plate)
-                    end
-                end
-            end)
+    toolsStaffMenu:IsVisible(function(Items)
         Items:AddButton("Delete Vehicle", "Command: ~b~/dv", { RightBadge = RageUI.BadgeStyle.Car }, function(onSelected)
             if onSelected then
                 TriggerServerEvent("Spectrum:Staff:DeleteVehicle")
