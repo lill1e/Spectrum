@@ -39,6 +39,12 @@ RegisterNetEvent("Spectrum:Vehicles:Remove", function(plate)
     Notification("~b~" .. plate .. " ~s~has been removed from your Garage")
 end)
 
+RegisterNetEvent("Spectrum:Vehicles:Reassign", function(oldPlate, newPlate)
+    Spectrum.vehicles[newPlate] = Spectrum.vehicles[oldPlate]
+    Spectrum.vehicles[oldPlate] = nil
+    Notification("~b~" .. oldPlate .. " ~s~has been reassinged to ~b~" .. newPlate)
+end)
+
 local garageMenu = RageUI.CreateMenu("Garage", "vroom")
 
 function RageUI.PoolMenus:Garage()

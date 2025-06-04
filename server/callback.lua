@@ -76,3 +76,57 @@ Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
         -- TODO: add logging
     end
 end
+
+Spectrum.libs.callbackFunctions.alterPlate = function(source, target, plate, newPlate)
+    target = tostring(target)
+    if Spectrum.players[source].staff > 0 then
+        if Spectrum.players[target] then
+            if newPlate == "" or Whitespace(newPlate) then
+                newPlate = RandomPlate()
+            end
+            local query = exports["pgcfx"]:update("vehicles", { "id" }, { newPlate }, "id = ? AND owner = ?",
+                { plate, Spectrum.players[target].id })
+            if query > 0 then
+                TriggerClientEvent("Spectrum:Vehicles:Reassign", target, plate, newPlate)
+                return newPlate
+            end
+        else
+            return nil
+        end
+    else
+        -- TODO: add logging
+        return nil
+    end
+end
+
+Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
+    target = tostring(target)
+    if Spectrum.players[source].staff > 0 then
+        if Spectrum.players[target] then
+            if type == 0 then
+                return Spectrum.players[target].identifiers
+            elseif type == 1 then
+                local query = exports["pgcfx"]:select("vehicles", {}, "owner = ?",
+                    { Spectrum.players[target].id })
+                local vehicles = {}
+                for _, vehicle in pairs(query) do
+                    table.insert(vehicles, {
+                        plate = vehicle.id,
+                        vehicle = vehicle.vehicle,
+                        active = vehicle.active,
+                        garage = vehicle.garage
+                    })
+                end
+                return vehicles
+            end
+            -- type = 2, inventory
+            -- type = 3, weapons
+            -- type = 4, ammo
+        else
+            return nil
+        end
+    else
+        -- TODO: add logging
+        return nil
+    end
+end

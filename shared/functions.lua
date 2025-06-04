@@ -51,3 +51,12 @@ function RandomPlate()
     end
     return plate
 end
+
+function Whitespace(s)
+    for c in s:gmatch(".") do
+        if c ~= " " then
+            return false
+        end
+    end
+    return true
+end
