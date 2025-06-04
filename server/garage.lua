@@ -15,8 +15,9 @@ RegisterNetEvent("Spectrum:Garage:Revoke", function(target, plate)
     if Spectrum.players[source].staff > 0 then
         local query = exports["pgcfx"]:delete("vehicles", "id = ? AND owner = ?", { plate, Spectrum.players[target].id })
         if query > 0 then
+            local paddedPlate = PadPlate(plate)
             for _, entity in ipairs(GetAllVehicles()) do
-                if GetEntityType(entity) == 2 and GetVehicleNumberPlateText(entity) == plate then
+                if GetEntityType(entity) == 2 and GetVehicleNumberPlateText(entity) == paddedPlate then
                     DeleteEntity(entity)
                 end
             end
