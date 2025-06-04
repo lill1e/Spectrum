@@ -88,18 +88,20 @@ exports["pgcfx"]:ready(function()
         while true do
             Wait(60000 * 3)
             for source, playerData in pairs(Spectrum.players) do
-                if DoesEntityExist(GetPlayerPed(source)) then
-                    Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
+                if playerData.active then
+                    if DoesEntityExist(GetPlayerPed(source)) then
+                        Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
+                    end
+                    exports["pgcfx"]:update("users",
+                        { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
+                        { playerData.money.clean, playerData.money.dirty,
+                            {
+                                x = playerData.position.x,
+                                y = playerData.position.y,
+                                z = playerData.position.z
+                            },
+                            playerData.items, playerData.ammo, playerData.skin }, "id = ?", { playerData.id })
                 end
-                exports["pgcfx"]:update("users",
-                    { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
-                    { playerData.money.clean, playerData.money.dirty,
-                        {
-                            x = playerData.position.x,
-                            y = playerData.position.y,
-                            z = playerData.position.z
-                        },
-                        playerData.items, playerData.ammo, playerData.skin }, "id = ?", { playerData.id })
             end
             for weaponId, weaponData in pairs(Spectrum.weapons) do
                 exports["pgcfx"]:update("weapons", { "attachments" }, { weaponData.attachments }, "id = ?", { weaponId })
