@@ -117,8 +117,7 @@ function RageUI.PoolMenus:Staff()
                     local playerData = Spectrum.players[input]
                     if playerData then
                         Spectrum.StaffMenu.target = input
-                        playerStaffMenu:SetTitle(playerData.name)
-                        playerStaffMenu:SetSubtitle("ID: " .. input)
+                        playerStaffMenu:SetSubtitle("ID: " .. input .. " | " .. playerData.name)
                         RageUI.Visible(playerStaffMenu, true)
                     else
                         Notification("Please enter a valid ~b~ID")
@@ -126,61 +125,58 @@ function RageUI.PoolMenus:Staff()
                 end
             end
         end)
-        Items:AddSeparator("")
+        local flag = false
         for id, playerData in pairs(Spectrum.players) do
             if (Spectrum.StaffMenu.playerType == 1 and playerData.active) or (Spectrum.StaffMenu.playerType == 2 and not playerData.active) then
+                if not flag then
+                    Items:AddSeparator("")
+                    flag = true
+                end
                 Items:AddButton("[" .. id .. "] " .. playerData.name, playerData.id, {}, function(onSelected)
                     if onSelected then
                         Spectrum.StaffMenu.target = id
-                        playerStaffMenu:SetTitle(playerData.name)
-                        playerStaffMenu:SetSubtitle("ID: " .. id)
+                        playerStaffMenu:SetSubtitle("ID: " .. id .. " | " .. playerData.name)
                     end
                 end, playerStaffMenu)
             end
+        end
+        if not flag then
+            Items:AddButton(
+                "There are no ~o~" ..
+                (Spectrum.StaffMenu.playerType == 1 and "connected" or "disconnected") .. " ~s~players", nil,
+                {},
+                function()
+
+                end)
         end
     end, function()
 
     end)
 
     playerStaffMenu:IsVisible(function(Items)
-        Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
-            if onSelected then
-                TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)
-            end
-        end)
-        Items:AddButton("Revive", "Heroes never die!", {}, function(onSelected)
-            if onSelected then
-                TriggerServerEvent("Spectrum:Staff:Revive", Spectrum.StaffMenu.target)
-            end
-        end)
-        Items:AddButton("Teleport (To)", "Me -> Them", {}, function(onSelected)
-            if onSelected then
-                TriggerServerEvent("Spectrum:Staff:Teleport", 1, Spectrum.StaffMenu.target)
-            end
-        end)
-        Items:AddButton("Teleport (From)", "Them -> Me", {}, function(onSelected)
-            if onSelected then
-                TriggerServerEvent("Spectrum:Staff:Teleport", 2, Spectrum.StaffMenu.target)
-            end
-        end)
-        Items:AddButton("Grant Vehicle", "Shiny", {}, function(onSelected)
-            if onSelected then
-                local vehicle = Input("Vehicle:")
-                if vehicle and Config.Vehicles.Names[GetHashKey(vehicle)] then
-                    TriggerServerEvent("Spectrum:Garage:Grant", Spectrum.StaffMenu.target, vehicle)
-                else
-                    Notification("Please enter a valid ~b~Vehicle Model")
+        if Spectrum.StaffMenu.playerType == 1 then
+            Items:AddSeparator("")
+            Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
+                if onSelected then
+                    TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)
                 end
-            end
-        end)
-        Items:AddButton("Revoke Vehicle", "there goes poof", {}, function(onSelected)
-            if onSelected then
-                local vehicle = Input("Vehicle (Plate):")
-                if vehicle then
-                    TriggerServerEvent("Spectrum:Garage:Revoke", Spectrum.StaffMenu.target, PadPlate(vehicle:upper()))
+            end)
+            Items:AddButton("Revive", "Heroes never die!", {}, function(onSelected)
+                if onSelected then
+                    TriggerServerEvent("Spectrum:Staff:Revive", Spectrum.StaffMenu.target)
                 end
-            end
-        end)
+            end)
+            Items:AddButton("Teleport (To)", "Me -> Them", {}, function(onSelected)
+                if onSelected then
+                    TriggerServerEvent("Spectrum:Staff:Teleport", 1, Spectrum.StaffMenu.target)
+                end
+            end)
+            Items:AddButton("Teleport (From)", "Them -> Me", {}, function(onSelected)
+                if onSelected then
+                    TriggerServerEvent("Spectrum:Staff:Teleport", 2, Spectrum.StaffMenu.target)
+                end
+            end)
+        end
     end, function(Panels)
 
     end)
