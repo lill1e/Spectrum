@@ -1,6 +1,6 @@
 local inventoryMenu = RageUI.CreateMenu("Inventory", "~b~Your belongings")
 
-RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
+RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType, ammo, token)
     local condFlag = true
     if type == 1 then
         if itemType == 0 then
