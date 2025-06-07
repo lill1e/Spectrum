@@ -130,3 +130,17 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
         return nil
     end
 end
+
+Spectrum.libs.callbackFunctions.declareAmmo = function(source, token, ammoType, ammo)
+    if token == nil then
+        -- TODO: arity mismatch (this should not happen)
+    end
+    local isMatch = Spectrum.libs.tokens[token] == source
+    if Spectrum.libs.tokens[token] == false then
+        -- TODO: violation (this should not happen)
+    end
+    if isMatch then
+        Spectrum.players[source].ammo[ammoType] = Spectrum.players[source].ammo[ammoType] + ammo
+    end
+    return isMatch
+end
