@@ -8,7 +8,7 @@ RegisterNetEvent("Spectrum:Staff:Add", function(type, item, count)
         elseif type == "item" then
             AddItem(source, item, count)
         elseif type == "weapon" then
-            CreateWeapon(source, item)
+            AddWeapon(source, CreateWeapon(item), 0)
         elseif type == "ammo" then
             AddAmmo(source, item, count)
         end

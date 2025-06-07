@@ -15,14 +15,28 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType)
                 Spectrum.PlayerData.items[item] + quantity or
                 quantity
         elseif itemType == 2 then
-            if Spectrum.PlayerData.weapons[quantity] == nil then
-                Spectrum.PlayerData.numWeapons = Spectrum.PlayerData.numWeapons + 1
-            end
-            Spectrum.PlayerData.weapons[quantity] = item
+            Spectrum.AmmoLock = true
+            Spectrum.libs.Callbacks.callback("declareAmmo", function(verified)
+                if verified then
+                    if Spectrum.PlayerData.weapons[quantity] == nil then
+                        Spectrum.PlayerData.numWeapons = Spectrum.PlayerData.numWeapons + 1
+                    end
+                    Spectrum.PlayerData.weapons[quantity] = item
+
+                    Spectrum.PlayerData.ammo[Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] = Spectrum
+                        .PlayerData
+                        .ammo
+                        [Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] + ammo
+                    GiveWeaponToPed(PlayerPedId(), item, ammo, false, false)
+                    Spectrum.AmmoLock = false
+                end
+            end, token, Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)], ammo)
         else
+            Spectrum.AmmoLock = true
             Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] + quantity
             SetPedAmmoByType(PlayerPedId(), GetHashKey(item),
                 GetPedAmmoByType(PlayerPedId(), GetHashKey(item)) + quantity)
+            Spectrum.AmmoLock = false
         end
     elseif type == 2 then
         if itemType == 0 then
@@ -67,7 +81,7 @@ end)
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        if Spectrum.Loaded and Spectrum.Spawned and not IsPedShooting(PlayerPedId()) then
+        if Spectrum.Loaded and Spectrum.Spawned and not IsPedShooting(PlayerPedId()) and not Spectrum.AmmoLock then
             for k, _ in pairs(Spectrum.PlayerData.ammo) do
                 if GetPedAmmoByType(PlayerPedId(), k) ~= Spectrum.PlayerData.ammo[k] then
                     Spectrum.PlayerData.ammo[k] = GetPedAmmoByType(PlayerPedId(), k)

@@ -139,6 +139,9 @@ Citizen.CreateThread(function()
             while not IsScreenFadedIn() do Wait(0) end
 
             Spectrum.Spawned = true
+            if Spectrum.AmmoLock then
+                Spectrum.AmmoLock = false
+            end
         end
 
         if IsEntityDead(PlayerPedId()) and not Spectrum.DeathTimer then

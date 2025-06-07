@@ -11,7 +11,7 @@ RegisterNetEvent("Spectrum:Purchase", function(store, storeLoc, item)
                 AddItem(source, item,
                     Spectrum.stores[store].items[item].quantity and Spectrum.stores[store].items[item].quantity or 1)
             elseif Spectrum.stores[store].items[item].type == 2 then
-                CreateWeapon(source, item)
+                AddWeapon(source, CreateWeapon(item), 0)
             elseif Spectrum.stores[store].items[item].type == 3 then
                 AddAmmo(source, item,
                     Spectrum.stores[store].items[item].quantity and Spectrum.stores[store].items[item].quantity or 1)

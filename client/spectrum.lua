@@ -35,6 +35,7 @@ Spectrum = {
     CanRespawn = false,
     CanRevive = false,
     InventoryLock = false,
+    AmmoLock = true,
     Garage = {
         current = nil
     },

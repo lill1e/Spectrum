@@ -76,13 +76,13 @@ function SwapItem(source, itemOne, quantityOne, itemTwo, quantityTwo)
     end
 end
 
-function AddWeapon(source, id)
+function AddWeapon(source, id, ammo)
     local weapon = Spectrum.weapons[id].model
     Spectrum.weapons[id].owner = Spectrum.players[source].id
     Spectrum.players[source].weapons[id] = weapon
-    GiveWeaponToPed(GetPlayerPed(source), weapon, 0, false, false)
     exports["pgcfx"]:update("weapons", { "owner" }, { Spectrum.players[source].id }, "id = ?", { id })
-    TriggerClientEvent("Spectrum:Inventory", source, weapon, id, 1, 2)
+    TriggerClientEvent("Spectrum:Inventory", source, weapon, id, 1, 2, ammo and ammo or 0,
+        Spectrum.libs.Tokens.CreateToken(source))
 end
 
 function RemoveWeapon(source, weapon)
@@ -96,7 +96,17 @@ function RemoveWeapon(source, weapon)
 end
 
 function HasWeapon(source, weapon)
-    return HasPedGotWeapon(source, weapon, false)
+    local query = exports["pgcfx"]:selectOne("users",
+        { "COALESCE(json_agg(weapons.model) FILTER (WHERE weapons.id IS NOT NULL), '{}'::json) AS weapons" },
+        "users.id = ?", { Spectrum.players[source].id }, { JOIN = "LEFT" }, "weapons ON weapons.owner = users.id")
+    if query then
+        for _, model in ipairs(query) do
+            if model == weapon then
+                return true
+            end
+        end
+    end
+    return false
 end
 
 function AddAmmo(source, type, quantity)
@@ -134,9 +144,9 @@ function RemoveCash(source, clean, count)
     end
 end
 
-function CreateWeapon(source, name)
+function CreateWeapon(name)
     local insertion = exports["pgcfx"]:insert("weapons", { "model" }, { name }, "id, to_jsonb(weapons) - 'id' AS data")
         [1]
     Spectrum.weapons[insertion.id] = insertion.data
-    AddWeapon(source, insertion.id)
+    return insertion.id
 end
