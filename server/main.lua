@@ -118,7 +118,9 @@ exports["pgcfx"]:ready(function()
                 end
             end
             for weaponId, weaponData in pairs(Spectrum.weapons) do
-                exports["pgcfx"]:update("weapons", { "attachments" }, { weaponData.attachments }, "id = ?", { weaponId })
+                exports["pgcfx"]:update("weapons", { "attachments", "owner" },
+                    { weaponData.attachments, weaponData.owner and weaponData.owner or "NULL" }, "id = ?", { weaponId })
+            end
             for propertyId, property in pairs(Spectrum.properties) do
                 exports["pgcfx"]:update("properties", { "locked", "owner" },
                     { property.locked, property.owner and property.owner or "NULL" }, "id = ?", { propertyId })
