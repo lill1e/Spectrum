@@ -49,6 +49,7 @@ Spectrum = {
     players = {},
     vehicles = {},
     vehicleCount = 0,
+    properties = {},
     currentStore = {
         current = nil,
         currentLoc = nil

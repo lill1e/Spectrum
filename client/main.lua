@@ -31,6 +31,10 @@ RegisterNetEvent("Spectrum:Vehicles", function(vehicles, vehicleCount)
     Spectrum.vehicleCount = vehicleCount
 end)
 
+RegisterNetEvent("Spectrum:Properties", function(properties)
+    Spectrum.properties = properties
+end)
+
 RegisterNetEvent("Spectrum:Broadcast", function(t, token)
     Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
         if verified then

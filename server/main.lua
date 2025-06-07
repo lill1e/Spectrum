@@ -5,6 +5,12 @@ exports["pgcfx"]:ready(function()
     for _, v in ipairs(rawWeapons) do
         Spectrum.weapons[v.id] = v.data
     end
+    local properties = exports["pgcfx"]:select("properties", { "id", "(to_jsonb(properties) - 'id') AS data" }, nil, nil,
+        { ["GROUP BY"] = "id" })
+    for _, data in ipairs(properties) do
+        Spectrum.properties[data.id] = data.data
+        Spectrum.properties[data.id].position = vector3(data.data.x, data.data.y, data.data.z)
+    end
     for _, playerId in ipairs(GetPlayers()) do
         local identifier = GetSteamHex(playerId)
         local user = exports["pgcfx"]:selectOne("Users",
@@ -35,6 +41,13 @@ exports["pgcfx"]:ready(function()
             tempAttr[a] = true
         end
 
+        local globalProperties = {}
+        for id, data in ipairs(Spectrum.properties) do
+            globalProperties[id] = data
+            if data.owner == identifier then
+                globalProperties[id].owned = true
+            end
+        end
         Spectrum.players[tostring(playerId)] = {
             id = user.id,
             money = {
@@ -60,6 +73,7 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:Jobs", playerId, Spectrum.jobs)
         TriggerClientEvent("Spectrum:Stores", playerId, Spectrum.stores)
         TriggerClientEvent("Spectrum:Vehicles", playerId, vehiclesTbl, #vehicles)
+        TriggerClientEvent("Spectrum:Properties", playerId, globalProperties)
     end
     local players = {}
     for k, v in pairs(Spectrum.players) do
@@ -105,6 +119,10 @@ exports["pgcfx"]:ready(function()
             end
             for weaponId, weaponData in pairs(Spectrum.weapons) do
                 exports["pgcfx"]:update("weapons", { "attachments" }, { weaponData.attachments }, "id = ?", { weaponId })
+            for propertyId, property in pairs(Spectrum.properties) do
+                exports["pgcfx"]:update("properties", { "locked", "owner" },
+                    { property.locked, property.owner and property.owner or "NULL" }, "id = ?", { propertyId })
+            end
             end
         end
     end)
@@ -167,6 +185,14 @@ AddEventHandler("playerJoining", function()
             tempAttr[a] = true
         end
 
+        local globalProperties = {}
+        for id, data in ipairs(Spectrum.properties) do
+            globalProperties[id] = data
+            if data.owner == steamHex then
+                globalProperties[id].owned = true
+            end
+        end
+
         if user then
             Spectrum.players[source] = {
                 id = user.id,
@@ -192,6 +218,7 @@ AddEventHandler("playerJoining", function()
             TriggerClientEvent("Spectrum:Jobs", source, Spectrum.jobs)
             TriggerClientEvent("Spectrum:Stores", source, Spectrum.stores)
             TriggerClientEvent("Spectrum:Vehicles", source, vehiclesTbl, #vehicles)
+            TriggerClientEvent("Spectrum:Properties", source, globalProperties)
             local players = {}
             for k, v in pairs(Spectrum.players) do
                 players[k] = {

@@ -71,6 +71,7 @@ Spectrum = {
         ["fib"] = {},
         ["doa"] = {}
     },
+    properties = {},
     stores = {
         twentyfourseven = {
             colour = "~g~",

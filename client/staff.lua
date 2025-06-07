@@ -60,7 +60,17 @@ function RageUI.PoolMenus:Staff()
                 currentGarage = Index
             end
         end)
-
+        Items:AddButton("Teleport (Property)", "gg", {},
+            function(onSelected)
+                if onSelected then
+                    local input = Input("Property (ID):")
+                    if input and tonumber(input) and Spectrum.properties[tonumber(input)] then
+                        SetEntityCoordsNoOffset(PlayerPedId(), Spectrum.properties[tonumber(input)].position,
+                            false,
+                            false, true)
+                    end
+                end
+            end)
         Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
             if onSelected then
                 Spectrum.CanRespawn = true
