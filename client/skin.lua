@@ -249,13 +249,6 @@ function ApplySkin()
     SetPedEyeColor(PlayerPedId(), Spectrum.PlayerData.skin.EyeColour)
 end
 
-function TableEmpty(tbl)
-    for _, _ in pairs(tbl) do
-        return false
-    end
-    return true
-end
-
 function GetFeatureValue(value, inverseHuh)
     return (value * 2 - 1) * (inverseHuh and -1 or 1)
 end

@@ -60,3 +60,10 @@ function Whitespace(s)
     end
     return true
 end
+
+function TableEmpty(tbl)
+    for _, _ in pairs(tbl) do
+        return false
+    end
+    return true
+end
