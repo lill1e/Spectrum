@@ -23,10 +23,12 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType, 
                     end
                     Spectrum.PlayerData.weapons[quantity] = item
 
-                    Spectrum.PlayerData.ammo[Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] = Spectrum
-                        .PlayerData
-                        .ammo
-                        [Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] + ammo
+                    if Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)] then
+                        Spectrum.PlayerData.ammo[Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] = Spectrum
+                            .PlayerData
+                            .ammo
+                            [Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] + ammo
+                    end
                     GiveWeaponToPed(PlayerPedId(), item, ammo, false, false)
                     Spectrum.AmmoLock = false
                 end

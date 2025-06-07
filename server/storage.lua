@@ -78,11 +78,13 @@ Spectrum.libs.callbackFunctions.storagePush = function(source, storage, item, qu
             return -1
         end
     else
-        if Spectrum.storages[storage].occupied and Spectrum.storages[storage].occupier == source and Spectrum.weapons[item] and HasAmmoThreshold(source, ammoType, quantity) then
+        if Spectrum.storages[storage].occupied and Spectrum.storages[storage].occupier == source and Spectrum.weapons[item] and (quantity == 0 or HasAmmoThreshold(source, ammoType, quantity)) then
             if Spectrum.weapons[item].owner == Spectrum.players[source].id then
                 if HasStorageSpace(storage, 5) then
                     RemoveWeapon(source, item)
-                    RemoveAmmo(source, ammoType, quantity)
+                    if quantity > 0 then
+                        RemoveAmmo(source, ammoType, quantity)
+                    end
                     Spectrum.storages[storage].weapons[item] = {
                         model = Spectrum.weapons[item].model,
                         rounds = quantity,

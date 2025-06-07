@@ -110,13 +110,18 @@ function RageUI.PoolMenus:Storage()
         end
         for id, weapon in pairs(Spectrum.PlayerData.weapons) do
             local rounds = Spectrum.PlayerData.ammo[Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), weapon)]]
+            if rounds == nil then
+                rounds = 0
+            end
             Items:AddButton(Config.Weapons[weapon].displayName, nil,
-                { RightLabel = rounds .. " ~b~Rounds", IsDisabled = storageLock }, function(onSelected)
+                { RightLabel = rounds .. " ~b~Rounds", IsDisabled = storageLock },
+                function(onSelected)
                     if onSelected then
                         local input = "0"
                         if rounds > 0 then
                             input = Input("# of Rounds (Max: " .. rounds .. "):")
                         end
+                        print((rounds == 0 and "none" or Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), weapon)]))
                         if input and tonumber(input) then
                             storageLock = true
                             local inputNum = tonumber(input)
@@ -135,7 +140,7 @@ function RageUI.PoolMenus:Storage()
                                         storageLock = false
                                     end
                                 end, Spectrum.Storage.id, tonumber(id), inputNum,
-                                Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), weapon)])
+                                (rounds == 0 and "none" or Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), weapon)]))
                         end
                     end
                 end)
