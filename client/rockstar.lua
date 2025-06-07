@@ -4,7 +4,7 @@ end
 
 DisplayCash(false)
 
-SetWeaponsNoAutoreload(true)
+-- SetWeaponsNoAutoreload(true)
 SetWeaponsNoAutoswap(true)
 
 Citizen.CreateThread(function()
@@ -14,6 +14,6 @@ Citizen.CreateThread(function()
         SetMaxWantedLevel(0)
 
         SetPlayerHealthRechargeMultiplier(PlayerId(), 0.0)
+        DisablePlayerVehicleRewards(PlayerId())
     end
 end)
-
