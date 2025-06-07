@@ -43,7 +43,18 @@ Citizen.CreateThread(function()
                             -- TODO: property interiors (concealer)
                         else
                             if Spectrum.Storage.active then
+                                RageUI.Visible(StorageMenu, false)
                             else
+                                Spectrum.libs.Callbacks.callback("storageSync", function(data)
+                                    if data ~= nil then
+                                        Spectrum.Storage = data
+                                        Spectrum.Storage.active = true
+                                        Spectrum.Storage.id = id
+                                        RageUI.Visible(StorageMenu, true)
+                                    else
+                                        Notification("This ~b~storage ~s~is occupied")
+                                    end
+                                end, id, false)
                             end
                         end
                     elseif IsControlJustPressed(0, 58) and property.owner and not actionLock then

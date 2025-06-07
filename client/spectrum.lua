@@ -58,5 +58,6 @@ Spectrum = {
     misc = {},
     skin = {
         IsEditing = false,
-    }
+    },
+    Storage = {}
 }

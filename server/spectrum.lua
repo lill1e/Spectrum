@@ -72,6 +72,7 @@ Spectrum = {
         ["doa"] = {}
     },
     properties = {},
+    storages = {},
     stores = {
         twentyfourseven = {
             colour = "~g~",

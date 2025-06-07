@@ -11,6 +11,47 @@ exports["pgcfx"]:ready(function()
         Spectrum.properties[data.id] = data.data
         Spectrum.properties[data.id].position = vector3(data.data.x, data.data.y, data.data.z)
     end
+    local storages = exports["pgcfx"]:select("storages", { "id", "(to_jsonb(storages) - 'id') AS data" }, nil, nil,
+        {})
+    for _, data in ipairs(storages) do
+        Spectrum.storages[data.id] = {
+            items = data.data.items,
+            weapons = {},
+            space = data.data.space,
+            occupied = false,
+            occupier = "-1"
+        }
+        for weapon, ammo in pairs(data.data.weapons) do
+            local id = tonumber(weapon)
+            if id then
+                Spectrum.storages[data.id].weapons[id] = {
+                    model = Spectrum.weapons[id].model,
+                    rounds = ammo
+                }
+            end
+        end
+    end
+    local allVehicles = exports["pgcfx"]:select("vehicles", { "id", "(to_jsonb(vehicles) - 'id') AS data" }, nil, nil,
+        {})
+    for _, data in ipairs(allVehicles) do
+        Spectrum.storages[data.id] = {
+            items = data.data.items,
+            weapons = {},
+            space = 30,
+            occupied = false,
+            occupier = "-1",
+            vehicle = true
+        }
+        for weapon, ammo in pairs(data.data.weapons) do
+            local id = tonumber(weapon)
+            if id then
+                Spectrum.storages[data.id].weapons[id] = {
+                    model = Spectrum.weapons[id].model,
+                    rounds = ammo
+                }
+            end
+        end
+    end
     for _, playerId in ipairs(GetPlayers()) do
         local identifier = GetSteamHex(playerId)
         local user = exports["pgcfx"]:selectOne("Users",
@@ -125,6 +166,22 @@ exports["pgcfx"]:ready(function()
                 exports["pgcfx"]:update("properties", { "locked", "owner" },
                     { property.locked, property.owner and property.owner or "NULL" }, "id = ?", { propertyId })
             end
+            for storageId, storage in pairs(Spectrum.storages) do
+                if storage.temporary then
+                    goto continue
+                end
+                local weapons = {}
+                for id, weapon in pairs(storage.weapons) do
+                    weapons[id] = weapon.rounds
+                end
+                if storage.vehicle then
+                    exports["pgcfx"]:update("vehicles", { "items", "weapons" }, { storage.items, weapons }, "id = ?",
+                        { storageId })
+                else
+                    exports["pgcfx"]:update("storages", { "items", "weapons" }, { storage.items, weapons }, "id = ?",
+                        { storageId })
+                end
+                ::continue::
             end
         end
     end)
