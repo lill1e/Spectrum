@@ -107,6 +107,11 @@ function RageUI.PoolMenus:Staff()
     end)
 
     selfDevStaffMenu:IsVisible(function(Items)
+        Items:AddButton("Interior", "F8 to view", { RightLabel = ":3" }, function(onSelected)
+            if onSelected then
+                print(GetInteriorFromEntity(PlayerPedId()))
+            end
+        end)
         Items:AddButton("Coordinates", "F8 to view", { RightLabel = "🗺️" }, function(onSelected)
             if onSelected then
                 print(GetEntityCoords(PlayerPedId()))
