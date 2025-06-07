@@ -126,22 +126,21 @@ function HasAmmoThreshold(source, type, quantity)
     return Spectrum.players[source].ammo[type] >= quantity
 end
 
-function HasCash(source, clean, count)
-    return Spectrum.players[source].money[clean and "clean" or "dirty"] >= count
+function HasCash(source, cash, clean, count)
+    return Spectrum.players[source].money[cash and (clean and "clean" or "dirty") or "bank"] >= count
 end
 
-function AddCash(source, clean, count)
-    Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
-        [clean and "clean" or "dirty"] + count
-    TriggerClientEvent("Spectrum:Inventory", source, clean, count, 1, 0)
+function AddCash(source, cash, clean, count)
+    Spectrum.players[source].money[cash and (clean and "clean" or "dirty") or "bank"] = Spectrum.players[source].money
+        [cash and (clean and "clean" or "dirty") or "bank"] + count
+    TriggerClientEvent("Spectrum:Inventory", source, cash and (clean and "clean" or "dirty") or "bank", count, 1, 0)
 end
 
-function RemoveCash(source, clean, count)
-    if HasCash(source, clean, count) then
-        Spectrum.players[source].money[clean and "clean" or "dirty"] = Spectrum.players[source].money
-            [clean and "clean" or "dirty"] - count
-        TriggerClientEvent("Spectrum:Inventory", source, clean, count, 2, 0)
-    end
+function RemoveCash(source, cash, clean, count)
+    Spectrum.players[source].money[cash and (clean and "clean" or "dirty") or "bank"] = Spectrum.players[source]
+        .money
+        [cash and (clean and "clean" or "dirty") or "bank"] - count
+    TriggerClientEvent("Spectrum:Inventory", source, cash and (clean and "clean" or "dirty") or "bank", count, 2, 0)
 end
 
 function CreateWeapon(name)

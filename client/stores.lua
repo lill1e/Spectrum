@@ -22,7 +22,7 @@ for _, storeData in pairs(Spectrum.stores) do
     end
 end
 
-local storeMenu = RageUI.CreateMenu("placeholder", "what are you looking at?") -- TODO: find out how we can do right alignment, it looks sooooo much better
+local storeMenu = RageUI.CreateMenu("placeholder", "what are you looking at?")
 
 Citizen.CreateThread(function()
     while true do
@@ -50,7 +50,7 @@ Citizen.CreateThread(function()
                         Spectrum.currentStore.currentLoc = nil
                         RageUI.Visible(storeMenu, false)
                     end
-                elseif Spectrum.currentStore.currentLoc == location or not RageUI.Visible(storeMenu) then -- TODO: check if we can check vector equivalence
+                elseif Spectrum.currentStore.currentLoc == location or not RageUI.Visible(storeMenu) then
                     Spectrum.currentStore.current = nil
                     Spectrum.currentStore.currentLoc = nil
                     if RageUI.Visible(storeMenu) then
@@ -68,7 +68,7 @@ function RageUI.PoolMenus:Store()
             RageUI.Visible(storeMenu, false)
             goto continue
         end
-        for item, itemData in pairs(Spectrum.stores[Spectrum.currentStore.current].items) do -- TODO; make items hold a table of data
+        for item, itemData in pairs(Spectrum.stores[Spectrum.currentStore.current].items) do
             local name = "Unknown Item"
             if itemData.type == 0 then
                 name = (item == "clean" and "Clean Money" or "Dirty Money")

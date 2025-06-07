@@ -93,7 +93,8 @@ exports["pgcfx"]:ready(function()
             id = user.id,
             money = {
                 clean = user.clean_money,
-                dirty = user.dirty_money
+                dirty = user.dirty_money,
+                bank = user.bank
             },
             position = user.position,
             ped = user.ped,
@@ -148,8 +149,8 @@ exports["pgcfx"]:ready(function()
                         Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
                     end
                     exports["pgcfx"]:update("users",
-                        { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
-                        { playerData.money.clean, playerData.money.dirty,
+                        { "clean_money", "dirty_money", "bank", "position", "inventory", "ammo", "skin" },
+                        { playerData.money.clean, playerData.money.dirty, playerData.money.bank,
                             {
                                 x = playerData.position.x,
                                 y = playerData.position.y,
@@ -257,7 +258,8 @@ AddEventHandler("playerJoining", function()
                 id = user.id,
                 money = {
                     clean = user.clean_money,
-                    dirty = user.dirty_money
+                    dirty = user.dirty_money,
+                    bank = user.bank
                 },
                 position = user.position,
                 ped = user.ped,

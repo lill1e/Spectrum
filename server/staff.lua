@@ -2,9 +2,11 @@ RegisterNetEvent("Spectrum:Staff:Add", function(type, item, count)
     local source = tostring(source)
     if Spectrum.players[source].staff > 0 then
         if type == "clean_cash" then
-            AddCash(source, true, count)
+            AddCash(source, true, true, count)
         elseif type == "dirty_cash" then
-            AddCash(source, false, count)
+            AddCash(source, true, false, count)
+        elseif type == "bank" then
+            AddCash(source, false, true, count)
         elseif type == "item" then
             AddItem(source, item, count)
         elseif type == "weapon" then
@@ -21,9 +23,11 @@ RegisterNetEvent("Spectrum:Staff:Remove", function(type, item, count)
     local source = tostring(source)
     if Spectrum.players[source].staff > 0 then
         if type == "clean_cash" then
-            RemoveCash(source, true, count)
+            RemoveCash(source, true, true, count)
         elseif type == "dirty_cash" then
-            RemoveCash(source, false, count)
+            RemoveCash(source, true, false, count)
+        elseif type == "bank" then
+            RemoveCash(source, false, true, count)
         elseif type == "item" then
             RemoveItem(source, item, count)
         elseif type == "weapon" then

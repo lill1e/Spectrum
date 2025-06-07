@@ -4,8 +4,8 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType, 
     local condFlag = true
     if type == 1 then
         if itemType == 0 then
-            Spectrum.PlayerData.money[item and "clean" or "dirty"] = Spectrum.PlayerData.money
-                [item and "clean" or "dirty"] + quantity
+            Spectrum.PlayerData.money[item] = Spectrum.PlayerData.money
+                [item] + quantity
             condFlag = false
         elseif itemType == 1 then
             if Spectrum.PlayerData.items[item] == nil then
@@ -40,8 +40,8 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType, 
         end
     elseif type == 2 then
         if itemType == 0 then
-            Spectrum.PlayerData.money[item and "clean" or "dirty"] = Spectrum.PlayerData.money
-                [item and "clean" or "dirty"] - quantity
+            Spectrum.PlayerData.money[item] = Spectrum.PlayerData.money
+                [item] - quantity
             condFlag = false
         elseif itemType == 1 then
             if Spectrum.PlayerData.items[item] then
@@ -98,6 +98,10 @@ end)
 
 function RageUI.PoolMenus:Inventory()
     inventoryMenu:IsVisible(function(Items)
+        Items:AddButton("Bank", nil, { RightLabel = "~g~$" .. FormatMoney(Spectrum.PlayerData.money.bank) },
+            function(onSelected)
+
+            end)
         Items:AddButton("Clean Money", nil, { RightLabel = "~g~$" .. FormatMoney(Spectrum.PlayerData.money.clean) },
             function(onSelected)
 

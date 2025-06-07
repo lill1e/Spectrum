@@ -224,6 +224,14 @@ function RageUI.PoolMenus:Staff()
     end)
 
     inventoryStaffMenu:IsVisible(function(Items)
+        Items:AddButton("~g~Add Bank", nil, {}, function(onSelected)
+            if onSelected then
+                local input = Input("Amout of Money (bank):")
+                if input and tonumber(input) then
+                    TriggerServerEvent("Spectrum:Staff:Add", "bank", nil, tonumber(input))
+                end
+            end
+        end)
         Items:AddButton("~g~Add Cash", nil, {}, function(onSelected)
             if onSelected then
                 local input = Input("Amount of Cash (clean):")
@@ -273,6 +281,14 @@ function RageUI.PoolMenus:Staff()
             end
         end)
         Items:AddSeparator("")
+        Items:AddButton("~g~Remove Bank", nil, {}, function(onSelected)
+            if onSelected then
+                local input = Input("Amout of Money (bank):")
+                if input and tonumber(input) then
+                    TriggerServerEvent("Spectrum:Staff:Remove", "bank", nil, tonumber(input))
+                end
+            end
+        end)
         Items:AddButton("~g~Remove Cash", nil, {}, function(onSelected)
             if onSelected then
                 local input = Input("Amount of Cash (clean):")
