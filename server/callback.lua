@@ -144,3 +144,23 @@ Spectrum.libs.callbackFunctions.declareAmmo = function(source, token, ammoType, 
     end
     return isMatch
 end
+
+Spectrum.libs.callbackFunctions.depositBank = function(source, count)
+    if HasCash(source, true, true, count) then
+        RemoveCash(source, true, true, count)
+        AddCash(source, false, true, count)
+        return true
+    else
+        return false
+    end
+end
+
+Spectrum.libs.callbackFunctions.withdrawBank = function(source, count)
+    if HasCash(source, false, true, count) then
+        RemoveCash(source, false, true, count)
+        AddCash(source, true, true, count)
+        return true
+    else
+        return false
+    end
+end
