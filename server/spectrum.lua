@@ -61,6 +61,18 @@ Spectrum = {
                 TriggerClientEvent("Spectrum:Notification", source, "~r~there goes your blueprint")
             end,
             max = 1
+        },
+        ["repair_kit"] = {
+            displayName = "Repair Kit",
+            illegal = false,
+            rare = false,
+            removeOnUse = false,
+            swapOnUse = false,
+            handler = function(source)
+                TriggerClientEvent("Spectrum:Notification", source,
+                    "TBD")
+            end,
+            max = 3
         }
     },
     weapons = {},
@@ -70,6 +82,7 @@ Spectrum = {
         ["lspd"] = {},
         ["fib"] = {},
         ["doa"] = {}
+        Mechanic = {},
     },
     properties = {},
     storages = {},

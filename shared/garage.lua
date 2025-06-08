@@ -24,5 +24,15 @@ Config.Garage = {
                 colour = 3
             }
         },
+        Bennys = {
+            displayName = "Benny's",
+            position = vector3(-186.4437, -1290.272, 31.296),
+            range = 5,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
+        }
     }
 }
