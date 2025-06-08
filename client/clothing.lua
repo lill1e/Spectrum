@@ -12,27 +12,25 @@ local store = nil
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        for _, coord in ipairs(Config.Clothing.Stores) do
-            if #(GetEntityCoords(PlayerPedId()) - coord) <= 5 then
-                if not RageUI.AnyVisible({ ClothingMenu, SoloApparelMenu }) then
-                    HelpText("Press ~INPUT_CONTEXT~ to browse ~b~clothing")
-                    if IsControlJustPressed(0, 51) then
-                        if RageUI.AnyVisible({ ClothingMenu, SoloApparelMenu }) then
-                            Spectrum.skin.IsEditing = false
-                            RageUI.CloseAll()
-                        else
-                            store = coord
-                            Spectrum.skin.Outfit = true
-                            Spectrum.skin.IsEditing = true
-                            RageUI.Visible(ClothingMenu, true)
-                        end
+        if Config.Clothing.Interiors[GetInteriorFromEntity(PlayerPedId())] then
+            if not RageUI.AnyVisible({ ClothingMenu, SoloApparelMenu }) then
+                HelpText("Press ~INPUT_CONTEXT~ to browse ~b~clothing")
+                if IsControlJustPressed(0, 51) then
+                    if RageUI.AnyVisible({ ClothingMenu, SoloApparelMenu }) then
+                        Spectrum.skin.IsEditing = false
+                        RageUI.CloseAll()
+                    else
+                        store = GetInteriorFromEntity(PlayerPedId())
+                        Spectrum.skin.Outfit = true
+                        Spectrum.skin.IsEditing = true
+                        RageUI.Visible(ClothingMenu, true)
                     end
                 end
             end
         end
         if RageUI.AnyVisible({ ClothingMenu, SoloApparelMenu }) then
             if store then
-                if #(GetEntityCoords(PlayerPedId()) - store) > 5 then
+                if not Config.Clothing.Interiors[GetInteriorFromEntity(PlayerPedId())] then
                     ResetClothing()
                     Spectrum.skin.IsEditing = false
                     RageUI.CloseAll()
