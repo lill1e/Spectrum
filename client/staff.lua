@@ -86,7 +86,18 @@ function RageUI.PoolMenus:Staff()
                 SetEntityHealth(PlayerPedId(), 150)
             end
         end)
-        Items:AddButton("Spawn Vehicle", "vroom vroom", { RightLabel = "🏁" }, function(onSelected)
+        Items:AddButton("Spawn Car", "vroom vroom", { RightLabel = "🏁" }, function(onSelected)
+            if onSelected then
+                RequestModel("cheburek")
+                while not HasModelLoaded("cheburek") do
+                    Citizen.Wait(0)
+                end
+                TaskWarpPedIntoVehicle(PlayerPedId(),
+                    CreateVehicle(GetHashKey("cheburek"), GetEntityCoords(PlayerPedId()), GetEntityHeading(PlayerPedId()),
+                        true, false), -1)
+            end
+        end)
+        Items:AddButton("Spawn BMX", "pedal pedal", { RightLabel = "🏁" }, function(onSelected)
             if onSelected then
                 RequestModel("bmx")
                 while not HasModelLoaded("bmx") do
