@@ -89,6 +89,7 @@ exports["pgcfx"]:ready(function()
                 globalProperties[id].owned = true
             end
         end
+
         Spectrum.players[tostring(playerId)] = {
             id = user.id,
             money = {
