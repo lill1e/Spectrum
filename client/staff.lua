@@ -126,6 +126,7 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Coordinates", "F8 to view", { RightLabel = "🗺️" }, function(onSelected)
             if onSelected then
                 print(GetEntityCoords(PlayerPedId()))
+                print(GetEntityHeading(PlayerPedId()))
             end
         end)
         Items:AddButton("Audit Indetifiers", "ooh what's that we got there", { RightLabel = "📋" }, function(onSelected)
