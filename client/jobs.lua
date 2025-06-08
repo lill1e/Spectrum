@@ -70,11 +70,11 @@ function RageUI.PoolMenus:Jobs()
         for vehicle, data in pairs(Config.Jobs[Spectrum.Job.current].vehicles) do
             if Spectrum.Job.vehicle ~= nil then
                 Items:AddButton("~o~Park Vehicle", (DoesEntityExist(Spectrum.Job.vehicle) and
-                        (#(GetEntityCoords(Spectrum.Job.vehicle) - GetEntityCoords(PlayerPedId())) <= 20)) and nil or
+                        (#(GetEntityCoords(Spectrum.Job.vehicle) - GetEntityCoords(PlayerPedId())) <= 50)) and nil or
                     "Your ~b~vehicle ~s~must be in range to return it to parking",
                     {
                         IsDisabled = not DoesEntityExist(Spectrum.Job.vehicle) or
-                            (#(GetEntityCoords(Spectrum.Job.vehicle) - GetEntityCoords(PlayerPedId())) > 20)
+                            (#(GetEntityCoords(Spectrum.Job.vehicle) - GetEntityCoords(PlayerPedId())) > 50)
                     }, function(onSelected)
                         if onSelected then
                             SetEntityAsMissionEntity(Spectrum.Job.vehicle, true, true)
@@ -151,7 +151,7 @@ Citizen.CreateThread(function()
                                         TriggerServerEvent("Spectrum:Job:Toggle", Spectrum.Job.current, false)
                                         Spectrum.Job.current = nil
                                         Spectrum.Job.state = {}
-                                        if Spectrum.Job.vehicle and DoesEntityExist(Spectrum.Job.vehicle) and #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(Spectrum.Job.vehicle)) <= 20 then
+                                        if Spectrum.Job.vehicle and DoesEntityExist(Spectrum.Job.vehicle) and #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(Spectrum.Job.vehicle)) <= 50 then
                                             SetEntityAsMissionEntity(Spectrum.Job.vehicle, true, true)
                                             DeleteVehicle(Spectrum.Job.vehicle)
                                         end
