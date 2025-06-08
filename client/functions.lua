@@ -40,3 +40,39 @@ function GetClosest(pool)
         return minHandle
     end
 end
+
+function VehicleData(handle)
+    SetVehicleModKit(handle, 0)
+    local state = {
+        Color = {
+            Primary = table.pack(GetVehicleCustomPrimaryColour(handle)),
+            Secondary = table.pack(GetVehicleCustomSecondaryColour(handle))
+        },
+        Tint = GetVehicleWindowTint(handle),
+        Dirt = GetVehicleDirtLevel(handle),
+        Health = GetVehicleEngineHealth(handle),
+        Plate = GetVehicleNumberPlateTextIndex(handle),
+        Mods = {}
+    }
+    if state.Tint == -1 then
+        SetVehicleWindowTint(handle, 0)
+        state.Tint = GetVehicleWindowTint(handle)
+    end
+    for mod, _ in pairs(Config.Vehicles.Mods.Mods) do
+        state.Mods[mod] = GetVehicleMod(handle, mod)
+    end
+    return state
+end
+
+function ApplyVehicleData(handle, state)
+    SetVehicleModKit(handle, 0)
+    SetVehicleDirtLevel(handle, state.Dirt)
+    SetVehicleCustomPrimaryColour(handle, table.unpack(state.Color.Primary))
+    SetVehicleCustomSecondaryColour(handle, table.unpack(state.Color.Secondary))
+    SetVehicleWindowTint(handle, state.Tint)
+    SetVehicleEngineHealth(handle, state.Health * 10 / 10)
+    SetVehicleNumberPlateTextIndex(handle, state.Plate)
+    for mod, value in pairs(state.Mods) do
+        SetVehicleMod(handle, tonumber(mod), value, false)
+    end
+end

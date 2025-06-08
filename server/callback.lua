@@ -43,8 +43,9 @@ Spectrum.libs.callbackFunctions.verifyVehicle = function(source, vehicle, plate)
     return vehicleQuery ~= nil
 end
 
-Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, garage)
-    local query = exports["pgcfx"]:update("vehicles", { "active", "garage" }, { "false", garage }, "id = ? AND owner = ?",
+Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, garage, data)
+    local query = exports["pgcfx"]:update("vehicles", { "active", "garage", "data" }, { "false", garage, data },
+        "id = ? AND owner = ?",
         { plate, Spectrum.players[source].id })
     return query > 0
 end

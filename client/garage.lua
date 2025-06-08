@@ -71,7 +71,9 @@ function RageUI.PoolMenus:Garage()
                                     Wait(0)
                                 end
                                 SetVehicleNumberPlateText(handle, plate)
-                                SetVehicleCustomPrimaryColour(handle, 255, 146, 230)
+                                if vehicle.data ~= nil then
+                                    ApplyVehicleData(handle, vehicle.data)
+                                end
                                 TaskWarpPedIntoVehicle(PlayerPedId(), handle, -1)
                             end
                         end, vehicle.vehicle, plate)
@@ -99,14 +101,16 @@ Citizen.CreateThread(function()
                         HelpText("Press ~INPUT_CONTEXT~ to store your ~b~" ..
                             Config.Vehicles.Names[GetEntityModel(GetVehiclePedIsIn(PlayerPedId(), false))])
                         if IsControlJustPressed(0, 51) then
+                            local vehicleData = VehicleData(vehicle)
                             Spectrum.libs.Callbacks.callback("verifyVehiclePlate", function(verified)
                                 if verified then
                                     TaskLeaveVehicle(PlayerPedId(), vehicle, 0)
                                     DeleteVehicle(vehicle)
                                     Spectrum.vehicles[plateStripped].active = false
                                     Spectrum.vehicles[plateStripped].garage = k
+                                    Spectrum.vehicles[plateStripped].data = vehicleData
                                 end
-                            end, plateStripped, k)
+                            end, plateStripped, k, vehicleData)
                         end
                     else
                         HelpText("~r~You can only store owned vehicles in the garage")
