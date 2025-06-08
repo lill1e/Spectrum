@@ -121,7 +121,6 @@ function RageUI.PoolMenus:Storage()
                         if rounds > 0 then
                             input = Input("# of Rounds (Max: " .. rounds .. "):")
                         end
-                        print((rounds == 0 and "none" or Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), weapon)]))
                         if input and tonumber(input) then
                             storageLock = true
                             local inputNum = tonumber(input)
