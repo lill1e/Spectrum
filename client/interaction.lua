@@ -8,7 +8,7 @@ RegisterCommand("+interaction", function()
 end, false)
 RegisterCommand("-interaction", function() end, false)
 
-function RageUI.PoolMenus.Interaction()
+function RageUI.PoolMenus:Interaction()
     interactionMenu:IsVisible(function(Items)
         Items:AddButton("Inspect Vehicle", nil,
             {
