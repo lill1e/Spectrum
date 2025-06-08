@@ -27,7 +27,8 @@ Spectrum = {
         skin = {
             Sex = 1,
         },
-        identifiers = {}
+        identifiers = {},
+        jobs = {}
     },
     Loaded = false,
     Spawned = false,
@@ -59,5 +60,12 @@ Spectrum = {
     skin = {
         IsEditing = false,
     },
-    Storage = {}
+    Job = {
+        current = nil,
+        state = {},
+        vehicle = nil,
+        location = nil,
+        vehicleBlip = nil
+    },
+    Storage = {},
 }

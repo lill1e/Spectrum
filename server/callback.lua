@@ -165,3 +165,22 @@ Spectrum.libs.callbackFunctions.withdrawBank = function(source, count)
         return false
     end
 end
+
+Spectrum.libs.callbackFunctions.parking = function(source, spots)
+    local vehicles = GetAllVehicles()
+    for i, spot in ipairs(spots) do
+        local position = spot[1]
+        local available = true
+        for _, handle in ipairs(vehicles) do
+            local dist = #(position - GetEntityCoords(handle))
+            if dist <= 5 then
+                available = false
+                break
+            end
+        end
+        if available then
+            return i
+        end
+    end
+    return -1
+end

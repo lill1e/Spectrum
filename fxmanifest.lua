@@ -30,7 +30,8 @@ client_scripts {
     "RageUI/elements/*.lua",
     "RageUI/items/*.lua",
     "client/spectrum.lua",
-    "client/*.lua"
+    "client/*.lua",
+    "client/jobs/*.lua"
 }
 
 server_scripts {

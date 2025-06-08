@@ -107,7 +107,8 @@ exports["pgcfx"]:ready(function()
             identifiers = GetAllIdentifiers(tostring(playerId)),
             skin = user.skin,
             name = GetPlayerName(playerId),
-            active = true
+            active = true,
+            jobs = user.jobs
         }
 
         TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
@@ -272,7 +273,8 @@ AddEventHandler("playerJoining", function()
                 identifiers = GetAllIdentifiers(source),
                 skin = user.skin,
                 name = GetPlayerName(source),
-                active = true
+                active = true,
+                jobs = user.jobs
             }
 
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
