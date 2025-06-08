@@ -595,7 +595,7 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterKeyMapping("+skin", "Skin Menu", "keyboard", "f7")
+RegisterKeyMapping("+skin", "Skin Menu", "keyboard", "f9")
 RegisterCommand("+skin", function()
     if Spectrum.Loaded and (Spectrum.PlayerData.staff > 0 or Spectrum.debug or Spectrum.skin.IsEditing) then
         Spectrum.skin.IsEditing = true
