@@ -161,6 +161,7 @@ Citizen.CreateThread(function()
                                         end
                                     else
                                         Spectrum.Job.current = j
+                                        Spectrum.Job.state = Config.Jobs[j].defaultState
                                         TriggerServerEvent("Spectrum:Job:Toggle", Spectrum.Job.current, true)
                                         itemsMenu:SetTitle(job.displayName)
                                         vehiclesMenu:SetTitle(job.displayName)
