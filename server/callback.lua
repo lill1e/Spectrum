@@ -184,3 +184,35 @@ Spectrum.libs.callbackFunctions.parking = function(source, spots)
     end
     return -1
 end
+
+Spectrum.libs.callbackFunctions.createBill = function(source, cost, target)
+    target = tostring(target)
+    if not Spectrum.players[target] or not Spectrum.players[target].active then
+        return false
+    end
+    local id = GetGameTimer() + math.random(999)
+    while Spectrum.bills[id] ~= nil do
+        id = GetGameTimer() + math.random(999)
+    end
+    Spectrum.bills[id] = {
+        cost = cost,
+        biller = source,
+        target = target
+    }
+    TriggerClientEvent("Spectrum:Bills:Create", target, id, Spectrum.bills[id])
+    return true
+end
+
+Spectrum.libs.callbackFunctions.payBill = function(source, id)
+    if Spectrum.bills[id] and HasCash(source, false, true, Spectrum.bills[id].cost) then
+        RemoveCash(source, false, true, Spectrum.bills[id].cost)
+        AddCash(Spectrum.bills[id].biller, false, true, Spectrum.bills[id].cost)
+        Notification(source, "You have paid the ~y~bill ~s~of ~g~$" .. FormatMoney(Spectrum.bills[id].cost))
+        Notification(Spectrum.bills[id].biller,
+            "You have recieved ~g~$" .. FormatMoney(Spectrum.bills[id].cost) .. " ~s~for Bill #" .. id)
+        return true
+    else
+        Notification(source, "You do not have enough ~g~money ~s~for this")
+        return false
+    end
+end

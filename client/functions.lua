@@ -76,3 +76,20 @@ function ApplyVehicleData(handle, state)
         SetVehicleMod(handle, tonumber(mod), value, false)
     end
 end
+
+function GetClosestPlayer()
+    local me = PlayerId()
+    local meCoords = GetEntityCoords(PlayerPedId())
+    local target = nil
+    local dist = nil
+    for _, player in ipairs(GetActivePlayers()) do
+        if player ~= me then
+            local playerCoords = GetEntityCoords(GetPlayerPed(player))
+            if (dist == nil and (#(meCoords - playerCoords) <= 3)) or #(meCoords - playerCoords) < dist then
+                target = player
+                dist = #(meCoords - playerCoords)
+            end
+        end
+    end
+    return target and GetPlayerServerId(target) or target
+end

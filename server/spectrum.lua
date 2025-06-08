@@ -73,6 +73,7 @@ Spectrum = {
     },
     properties = {},
     storages = {},
+    bills = {},
     stores = {
         twentyfourseven = {
             colour = "~g~",
