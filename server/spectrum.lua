@@ -78,10 +78,6 @@ Spectrum = {
     weapons = {},
     weaponsData = {},
     jobs = {
-        ["dealer"] = {},
-        ["lspd"] = {},
-        ["fib"] = {},
-        ["doa"] = {}
         Mechanic = {},
     },
     properties = {},
