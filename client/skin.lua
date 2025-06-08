@@ -3,9 +3,13 @@ local heritageMenu = RageUI.CreateSubMenu(SkinMenu, "Character", "~d~Heritage")
 local featuresMenu = RageUI.CreateSubMenu(SkinMenu, "Character", "~d~Features")
 local appearanceMenu = RageUI.CreateSubMenu(SkinMenu, "Character", "~d~Appearance")
 local apparelMenu = RageUI.CreateSubMenu(SkinMenu, "Character", "~d~Apparel")
+ClothingMenu = RageUI.CreateMenu("Clothing", "~b~Clothing Store")
+SoloApparelMenu = RageUI.CreateSubMenu(ClothingMenu, "Clothing", "Browse Clothing")
 
 featuresMenu:ToggleMouse()
 appearanceMenu:ToggleMouse()
+
+local clothingCache = nil
 
 --[
 -- Feature ::= { [-1, 1] }
@@ -194,8 +198,11 @@ function RandomizeSkin()
     end
 end
 
-function ApplySkin()
+function ApplySkin(bypass)
     local model = Config.Skin.Models[Spectrum.PlayerData.skin.Sex]
+    if bypass then
+        goto skip
+    end
     RequestModel(model)
     while not HasModelLoaded(model) do
         Wait(0)
@@ -215,6 +222,7 @@ function ApplySkin()
                 ((i == 1 and featureData.inverseX or featureData.inverseY) and -1 or 1))
         end
     end
+    ::skip::
     for n, component in pairs(Config.Skin.Components) do
         if Spectrum.PlayerData.skin.Components[tostring(component)] then
             SetPedComponentVariation(PlayerPedId(), component,
@@ -251,6 +259,122 @@ end
 
 function GetFeatureValue(value, inverseHuh)
     return (value * 2 - 1) * (inverseHuh and -1 or 1)
+end
+
+function clothingChanged()
+    if clothingCache == nil then return false end
+    for k, v in pairs(clothingCache.Components) do
+        if v[1] ~= Spectrum.PlayerData.skin.Components[k][1] or v[2] ~= Spectrum.PlayerData.skin.Components[k][2] then
+            return true
+        end
+    end
+    for k, v in pairs(clothingCache.Props) do
+        if v[1] ~= Spectrum.PlayerData.skin.Props[k][1] or v[2] ~= Spectrum.PlayerData.skin.Props[k][2] then
+            return true
+        end
+    end
+    return false
+end
+
+function ResetClothing()
+    if clothingCache == nil then return end
+    for k, v in pairs(clothingCache.Components) do
+        Spectrum.PlayerData.skin.Components[k][1] = v[1]
+        Spectrum.PlayerData.skin.Components[k][2] = v[2]
+    end
+    for k, v in pairs(clothingCache.Props) do
+        Spectrum.PlayerData.skin.Props[k][1] = v[1]
+        Spectrum.PlayerData.skin.Props[k][2] = v[2]
+    end
+    ApplySkin(true)
+end
+
+function apparelMenuItems(Items)
+    for _, value in ipairs(Config.Skin.Menu.Apparel) do
+        if value.type == "Component" then
+            local tbl = nTable(GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), true, value.name)
+            local revMap = {}
+            for i, v in ipairs(tbl) do
+                if v ~= "None" then
+                    revMap[v] = i
+                end
+            end
+            Items:AddList(value.displayName,
+                tbl,
+                GetPedDrawableVariation(PlayerPedId(), value.name) == -1 and 1 or
+                revMap[GetPedDrawableVariation(PlayerPedId(), value.name)],
+                "Total: " .. GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), {},
+                function(Index, onSelected, onListChange)
+                    if onSelected then
+                        local input = Input("Variation:")
+                        if input and tonumber(input) and not IsPedComponentVariationGen9Exclusive(PlayerPedId(), value.name, tonumber(input)) then
+                            Spectrum.PlayerData.skin.Components[tostring(value.name)] = { tonumber(input), 1 }
+                            SetPedComponentVariation(PlayerPedId(), value.name, tonumber(input), 0, 0)
+                        end
+                    end
+                    if onListChange then
+                        Spectrum.PlayerData.skin.Components[tostring(value.name)] = { tbl[Index], 1 }
+                        SetPedComponentVariation(PlayerPedId(), value.name, tbl[Index] == "None" and -1 or tbl
+                            [Index],
+                            0, 0)
+                    end
+                end)
+            if GetNumberOfPedTextureVariations(PlayerPedId(), value.name, GetPedDrawableVariation(PlayerPedId(), value.name)) > 1 then
+                Items:AddList(value.displayName .. " (Style)",
+                    nTable(
+                        GetNumberOfPedTextureVariations(PlayerPedId(), value.name,
+                            GetPedDrawableVariation(PlayerPedId(), value.name)), false),
+                    GetPedTextureVariation(PlayerPedId(), value.name) + 1,
+                    "Total: " ..
+                    GetNumberOfPedTextureVariations(PlayerPedId(), value.name,
+                        GetPedDrawableVariation(PlayerPedId(), value.name)), {},
+                    function(Index, onSelected, onListChange)
+                        if onListChange then
+                            Spectrum.PlayerData.skin.Components[tostring(value.name)] = { Spectrum.PlayerData.skin
+                                .Components
+                                [tostring(value.name)][1],
+                                Index }
+                            SetPedComponentVariation(PlayerPedId(), value.name,
+                                GetPedDrawableVariation(PlayerPedId(), value.name), Index - 1, 0)
+                        end
+                    end)
+            end
+        else
+            Items:AddList(value.displayName,
+                nTable(GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), true),
+                GetPedPropIndex(PlayerPedId(), value.name) + 2,
+                "Total: " .. GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), {},
+                function(Index, onSelected, onListChange)
+                    if onListChange then
+                        if Index == 1 then
+                            Spectrum.PlayerData.skin.Props[tostring(value.name)] = { -1, 0 }
+                            ClearPedProp(PlayerPedId(), value.name)
+                        else
+                            Spectrum.PlayerData.skin.Props[tostring(value.name)] = { Index, 0 }
+                            SetPedPropIndex(PlayerPedId(), value.name, Index - 2, 0, true)
+                        end
+                    end
+                end)
+            if GetNumberOfPedPropTextureVariations(PlayerPedId(), value.name, GetPedPropIndex(PlayerPedId(), value.name)) > 1 then
+                Items:AddList(value.displayName .. " (Style)",
+                    nTable(
+                        GetNumberOfPedPropTextureVariations(PlayerPedId(), value.name,
+                            GetPedPropIndex(PlayerPedId(), value.name)), false),
+                    GetPedPropTextureIndex(PlayerPedId(), value.name) + 1,
+                    "Total: " ..
+                    GetNumberOfPedPropTextureVariations(PlayerPedId(), value.name,
+                        GetPedPropIndex(PlayerPedId(), value.name)), {},
+                    function(Index, onSelected, onListChange)
+                        if onListChange then
+                            Spectrum.PlayerData.skin.Props[tostring(value.name)] = { Spectrum.PlayerData.skin.Props
+                                [tostring(value.name)][1], Index }
+                            SetPedPropIndex(PlayerPedId(), value.name, GetPedPropIndex(PlayerPedId(), value.name),
+                                Index - 1, true)
+                        end
+                    end)
+            end
+        end
+    end
 end
 
 function RageUI.PoolMenus:Skin()
@@ -482,93 +606,56 @@ function RageUI.PoolMenus:Skin()
         end
     end)
 
-    apparelMenu:IsVisible(function(Items)
-        for _, value in ipairs(Config.Skin.Menu.Apparel) do
-            if value.type == "Component" then
-                local tbl = nTable(GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), true, value.name)
-                local revMap = {}
-                for i, v in ipairs(tbl) do
-                    if v ~= "None" then
-                        revMap[v] = i
-                    end
-                end
-                Items:AddList(value.displayName,
-                    tbl,
-                    GetPedDrawableVariation(PlayerPedId(), value.name) == -1 and 1 or
-                    revMap[GetPedDrawableVariation(PlayerPedId(), value.name)],
-                    "Total: " .. GetNumberOfPedDrawableVariations(PlayerPedId(), value.name), {},
-                    function(Index, onSelected, onListChange)
-                        if onSelected then
-                            local input = Input("Variation:")
-                            if input and tonumber(input) and not IsPedComponentVariationGen9Exclusive(PlayerPedId(), value.name, tonumber(input)) then
-                                Spectrum.PlayerData.skin.Components[tostring(value.name)] = { tonumber(input), 1 }
-                                SetPedComponentVariation(PlayerPedId(), value.name, tonumber(input), 0, 0)
-                            end
-                        end
-                        if onListChange then
-                            Spectrum.PlayerData.skin.Components[tostring(value.name)] = { tbl[Index], 1 }
-                            SetPedComponentVariation(PlayerPedId(), value.name, tbl[Index] == "None" and -1 or tbl
-                                [Index],
-                                0, 0)
-                        end
-                    end)
-                if GetNumberOfPedTextureVariations(PlayerPedId(), value.name, GetPedDrawableVariation(PlayerPedId(), value.name)) > 1 then
-                    Items:AddList(value.displayName .. " (Style)",
-                        nTable(
-                            GetNumberOfPedTextureVariations(PlayerPedId(), value.name,
-                                GetPedDrawableVariation(PlayerPedId(), value.name)), false),
-                        GetPedTextureVariation(PlayerPedId(), value.name) + 1,
-                        "Total: " ..
-                        GetNumberOfPedTextureVariations(PlayerPedId(), value.name,
-                            GetPedDrawableVariation(PlayerPedId(), value.name)), {},
-                        function(Index, onSelected, onListChange)
-                            if onListChange then
-                                Spectrum.PlayerData.skin.Components[tostring(value.name)] = { Spectrum.PlayerData.skin
-                                    .Components
-                                    [tostring(value.name)][1],
-                                    Index }
-                                SetPedComponentVariation(PlayerPedId(), value.name,
-                                    GetPedDrawableVariation(PlayerPedId(), value.name), Index - 1, 0)
-                            end
-                        end)
-                end
-            else
-                Items:AddList(value.displayName,
-                    nTable(GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), true),
-                    GetPedPropIndex(PlayerPedId(), value.name) + 2,
-                    "Total: " .. GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), {},
-                    function(Index, onSelected, onListChange)
-                        if onListChange then
-                            if Index == 1 then
-                                Spectrum.PlayerData.skin.Props[tostring(value.name)] = { -1, 0 }
-                                ClearPedProp(PlayerPedId(), value.name)
-                            else
-                                Spectrum.PlayerData.skin.Props[tostring(value.name)] = { Index, 0 }
-                                SetPedPropIndex(PlayerPedId(), value.name, Index - 2, 0, true)
-                            end
-                        end
-                    end)
-                if GetNumberOfPedPropTextureVariations(PlayerPedId(), value.name, GetPedPropIndex(PlayerPedId(), value.name)) > 1 then
-                    Items:AddList(value.displayName .. " (Style)",
-                        nTable(
-                            GetNumberOfPedPropTextureVariations(PlayerPedId(), value.name,
-                                GetPedPropIndex(PlayerPedId(), value.name)), false),
-                        GetPedPropTextureIndex(PlayerPedId(), value.name) + 1,
-                        "Total: " ..
-                        GetNumberOfPedPropTextureVariations(PlayerPedId(), value.name,
-                            GetPedPropIndex(PlayerPedId(), value.name)), {},
-                        function(Index, onSelected, onListChange)
-                            if onListChange then
-                                Spectrum.PlayerData.skin.Props[tostring(value.name)] = { Spectrum.PlayerData.skin.Props
-                                    [tostring(value.name)][1], Index }
-                                SetPedPropIndex(PlayerPedId(), value.name, GetPedPropIndex(PlayerPedId(), value.name),
-                                    Index - 1, true)
-                            end
-                        end)
-                end
+    apparelMenu:IsVisible(apparelMenuItems, function(Panels)
+    end)
+
+    ClothingMenu:IsVisible(function(Items)
+        if clothingCache == nil then
+            local Components = {}
+            local Props = {}
+            for k, v in pairs(Spectrum.PlayerData.skin.Components) do
+                Components[k] = { v[1], v[2] }
             end
+            for k, v in pairs(Spectrum.PlayerData.skin.Props) do
+                Props[k] = { v[1], v[2] }
+            end
+            clothingCache = {
+                Components = Components,
+                Props = Props
+            }
         end
+        Items:AddButton("Browse Clothing", nil, { RightLabel = "→→→" }, function(onSelected)
+
+        end, SoloApparelMenu)
+
+        Items:AddSeparator("")
+        Items:AddButton("Confirm Changes",
+            clothingChanged() and "Make sure to save an ~b~outfit" or
+            "You must make a change to your ~b~clothes ~s~to save it",
+            { RightBadge = RageUI.BadgeStyle.Clothes, IsDisabled = not clothingChanged() },
+            function(onSelected)
+                if onSelected then
+                    local Components = {}
+                    local Props = {}
+                    for k, v in pairs(Spectrum.PlayerData.skin.Components) do
+                        Components[k] = { v[1], v[2] }
+                    end
+                    for k, v in pairs(Spectrum.PlayerData.skin.Props) do
+                        Props[k] = { v[1], v[2] }
+                    end
+                    clothingCache = {
+                        Components = Components,
+                        Props = Props
+                    }
+                    TriggerServerEvent("Spectrum:Skin", Spectrum.PlayerData.skin)
+                    Notification("Your new ~b~clothes ~s~have been saved.")
+                end
+            end)
     end, function(Panels)
+
+    end)
+
+    SoloApparelMenu:IsVisible(apparelMenuItems, function(Panels)
 
     end)
 end
@@ -576,21 +663,15 @@ end
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        local anyVisible = (RageUI.Visible(SkinMenu) or RageUI.Visible(heritageMenu) or RageUI.Visible(apparelMenu) or RageUI.Visible(appearanceMenu) or RageUI.Visible(featuresMenu))
-        if Spectrum.Spawned and Spectrum.skin.IsEditing and not anyVisible then
-            RageUI.Visible(SkinMenu, true)
-        elseif Spectrum.Spawned and not Spectrum.skin.IsEditing and anyVisible then
-            if RageUI.Visible(SkinMenu) then
-                RageUI.Visible(SkinMenu, false)
-            elseif RageUI.Visible(heritageMenu) then
-                RageUI.Visible(heritageMenu, false)
-            elseif RageUI.Visible(apparelMenu) then
-                RageUI.Visible(apparelMenu, false)
-            elseif RageUI.Visible(appearanceMenu) then
-                RageUI.Visible(appearanceMenu, false)
-            elseif RageUI.Visible(featuresMenu) then
-                RageUI.Visible(featuresMenu, false)
+        local anyVisible = RageUI.AnyVisible({ SkinMenu, heritageMenu, apparelMenu, appearanceMenu, featuresMenu })
+        if Spectrum.Spawned and Spectrum.skin.IsEditing and not Spectrum.skin.Outfit and not anyVisible then
+            if Spectrum.skin.Outfit then
+                RageUI.Visible(ClothingMenu, true)
+            else
+                RageUI.Visible(SkinMenu, true)
             end
+        elseif Spectrum.Spawned and not Spectrum.skin.IsEditing and not Spectrum.skin.Outfit and anyVisible then
+            RageUI.CloseAll()
         end
     end
 end)
@@ -598,6 +679,7 @@ end)
 RegisterKeyMapping("+skin", "Skin Menu", "keyboard", "f9")
 RegisterCommand("+skin", function()
     if Spectrum.Loaded and (Spectrum.PlayerData.staff > 0 or Spectrum.debug or Spectrum.skin.IsEditing) then
+        Spectrum.skin.Outfit = false
         Spectrum.skin.IsEditing = true
     end
 end, false)

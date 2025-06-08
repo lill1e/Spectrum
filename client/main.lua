@@ -96,6 +96,7 @@ Citizen.CreateThread(function()
                 }
                 RandomizeSkin()
                 ApplySkin()
+                Spectrum.skin.Outfit = false
                 Spectrum.skin.IsEditing = true
             else
                 ApplySkin()

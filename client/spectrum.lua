@@ -59,6 +59,7 @@ Spectrum = {
     misc = {},
     skin = {
         IsEditing = false,
+        Outfit = false
     },
     Job = {
         current = nil,

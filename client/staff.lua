@@ -110,6 +110,7 @@ function RageUI.PoolMenus:Staff()
         end)
         Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
             if onSelected then
+                Spectrum.skin.Outfit = false
                 Spectrum.skin.IsEditing = true
             end
         end)
