@@ -101,6 +101,9 @@ Citizen.CreateThread(function()
                 ApplySkin()
             end
 
+            NetworkSetFriendlyFireOption(true)
+            SetCanAttackFriendly(PlayerPedId(), true, true)
+
             local coords = vector3(0, 0, 75)
             if Spectrum.CanRevive then coords = GetEntityCoords(PlayerPedId()) end
             if not Spectrum.Spawned then
