@@ -119,6 +119,10 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
                     })
                 end
                 return vehicles
+            elseif type == 2 then
+                return Spectrum.players[target].items
+            elseif type == 3 then
+                return Spectrum.players[target].money
             end
         else
             return nil

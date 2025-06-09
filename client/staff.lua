@@ -17,6 +17,15 @@ local toggles = {
 local map = {
     markerDist = 5.0
 }
+local lists = {
+    moneyAudit = { "Bank", "Cash (Clean)", "Cash (Dirty)" }
+}
+local listIndex = {
+    moneyAuditAdd = 1,
+    moneyAuditRemove = 1
+}
+local moneyTypes = { "bank", "clean_cash", "dirty_cash" }
+local moneyTypesAlt = { "bank", "clean", "dirty" }
 
 local currentGarage = 1
 local garageTbl = {}
@@ -262,6 +271,32 @@ function RageUI.PoolMenus:Staff()
                 end, Spectrum.StaffMenu.target, 1)
             end
         end, detailsMenu)
+        Items:AddButton("Audit Inventory", nil, { RightLabel = "→→→" }, function(onSelected)
+            if onSelected then
+                detailData = {}
+                detail = "userInventory"
+                Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                    if verified ~= nil then
+                        detailData = verified
+                    else
+                        Notification("There was an issue requesting this ~b~player")
+                    end
+                end, Spectrum.StaffMenu.target, 2)
+            end
+        end, detailsMenu)
+        Items:AddButton("Audit Money", nil, { RightLabel = "→→→" }, function(onSelected)
+            if onSelected then
+                detailData = {}
+                detail = "userMoney"
+                Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                    if verified ~= nil then
+                        detailData = verified
+                    else
+                        Notification("There was an issue requesting this ~b~player")
+                    end
+                end, Spectrum.StaffMenu.target, 3)
+            end
+        end, detailsMenu)
     end, function()
 
     end)
@@ -400,8 +435,8 @@ function RageUI.PoolMenus:Staff()
             return
         end
 
-        for _, data in ipairs(detailData) do
-            if detail == "userVehicles" then
+        if detail == "userVehicles" then
+            for _, data in ipairs(detailData) do
                 Items:AddButton(Config.Vehicles.Names[GetHashKey(data.vehicle)],
                     (data.active and "~y~Active" or "~g~Stored") .. " ~s~| ~b~" ..
                     (data.garage and Config.Garage.Garages[data.garage].displayName or "Global"),
@@ -412,10 +447,9 @@ function RageUI.PoolMenus:Staff()
                         end
                     end, vehicleManageMenu)
             end
-        end
-
-        if detail == "userVehicles" then
-            Items:AddSeparator("")
+            if #detailData > 0 then
+                Items:AddSeparator("")
+            end
             Items:AddButton("Grant Vehicle", "Shiny", {}, function(onSelected)
                 if onSelected then
                     local vehicle = Input("Vehicle:")
@@ -426,6 +460,124 @@ function RageUI.PoolMenus:Staff()
                     end
                 end
             end)
+        elseif detail == "userInventory" then
+            local c = 0
+            for item, count in pairs(detailData) do
+                c = c + 1
+                if Spectrum.items[item] ~= nil then
+                    Items:AddButton(Spectrum.items[item].displayName, nil, { RightLabel = "x" .. count },
+                        function(onSelected)
+
+                        end)
+                end
+            end
+            if c == 0 then
+                Items:AddButton("Empty Inventory", nil, {}, function(onSelected)
+
+                end)
+            end
+            Items:AddSeparator("")
+            Items:AddButton("~b~Add Item", nil, { RightLabel = "→→→" }, function(onSelected)
+                if onSelected then
+                    local input = Input("Item:")
+                    if input then
+                        local item = input
+                        input = Input("Quantity:")
+                        if input and tonumber(input) then
+                            Spectrum.libs.Callbacks.callback("staffAdd", function(status)
+                                if status then
+                                    if detailData[item] then
+                                        detailData[item] = detailData[item] + tonumber(input)
+                                    else
+                                        detailData[item] = tonumber(input)
+                                    end
+                                else
+                                    Notification("The player is unable to hold an additional ~y~x" ..
+                                        input .. "~s~ " .. Spectrum.items[item].displayName)
+                                end
+                            end, "item", item, tonumber(input), Spectrum.StaffMenu.target)
+                        end
+                    end
+                end
+            end)
+            Items:AddButton("~b~Remove Item", nil, { RightLabel = "→→→" }, function(onSelected)
+                if onSelected then
+                    local input = Input("Item:")
+                    if input then
+                        local item = input
+                        input = Input("Quantity:")
+                        if input and tonumber(input) then
+                            print(detailData[item], type(detailData[item]))
+                            if detailData[item] and detailData[item] >= tonumber(input) then
+                                Spectrum.libs.Callbacks.callback("staffRemove", function(status)
+                                    if status and detailData[item] then
+                                        if detailData[item] == tonumber(input) then
+                                            detailData[item] = nil
+                                        else
+                                            detailData[item] = detailData[item] - tonumber(input)
+                                        end
+                                    else
+                                        Notification("The ~b~player ~s~does not have enough " ..
+                                            Spectrum.items[item].displayName)
+                                    end
+                                end, "item", item, tonumber(input), Spectrum.StaffMenu.target)
+                            else
+                                Notification("The ~b~player ~s~does not have enough " ..
+                                    Spectrum.items[item].displayName)
+                            end
+                        end
+                    end
+                end
+            end)
+        elseif detail == "userMoney" then
+            if TableEmpty(detailData) then
+                goto skip
+            end
+            Items:AddButton("Bank", nil, { RightLabel = "~g~$" .. FormatMoney(detailData.bank) }, function() end)
+            Items:AddButton("Cash (Clean)", nil, { RightLabel = "~g~$" .. FormatMoney(detailData.clean) },
+                function() end)
+            Items:AddButton("Cash (Dirty)", nil, { RightLabel = "~r~$" .. FormatMoney(detailData.dirty) },
+                function() end)
+            Items:AddSeparator("")
+            Items:AddList("~g~Add Money", lists.moneyAudit, listIndex.moneyAuditAdd, nil, {},
+                function(Index, onSelected, onListChange)
+                    if onListChange then
+                        listIndex.moneyAuditAdd = Index
+                    end
+                    if onSelected then
+                        local input = Input("Amount of Money:")
+                        if input and tonumber(input) then
+                            Spectrum.libs.Callbacks.callback("staffAdd", function(status)
+                                if status then
+                                    detailData[moneyTypesAlt[listIndex.moneyAuditAdd]] = detailData
+                                        [moneyTypesAlt[listIndex.moneyAuditAdd]] + tonumber(input)
+                                else
+                                    Notification("There was an issue adding money to the ~b~player")
+                                end
+                            end, moneyTypes[listIndex.moneyAuditAdd], nil, tonumber(input), Spectrum.StaffMenu.target)
+                        end
+                    end
+                end)
+            Items:AddList("~g~Remove Money", lists.moneyAudit, listIndex.moneyAuditRemove, nil, {},
+                function(Index, onSelected, onListChange)
+                    if onListChange then
+                        listIndex.moneyAuditRemove = Index
+                    end
+                    if onSelected then
+                        local input = Input("Amount of Money:")
+                        if input and tonumber(input) then
+                            Spectrum.libs.Callbacks.callback("staffRemove", function(status)
+                                if status then
+                                    detailData[moneyTypesAlt[listIndex.moneyAuditRemove]] = detailData
+                                        [moneyTypesAlt[listIndex.moneyAuditRemove]] - tonumber(input)
+                                else
+                                    Notification("There was an issue removing money from the ~b~player")
+                                end
+                            end, moneyTypes[listIndex.moneyAuditRemove], nil, tonumber(input), Spectrum.StaffMenu.target)
+                        end
+                    end
+                end)
+            ::skip::
         end
     end, function()
 
@@ -502,6 +654,7 @@ function RageUI.PoolMenus:Staff()
 
     end)
 end
+
 Citizen.CreateThread(function()
     while true do
         Wait(0)
