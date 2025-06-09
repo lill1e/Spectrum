@@ -120,9 +120,6 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
                 end
                 return vehicles
             end
-            -- type = 2, inventory
-            -- type = 3, weapons
-            -- type = 4, ammo
         else
             return nil
         end
