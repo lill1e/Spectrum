@@ -3,7 +3,8 @@ Config.Jobs = {
         displayName = "Mechanic",
         colour = "~o~",
         locations = {
-            vector3(-209.8038, -1332.669, 30.89042)
+            vector3(-209.8038, -1332.669, 30.89042),
+            vector3(-347.3336, -133.3788, 39.00957)
         },
         parking = {
             {
@@ -43,7 +44,8 @@ Config.Jobs = {
             }
         },
         interiors = {
-            [196609] = true
+            [196609] = true,
+            [234753] = true
         },
         defaultState = {
             active = false
