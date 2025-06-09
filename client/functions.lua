@@ -66,14 +66,16 @@ end
 
 function ApplyVehicleData(handle, state)
     SetVehicleModKit(handle, 0)
-    SetVehicleDirtLevel(handle, state.Dirt)
-    SetVehicleCustomPrimaryColour(handle, table.unpack(state.Color.Primary))
-    SetVehicleCustomSecondaryColour(handle, table.unpack(state.Color.Secondary))
-    SetVehicleWindowTint(handle, state.Tint)
-    SetVehicleEngineHealth(handle, state.Health * 10 / 10)
-    SetVehicleNumberPlateTextIndex(handle, state.Plate)
-    for mod, value in pairs(state.Mods) do
-        SetVehicleMod(handle, tonumber(mod), value, false)
+    if state then
+        SetVehicleDirtLevel(handle, state.Dirt)
+        SetVehicleCustomPrimaryColour(handle, table.unpack(state.Color.Primary))
+        SetVehicleCustomSecondaryColour(handle, table.unpack(state.Color.Secondary))
+        SetVehicleWindowTint(handle, state.Tint)
+        SetVehicleEngineHealth(handle, state.Health * 10 / 10)
+        SetVehicleNumberPlateTextIndex(handle, state.Plate)
+        for mod, value in pairs(state.Mods) do
+            SetVehicleMod(handle, tonumber(mod), value, false)
+        end
     end
 end
 
