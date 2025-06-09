@@ -216,3 +216,13 @@ Spectrum.libs.callbackFunctions.payBill = function(source, id)
         return false
     end
 end
+
+Spectrum.libs.callbackFunctions.saveOutfit = function(source, components, props)
+    if Spectrum.players[source] then
+        local query = exports["pgcfx"]:insert("outfits", { "owner", "components", "props", "created" },
+            { Spectrum.players[source].id, components, props, os.time() }, "id")
+        return query
+    else
+        return {}
+    end
+end

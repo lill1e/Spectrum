@@ -289,6 +289,14 @@ function ResetClothing()
     ApplySkin(true)
 end
 
+function copyTable(tbl)
+    local target = {}
+    for k, v in pairs(tbl) do
+        target[k] = { v[1], v[2] }
+    end
+    return target
+end
+
 function apparelMenuItems(Items)
     for _, value in ipairs(Config.Skin.Menu.Apparel) do
         if value.type == "Component" then
@@ -651,6 +659,53 @@ function RageUI.PoolMenus:Skin()
                     Notification("Your new ~b~clothes ~s~have been saved.")
                 end
             end)
+        Items:AddButton("Export Outfit", clothingChanged() and "Make sure to ~b~confirm ~s~your changes first" or nil,
+            { RightBadge = RageUI.BadgeStyle.Clothes, IsDisabled = clothingChanged() }, function(onSelected)
+                if onSelected then
+                    Spectrum.libs.Callbacks.callback("saveOutfit", function(status)
+                        if #status > 0 then
+                            Notification("The ~b~outfit ~s~was saved to your wardrobe")
+                            table.insert(Spectrum.outfits,
+                                {
+                                    id = status[1].id,
+                                    components = copyTable(Spectrum.PlayerData.skin.Components),
+                                    props =
+                                        copyTable(Spectrum.PlayerData.skin.Props)
+                                })
+                        else
+                            Notification("There was an issue saving this ~b~outfit")
+                        end
+                    end, Spectrum.PlayerData.skin.Components, Spectrum.PlayerData.skin.Props)
+                end
+            end)
+        Items:AddSeparator("")
+        if #Spectrum.outfits == 0 then
+            Items:AddButton("Please save an ~b~outfit ~s~in order to use it later", nil, {}, function()
+
+            end)
+        end
+        for _, outfit in ipairs(Spectrum.outfits) do
+            Items:AddButton("Outfit (ID: " .. outfit.id .. ")", nil, {}, function(onSelected)
+                if onSelected then
+                    Spectrum.PlayerData.skin.Components = copyTable(outfit.components)
+                    Spectrum.PlayerData.skin.Props = copyTable(outfit.props)
+                    ApplySkin(true)
+                    local Components = {}
+                    local Props = {}
+                    for k, v in pairs(Spectrum.PlayerData.skin.Components) do
+                        Components[k] = { v[1], v[2] }
+                    end
+                    for k, v in pairs(Spectrum.PlayerData.skin.Props) do
+                        Props[k] = { v[1], v[2] }
+                    end
+                    clothingCache = {
+                        Components = Components,
+                        Props = Props
+                    }
+                    TriggerServerEvent("Spectrum:Skin", Spectrum.PlayerData.skin)
+                end
+            end)
+        end
     end, function(Panels)
 
     end)

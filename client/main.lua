@@ -35,6 +35,10 @@ RegisterNetEvent("Spectrum:Properties", function(properties)
     Spectrum.properties = properties
 end)
 
+RegisterNetEvent("Spectrum:Outfits", function(outfits)
+    Spectrum.outfits = outfits
+end)
+
 RegisterNetEvent("Spectrum:Broadcast", function(t, token)
     Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
         if verified then

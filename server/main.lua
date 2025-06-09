@@ -118,6 +118,9 @@ exports["pgcfx"]:ready(function()
         TriggerClientEvent("Spectrum:Stores", playerId, Spectrum.stores)
         TriggerClientEvent("Spectrum:Vehicles", playerId, vehiclesTbl, #vehicles)
         TriggerClientEvent("Spectrum:Properties", playerId, globalProperties)
+        TriggerClientEvent("Spectrum:Outfits", playerId,
+            exports["pgcfx"]:select("outfits", { "id", "components", "props" }, "owner = ?",
+                { identifier }, { ["ORDER BY"] = "created" }, nil))
     end
     local players = {}
     for k, v in pairs(Spectrum.players) do
@@ -283,6 +286,9 @@ AddEventHandler("playerJoining", function()
             TriggerClientEvent("Spectrum:Stores", source, Spectrum.stores)
             TriggerClientEvent("Spectrum:Vehicles", source, vehiclesTbl, #vehicles)
             TriggerClientEvent("Spectrum:Properties", source, globalProperties)
+            TriggerClientEvent("Spectrum:Outfits", source,
+                exports["pgcfx"]:select("outfits", { "id", "components", "props" }, "owner = ?",
+                    { steamHex }, { ["ORDER BY"] = "created" }, nil))
             local players = {}
             for k, v in pairs(Spectrum.players) do
                 players[k] = {

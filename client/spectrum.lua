@@ -69,5 +69,6 @@ Spectrum = {
         vehicleBlip = nil
     },
     Storage = {},
-    bills = {}
+    bills = {},
+    outfits = {}
 }
