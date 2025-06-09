@@ -71,6 +71,15 @@ function RageUI.PoolMenus:Staff()
                     end
                 end
             end)
+        Items:AddButton("Teleport (Waypoint)", "ez", {}, function(onSelected)
+            if onSelected then
+                local waypoint = GetFirstBlipInfoId(8)
+                if DoesBlipExist(waypoint) then
+                    local coords = GetBlipInfoIdCoord(waypoint)
+                    TriggerServerEvent("Spectrum:Staff:TeleportCoords", coords, true)
+                end
+            end
+        end)
         Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
             if onSelected then
                 Spectrum.CanRespawn = true

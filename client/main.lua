@@ -55,14 +55,23 @@ RegisterNetEvent("Spectrum:Player:Drop", function(id)
     Spectrum.players[id].active = false
 end)
 
-RegisterNetEvent("Spectrum:Warp", function(token, coords)
+RegisterNetEvent("Spectrum:Warp", function(token, coords, checkGround)
     Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
         if verified then
             DoScreenFadeOut(500)
             while not IsScreenFadedOut() do Wait(0) end
 
-            SetEntityCoordsNoOffset(PlayerPedId(),
-                coords, false, false, true)
+            if checkGround then
+                for z = 1, 1000 do
+                    SetPedCoordsKeepVehicle(PlayerPedId(), coords.x, coords.y, z + 0.0)
+                    local ground, _ = GetGroundZFor_3dCoord(coords.x, coords.y, z + 0.0)
+                    if ground then
+                        break
+                    end
+                end
+            else
+                SetPedCoordsKeepVehicle(PlayerPedId(), coords)
+            end
 
             DoScreenFadeIn(500)
             while not IsScreenFadedIn() do Wait(0) end

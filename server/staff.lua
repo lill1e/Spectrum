@@ -91,6 +91,15 @@ RegisterNetEvent("Spectrum:Staff:Teleport", function(t, target)
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:TeleportCoords", function(coords, waypoint)
+    local source = tostring(source)
+    if Spectrum.players[source].staff > 0 then
+        TriggerClientEvent("Spectrum:Warp", source, Spectrum.libs.Tokens.CreateToken(source), coords, waypoint)
+    else
+        -- TODO: add logging
+    end
+end)
+
 RegisterCommand("dv", function(source)
     source = tostring(source)
     if Spectrum.players[source].staff > 0 then
