@@ -229,3 +229,63 @@ Spectrum.libs.callbackFunctions.saveOutfit = function(source, components, props)
         return {}
     end
 end
+
+Spectrum.libs.callbackFunctions.staffAdd = function(source, type, item, count, target)
+    local player = source
+    if target then player = tostring(target) end
+    if Spectrum.players[source].staff > 0 then
+        if type == "clean_cash" then
+            AddCash(player, true, true, count)
+        elseif type == "dirty_cash" then
+            AddCash(player, true, false, count)
+        elseif type == "bank" then
+            AddCash(player, false, true, count)
+        elseif type == "item" then
+            if HasItemSpace(player, item, count) then
+                AddItem(player, item, count)
+            else
+                return false
+            end
+        elseif type == "weapon" then
+            if HasWeapon(player, item) then
+                return false
+            else
+                AddWeapon(player, CreateWeapon(item), 0)
+            end
+        elseif type == "ammo" then
+            AddAmmo(player, item, count)
+        end
+        return true
+    else
+        -- TODO: add logging
+        return false
+    end
+end
+
+Spectrum.libs.callbackFunctions.staffRemove = function(source, type, item, count, target)
+    local player = source
+    if target then player = tostring(target) end
+    if Spectrum.players[source].staff > 0 then
+        if type == "clean_cash" then
+            RemoveCash(player, true, true, count)
+        elseif type == "dirty_cash" then
+            RemoveCash(player, true, false, count)
+        elseif type == "bank" then
+            RemoveCash(player, false, true, count)
+        elseif type == "item" then
+            if HasItemThreshold(player, item, count) then
+                RemoveItem(player, item, count)
+            else
+                return false
+            end
+        elseif type == "weapon" then
+            RemoveWeapon(player, item)
+        elseif type == "ammo" then
+            RemoveAmmo(player, item, count)
+        end
+        return true
+    else
+        -- TODO: add logging
+        return false
+    end
+end
