@@ -113,6 +113,8 @@ function RageUI.PoolMenus:Jobs()
                                     TaskWarpPedIntoVehicle(PlayerPedId(), handle, -1)
                                     DoScreenFadeIn(250)
                                     while not IsScreenFadedIn() do Wait(0) end
+                                else
+                                    Notification("There are no ~o~parking ~s~spots available, please try again")
                                 end
                             end, Config.Jobs[Spectrum.Job.current].parking[Spectrum.Job.location])
                         end

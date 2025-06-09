@@ -167,6 +167,9 @@ Spectrum.libs.callbackFunctions.withdrawBank = function(source, count)
 end
 
 Spectrum.libs.callbackFunctions.parking = function(source, spots)
+    if spots == nil then
+        return -1
+    end
     local vehicles = GetAllVehicles()
     for i, spot in ipairs(spots) do
         local position = spot[1]
