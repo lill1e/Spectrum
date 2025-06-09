@@ -11,6 +11,12 @@ local vehicleManageMenu = RageUI.CreateSubMenu(detailsMenu)
 local detail = nil
 local detailData = {}
 local depthReg = nil
+local toggles = {
+    constantMarker = false
+}
+local map = {
+    markerDist = 5.0
+}
 
 local currentGarage = 1
 local garageTbl = {}
@@ -144,6 +150,21 @@ function RageUI.PoolMenus:Staff()
                 for _, identifier in ipairs(Spectrum.PlayerData.identifiers) do
                     print(identifier)
                 end
+            end
+        end)
+        Items:AddButton("Marker Distance", nil, { RightLabel = map.markerDist }, function(onSelected)
+            if onSelected then
+                local input = Input("Distance (Debug Marker):")
+                if input and tonumber(input) then
+                    if tonumber(input) > 0 then
+                        map.markerDist = tonumber(input) * 10 / 10
+                    end
+                end
+            end
+        end)
+        Items:CheckBox("Debug Marker", nil, toggles.constantMarker, {}, function(onSelected, Checked)
+            if onSelected then
+                toggles.constantMarker = Checked
             end
         end)
     end, function()
@@ -481,3 +502,15 @@ function RageUI.PoolMenus:Staff()
 
     end)
 end
+Citizen.CreateThread(function()
+    while true do
+        Wait(0)
+        if toggles.constantMarker then
+            local loc = GetEntityCoords(PlayerPedId())
+            DrawMarker(1, loc.x, loc.y, loc.z - 1, 0, 0, 0, 0, 0, 0, map.markerDist * 2, map.markerDist * 2, 0.5, 255,
+                255,
+                255,
+                100, 0, 0, 0, 0, 0, 0, 0)
+        end
+    end
+end)
