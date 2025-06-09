@@ -33,6 +33,26 @@ Config.Garage = {
                 sprite = 357,
                 colour = 3
             }
+        },
+        Alta = {
+            displayName = "Alta",
+            position = vector3(282.1153, -334.9559, 44.91992),
+            range = 12.5,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
+        },
+        Burton = {
+            displayName = "Burton",
+            position = vector3(-371.8333, -119.6975, 38.69656),
+            range = 20,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
         }
     }
 }
