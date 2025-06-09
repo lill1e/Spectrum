@@ -1,39 +1,47 @@
-RegisterNetEvent("Spectrum:Staff:Add", function(type, item, count)
+RegisterNetEvent("Spectrum:Staff:Add", function(type, item, count, target)
     local source = tostring(source)
+    local player = source
+    if target then player = tostring(target) end
     if Spectrum.players[source].staff > 0 then
         if type == "clean_cash" then
-            AddCash(source, true, true, count)
+            AddCash(player, true, true, count)
         elseif type == "dirty_cash" then
-            AddCash(source, true, false, count)
+            AddCash(player, true, false, count)
         elseif type == "bank" then
-            AddCash(source, false, true, count)
+            AddCash(player, false, true, count)
         elseif type == "item" then
-            AddItem(source, item, count)
+            if HasItemSpace(player, item, count) then
+                AddItem(player, item, count)
+            end
         elseif type == "weapon" then
-            AddWeapon(source, CreateWeapon(item), 0)
+            if not HasWeapon(player, item) then
+                AddWeapon(player, CreateWeapon(item), 0)
+            end
         elseif type == "ammo" then
-            AddAmmo(source, item, count)
+            AddAmmo(player, item, count)
         end
     else
         -- TODO: add logging
     end
 end)
 
-RegisterNetEvent("Spectrum:Staff:Remove", function(type, item, count)
+RegisterNetEvent("Spectrum:Staff:Remove", function(type, item, count, target)
     local source = tostring(source)
+    local player = source
+    if target then player = tostring(target) end
     if Spectrum.players[source].staff > 0 then
         if type == "clean_cash" then
-            RemoveCash(source, true, true, count)
+            RemoveCash(player, true, true, count)
         elseif type == "dirty_cash" then
-            RemoveCash(source, true, false, count)
+            RemoveCash(player, true, false, count)
         elseif type == "bank" then
-            RemoveCash(source, false, true, count)
+            RemoveCash(player, false, true, count)
         elseif type == "item" then
-            RemoveItem(source, item, count)
+            RemoveItem(player, item, count)
         elseif type == "weapon" then
-            RemoveWeapon(source, item)
+            RemoveWeapon(player, item)
         elseif type == "ammo" then
-            RemoveAmmo(source, item, count)
+            RemoveAmmo(player, item, count)
         end
     else
         -- TODO: add logging
