@@ -144,6 +144,17 @@ Citizen.CreateThread(function()
                 SetPedAmmoByType(PlayerPedId(), GetHashKey(ammo), count)
             end
 
+            if Spectrum.PlayerData.health == nil then
+                Spectrum.PlayerData.health = Spectrum.PlayerData.skin.Sex == 1 and 200 or 175
+            end
+
+            if Spectrum.PlayerData.dead then
+                ApplyDamageToPed(PlayerPedId(), 200, false)
+            else
+                SetEntityHealth(PlayerPedId(), Spectrum.PlayerData.health)
+                SetPedArmour(PlayerPedId(), Spectrum.PlayerData.armor)
+            end
+
             if Spectrum.skin.IsEditing then
                 RageUI.Visible(SkinMenu, true)
             end
@@ -166,6 +177,7 @@ Citizen.CreateThread(function()
 
         if IsEntityDead(PlayerPedId()) and not Spectrum.DeathTimer then
             Spectrum.DeathTimer = GetGameTimer()
+            TriggerServerEvent("Spectrum:Dead")
         elseif not IsEntityDead(PlayerPedId()) and Spectrum.DeathTimer then
             Spectrum.DeathTimer = nil
             Spectrum.CanRespawn = false

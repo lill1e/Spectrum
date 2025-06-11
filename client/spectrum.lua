@@ -1,6 +1,9 @@
 Spectrum = {
     PlayerData = {
         id = nil,
+        health = 200,
+        armor = 0,
+        dead = false,
         money = {
             clean = 0,
             dirty = 0
