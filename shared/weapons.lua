@@ -369,5 +369,11 @@ Config.Weapons = {
     },
     AMMO_MG = {
         displayName = "Machine Gun"
-    }
+    },
+    AMMO_GRENADE = {
+        displayName = "Grenade"
+    },
+    AMMO_MOLOTOV = {
+        displayName = "Molotov Cocktail"
+    },
 }
