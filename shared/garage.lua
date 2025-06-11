@@ -53,6 +53,56 @@ Config.Garage = {
                 sprite = 357,
                 colour = 3
             }
+        },
+        LaPuerta = {
+            displayName = "La Puerta",
+            position = vector3(-1186.911, -1486.68, 4.379676),
+            range = 15,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
+        },
+        Vespucci = {
+            displayName = "Vespucci",
+            position = vector3(-1645.934, -897.3082, 8.754241),
+            range = 50,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
+        },
+        Harmony = {
+            displayName = "Harmony",
+            position = vector3(592.4904, 2732.536, 42.05633),
+            range = 12.5,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
+        },
+        Paleto = {
+            displayName = "Paleto Bay",
+            position = vector3(146.4598, 6605.759, 31.85636),
+            range = 17.5,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
+        },
+        Sandy = {
+            displayName = "Sandy Shores",
+            position = vector3(2045.655, 3437.594, 43.90836),
+            range = 22.5,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
         }
     }
 }
