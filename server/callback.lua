@@ -82,6 +82,32 @@ Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
     end
 end
 
+Spectrum.libs.callbackFunctions.locationChange = function(source, plate, garage)
+    if Spectrum.players[source].staff >= Config.Permissions.Admin then
+        print(plate, garage)
+        local query = exports["pgcfx"]:update("vehicles", { "garage" }, { garage }, "id = ?",
+            { plate })
+        if query > 0 then
+            local identifierQuery = exports["pgcfx"]:selectOne("vehicles", { "owner" }, "id = ?", { plate })
+            if identifierQuery == nil then
+                return false
+            end
+            local identifier = identifierQuery.owner
+            for target, player in pairs(Spectrum.players) do
+                if player.id == identifier then
+                    TriggerClientEvent("Spectrum:Garage:Location", target, plate, garage)
+                end
+            end
+            return true
+        else
+            return false
+        end
+    else
+        return false
+        -- TODO: add logging
+    end
+end
+
 Spectrum.libs.callbackFunctions.alterPlate = function(source, target, plate, newPlate)
     target = tostring(target)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
