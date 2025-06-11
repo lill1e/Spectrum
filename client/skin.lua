@@ -198,11 +198,8 @@ function RandomizeSkin()
     end
 end
 
-function ApplySkin(bypass)
+function ApplyModel()
     local model = Config.Skin.Models[Spectrum.PlayerData.skin.Sex]
-    if bypass then
-        goto skip
-    end
     RequestModel(model)
     while not HasModelLoaded(model) do
         Wait(0)
@@ -215,6 +212,9 @@ function ApplySkin(bypass)
         Spectrum.PlayerData.skin.Parents.Mother,
         Spectrum.PlayerData.skin.Parents.Father, 0, Spectrum.PlayerData.skin.Parents.MixChar,
         Spectrum.PlayerData.skin.Parents.MixSkin, 0, false)
+end
+
+function ApplyFace()
     for feature, featureData in pairs(Config.Skin.Features) do
         for i, featureNum in ipairs(featureData.features) do
             SetPedFaceFeature(PlayerPedId(), featureNum,
@@ -222,23 +222,9 @@ function ApplySkin(bypass)
                 ((i == 1 and featureData.inverseX or featureData.inverseY) and -1 or 1))
         end
     end
-    ::skip::
-    for n, component in pairs(Config.Skin.Components) do
-        if Spectrum.PlayerData.skin.Components[tostring(component)] then
-            SetPedComponentVariation(PlayerPedId(), component,
-                Spectrum.PlayerData.skin.Components[tostring(component)][1],
-                Spectrum.PlayerData.skin.Components[tostring(component)][2] - 1, 0)
-        end
-    end
     SetPedComponentVariation(PlayerPedId(), 2,
         Spectrum.PlayerData.skin.Components[tostring(2)]
         [1] - 1, 0, 0)
-    for k, prop in pairs(Config.Skin.Props) do
-        if Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2 ~= -1 then
-            SetPedPropIndex(PlayerPedId(), prop, Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2,
-                Spectrum.PlayerData.skin.Props[tostring(prop)][2], true)
-        end
-    end
     for k, v in pairs(Config.Skin.Overlays) do
         SetPedHeadOverlay(PlayerPedId(), v.overlay, Spectrum.PlayerData.skin.Overlays[k].overlay,
             v.opacity and
@@ -255,6 +241,34 @@ function ApplySkin(bypass)
     end
     SetPedHairTint(PlayerPedId(), Spectrum.PlayerData.skin.HairColour[1], Spectrum.PlayerData.skin.HairColour[2])
     SetPedEyeColor(PlayerPedId(), Spectrum.PlayerData.skin.EyeColour)
+end
+
+function ApplyClothes()
+    for n, component in pairs(Config.Skin.Components) do
+        if Spectrum.PlayerData.skin.Components[tostring(component)] then
+            SetPedComponentVariation(PlayerPedId(), component,
+                Spectrum.PlayerData.skin.Components[tostring(component)][1],
+                Spectrum.PlayerData.skin.Components[tostring(component)][2] - 1, 0)
+        end
+    end
+    for k, prop in pairs(Config.Skin.Props) do
+        if Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2 ~= -1 then
+            SetPedPropIndex(PlayerPedId(), prop, Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2,
+                Spectrum.PlayerData.skin.Props[tostring(prop)][2], true)
+        end
+    end
+end
+
+function ApplySkin(bypass)
+    if not bypass then
+        ApplyModel()
+    end
+    if bypass ~= "clothes" then
+        ApplyFace()
+    end
+    if bypass ~= "face" then
+        ApplyClothes()
+    end
 end
 
 function GetFeatureValue(value, inverseHuh)
@@ -689,7 +703,7 @@ function RageUI.PoolMenus:Skin()
                 if onSelected then
                     Spectrum.PlayerData.skin.Components = copyTable(outfit.components)
                     Spectrum.PlayerData.skin.Props = copyTable(outfit.props)
-                    ApplySkin(true)
+                    ApplySkin("clothes")
                     local Components = {}
                     local Props = {}
                     for k, v in pairs(Spectrum.PlayerData.skin.Components) do
