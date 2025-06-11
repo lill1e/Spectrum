@@ -154,6 +154,7 @@ Citizen.CreateThread(function()
                                 if IsControlJustPressed(0, 51) then
                                     if Spectrum.Job.current then
                                         TriggerServerEvent("Spectrum:Job:Toggle", Spectrum.Job.current, false)
+                                        TriggerEvent("Spectrum:Job:Terminate", Spectrum.Job.current)
                                         Spectrum.Job.current = nil
                                         Spectrum.Job.state = {}
                                         if Spectrum.Job.vehicle and DoesEntityExist(Spectrum.Job.vehicle) and #(GetEntityCoords(PlayerPedId()) - GetEntityCoords(Spectrum.Job.vehicle)) <= 50 then
