@@ -322,3 +322,40 @@ Spectrum.libs.callbackFunctions.staffRemove = function(source, type, item, count
         return false
     end
 end
+
+Spectrum.libs.callbackFunctions.addExternalProperty = function(source, target, location, space)
+    target = tostring(target)
+    if Spectrum.players[source].staff >= 3 then
+        if Spectrum.players[target] then
+            local queryP = exports["pgcfx"]:insert("properties", { "owner", "x", "y", "z" },
+                { Spectrum.players[target].id, location.x, location.y, location.z }, "id")
+            if queryP and #queryP > 0 then
+                local id = queryP[1].id
+                local queryS = exports["pgcfx"]:insert("storages", { "id", "space" }, { id, 100 })
+                if queryS > 0 then
+                    Spectrum.properties[id] = {
+                        owner = Spectrum.players[target].id,
+                        x = location.x,
+                        y = location.y,
+                        z = location.z,
+                        position = location,
+                        locked = true
+                    }
+                    Spectrum.storages[id] = {
+                        items = {},
+                        weapons = {},
+                        space = space,
+                        occupied = false,
+                        occupier = "-1"
+                    }
+                    TriggerClientEvent("Spectrum:Property:Add", -1, id, Spectrum.properties[id])
+                    return true
+                else
+                    return false
+                end
+            else
+                return false
+            end
+        end
+    end
+end

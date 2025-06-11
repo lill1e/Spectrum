@@ -22,6 +22,18 @@ RegisterNetEvent("Spectrum:Property:Release", function()
     actionLock = false
 end)
 
+RegisterNetEvent("Spectrum:Property:Add", function(id, property)
+    Spectrum.properties[id] = property
+    Spectrum.properties[id].owned = (property.owner == Spectrum.PlayerData.id)
+    if Spectrum.properties[id].owned then
+        local blip = AddBlipForCoord(property.position)
+        SetBlipSprite(blip, 40)
+        BeginTextCommandSetBlipName("STRING")
+        AddTextComponentSubstringPlayerName("Property (Owned)")
+        EndTextCommandSetBlipName(blip)
+    end
+end)
+
 Citizen.CreateThread(function()
     while true do
         Wait(0)
