@@ -35,7 +35,7 @@ end
 
 RegisterKeyMapping("+staff", "Staff Menu", "keyboard", "f5")
 RegisterCommand("+staff", function()
-    if Spectrum.Loaded and (Spectrum.PlayerData.staff > 0 or Spectrum.debug) then
+    if Spectrum.Loaded and (Spectrum.PlayerData.staff >= Config.Permissions.Trial or Spectrum.debug) then
         RageUI.Visible(staffMenu, not RageUI.Visible(staffMenu))
     end
 end, false)
@@ -52,12 +52,14 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Self", "me <3", { RightLabel = "→→→" }, function(onSelected)
 
         end, selfStaffMenu)
-        Items:AddButton("Self (Dev)", "f8", { RightLabel = "→→→" }, function(onSelected)
+        if Spectrum.PlayerData.staff >= Config.Permissions.Developer then
+            Items:AddButton("Self (Dev)", "f8", { RightLabel = "→→→" }, function(onSelected)
 
-        end, selfDevStaffMenu)
-        Items:AddButton("Inventory", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
+            end, selfDevStaffMenu)
+            Items:AddButton("Inventory", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
 
-        end, inventoryStaffMenu)
+            end, inventoryStaffMenu)
+        end
         Items:AddButton("Tools", "don't do something stupid", { RightLabel = "→→→" }, function(onSelected)
 
         end, toolsStaffMenu)
@@ -66,61 +68,74 @@ function RageUI.PoolMenus:Staff()
     end)
 
     selfStaffMenu:IsVisible(function(Items)
-        Items:AddList("Teleport (Garage)", garageTbl, currentGarage, "ez", {}, function(Index, onSelected, onListChange)
-            if onSelected then
-                SetEntityCoordsNoOffset(PlayerPedId(), Config.Garage.Garages[garageTbl[currentGarage]].position, false,
-                    false, true)
-            end
-            if onListChange then
-                currentGarage = Index
-            end
-        end)
-        Items:AddButton("Teleport (Property)", "gg", {},
-            function(onSelected)
-                if onSelected then
-                    local input = Input("Property (ID):")
-                    if input and tonumber(input) and Spectrum.properties[tonumber(input)] then
-                        SetEntityCoordsNoOffset(PlayerPedId(), Spectrum.properties[tonumber(input)].position,
+        if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+            Items:AddList("Teleport (Garage)", garageTbl, currentGarage, "ez", {},
+                function(Index, onSelected, onListChange)
+                    if onSelected then
+                        SetEntityCoordsNoOffset(PlayerPedId(), Config.Garage.Garages[garageTbl[currentGarage]].position,
                             false,
                             false, true)
                     end
+                    if onListChange then
+                        currentGarage = Index
+                    end
+                end)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Developer then
+            Items:AddButton("Teleport (Property)", "gg", {},
+                function(onSelected)
+                    if onSelected then
+                        local input = Input("Property (ID):")
+                        if input and tonumber(input) and Spectrum.properties[tonumber(input)] then
+                            SetEntityCoordsNoOffset(PlayerPedId(), Spectrum.properties[tonumber(input)].position,
+                                false,
+                                false, true)
+                        end
+                    end
+                end)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+            Items:AddButton("Teleport (Waypoint)", "ez", {}, function(onSelected)
+                if onSelected then
+                    local waypoint = GetFirstBlipInfoId(8)
+                    if DoesBlipExist(waypoint) then
+                        local coords = GetBlipInfoIdCoord(waypoint)
+                        TriggerServerEvent("Spectrum:Staff:TeleportCoords", coords, true)
+                    end
                 end
             end)
-        Items:AddButton("Teleport (Waypoint)", "ez", {}, function(onSelected)
-            if onSelected then
-                local waypoint = GetFirstBlipInfoId(8)
-                if DoesBlipExist(waypoint) then
-                    local coords = GetBlipInfoIdCoord(waypoint)
-                    TriggerServerEvent("Spectrum:Staff:TeleportCoords", coords, true)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+            Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
+                if onSelected then
+                    Spectrum.CanRespawn = true
                 end
-            end
-        end)
-        Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
-            if onSelected then
-                Spectrum.CanRespawn = true
-            end
-        end)
-        Items:AddButton("Revive", "Heroes never die!", { RightLabel = "⛑️" }, function(onSelected)
-            if onSelected then
-                Spectrum.CanRevive = true
-            end
-        end)
-        Items:AddButton("kys", "kurt cobain?", { RightLabel = "💀" }, function(onSelected)
-            if onSelected then
-                SetEntityHealth(PlayerPedId(), 150)
-            end
-        end)
-        Items:AddButton("Spawn Car", "vroom vroom", { RightLabel = "🏁" }, function(onSelected)
-            if onSelected then
-                RequestModel("cheburek")
-                while not HasModelLoaded("cheburek") do
-                    Citizen.Wait(0)
+            end)
+            Items:AddButton("Revive", "Heroes never die!", { RightLabel = "⛑️" }, function(onSelected)
+                if onSelected then
+                    Spectrum.CanRevive = true
                 end
-                TaskWarpPedIntoVehicle(PlayerPedId(),
-                    CreateVehicle(GetHashKey("cheburek"), GetEntityCoords(PlayerPedId()), GetEntityHeading(PlayerPedId()),
-                        true, false), -1)
-            end
-        end)
+            end)
+            Items:AddButton("kys", "kurt cobain?", { RightLabel = "💀" }, function(onSelected)
+                if onSelected then
+                    SetEntityHealth(PlayerPedId(), 150)
+                end
+            end)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+            Items:AddButton("Spawn Car", "vroom vroom", { RightLabel = "🏁" }, function(onSelected)
+                if onSelected then
+                    RequestModel("cheburek")
+                    while not HasModelLoaded("cheburek") do
+                        Citizen.Wait(0)
+                    end
+                    TaskWarpPedIntoVehicle(PlayerPedId(),
+                        CreateVehicle(GetHashKey("cheburek"), GetEntityCoords(PlayerPedId()),
+                            GetEntityHeading(PlayerPedId()),
+                            true, false), -1)
+                end
+            end)
+        end
         Items:AddButton("Spawn BMX", "pedal pedal", { RightLabel = "🏁" }, function(onSelected)
             if onSelected then
                 RequestModel("bmx")
@@ -230,16 +245,18 @@ function RageUI.PoolMenus:Staff()
         end, playerManageStaffMenu)
         if Spectrum.StaffMenu.playerType == 1 then
             Items:AddSeparator("")
-            Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
-                if onSelected then
-                    TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)
-                end
-            end)
-            Items:AddButton("Revive", "Heroes never die!", {}, function(onSelected)
-                if onSelected then
-                    TriggerServerEvent("Spectrum:Staff:Revive", Spectrum.StaffMenu.target)
-                end
-            end)
+            if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+                Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
+                    if onSelected then
+                        TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)
+                    end
+                end)
+                Items:AddButton("Revive", "Heroes never die!", {}, function(onSelected)
+                    if onSelected then
+                        TriggerServerEvent("Spectrum:Staff:Revive", Spectrum.StaffMenu.target)
+                    end
+                end)
+            end
             Items:AddButton("Teleport (To)", "Me -> Them", {}, function(onSelected)
                 if onSelected then
                     TriggerServerEvent("Spectrum:Staff:Teleport", 1, Spectrum.StaffMenu.target)
@@ -258,45 +275,51 @@ function RageUI.PoolMenus:Staff()
     playerManageStaffMenu:IsVisible(function(Items)
         Items:AddSeparator("ID: ~b~" .. Spectrum.StaffMenu.target)
         Items:AddSeparator("Name: ~b~" .. Spectrum.players[Spectrum.StaffMenu.target].name)
-        Items:AddButton("Audit Vehicles", nil, { RightLabel = "→→→" }, function(onSelected)
-            if onSelected then
-                detailData = {}
-                detail = "userVehicles"
-                Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
-                    if verified ~= nil then
-                        detailData = verified
-                    else
-                        Notification("There was an issue requesting this ~b~player")
+        if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+            Items:AddButton("Audit Vehicles", nil, { RightLabel = "→→→" }, function(onSelected)
+                if onSelected then
+                    detailData = {}
+                    detail = "userVehicles"
+                    Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                        if verified ~= nil then
+                            detailData = verified
+                        else
+                            Notification("There was an issue requesting this ~b~player")
+                        end
+                    end, Spectrum.StaffMenu.target, 1)
+                end
+            end, detailsMenu)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+            if Spectrum.StaffMenu.playerType == 1 then
+                Items:AddButton("Audit Inventory", nil, { RightLabel = "→→→" }, function(onSelected)
+                    if onSelected then
+                        detailData = {}
+                        detail = "userInventory"
+                        Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                            if verified ~= nil then
+                                detailData = verified
+                            else
+                                Notification("There was an issue requesting this ~b~player")
+                            end
+                        end, Spectrum.StaffMenu.target, 2)
                     end
-                end, Spectrum.StaffMenu.target, 1)
-            end
-        end, detailsMenu)
-        Items:AddButton("Audit Inventory", nil, { RightLabel = "→→→" }, function(onSelected)
-            if onSelected then
-                detailData = {}
-                detail = "userInventory"
-                Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
-                    if verified ~= nil then
-                        detailData = verified
-                    else
-                        Notification("There was an issue requesting this ~b~player")
+                end, detailsMenu)
+                Items:AddButton("Audit Money", nil, { RightLabel = "→→→" }, function(onSelected)
+                    if onSelected then
+                        detailData = {}
+                        detail = "userMoney"
+                        Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                            if verified ~= nil then
+                                detailData = verified
+                            else
+                                Notification("There was an issue requesting this ~b~player")
+                            end
+                        end, Spectrum.StaffMenu.target, 3)
                     end
-                end, Spectrum.StaffMenu.target, 2)
+                end, detailsMenu)
             end
-        end, detailsMenu)
-        Items:AddButton("Audit Money", nil, { RightLabel = "→→→" }, function(onSelected)
-            if onSelected then
-                detailData = {}
-                detail = "userMoney"
-                Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
-                    if verified ~= nil then
-                        detailData = verified
-                    else
-                        Notification("There was an issue requesting this ~b~player")
-                    end
-                end, Spectrum.StaffMenu.target, 3)
-            end
-        end, detailsMenu)
+        end
     end, function()
 
     end)
@@ -447,19 +470,22 @@ function RageUI.PoolMenus:Staff()
                         end
                     end, vehicleManageMenu)
             end
-            if #detailData > 0 then
+            if #detailData > 0 and Spectrum.PlayerData.staff >= Config.Permissions.Admin then
                 Items:AddSeparator("")
             end
-            Items:AddButton("Grant Vehicle", "Shiny", {}, function(onSelected)
-                if onSelected then
-                    local vehicle = Input("Vehicle:")
-                    if vehicle and Config.Vehicles.Names[GetHashKey(vehicle)] then
-                        TriggerServerEvent("Spectrum:Garage:Grant", Spectrum.StaffMenu.target, vehicle)
-                    else
-                        Notification("Please enter a valid ~b~Vehicle Model")
+            if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+                Items:AddButton("Grant Vehicle", "Shiny", {}, function(onSelected)
+                    if onSelected then
+                        local vehicle = Input("Vehicle:")
+                        if vehicle and Config.Vehicles.Names[GetHashKey(vehicle)] then
+                            TriggerServerEvent("Spectrum:Garage:Grant", Spectrum.StaffMenu.target, vehicle,
+                                GetVehicleClassFromName(vehicle))
+                        else
+                            Notification("Please enter a valid ~b~Vehicle Model")
+                        end
                     end
-                end
-            end)
+                end)
+            end
         elseif detail == "userInventory" then
             local c = 0
             for item, count in pairs(detailData) do
@@ -584,72 +610,101 @@ function RageUI.PoolMenus:Staff()
     end)
 
     vehicleManageMenu:IsVisible(function(Items)
-        Items:AddButton("~o~Revoke Vehicle", "Be Careful", {}, function(onSelected)
-            if onSelected then
-                local input = Input("Enter \"yes\" to confirm:")
-                if input:lower() == "yes" then
-                    TriggerServerEvent("Spectrum:Garage:Revoke", Spectrum.StaffMenu.target, depthReg:upper())
-                    RageUI.GoBack()
-                    detailData = {}
-                    Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
-                        if verified ~= nil then
-                            detailData = verified
-                        else
-                            Notification("There was an issue refreshing this ~b~player")
-                        end
-                    end, Spectrum.StaffMenu.target, 1)
-                end
-            end
-        end)
-        Items:AddButton("~o~Restore Vehicle", "Be Careful", {}, function(onSelected)
-            if onSelected then
-                local input = Input("Enter \"yes\" to confirm:")
-                if input:lower() == "yes" then
-                    Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
-                        if verified then
-                            Notification("~b~" .. depthReg .. " ~s~was restored to the most recent Garage")
-                            for i, data in ipairs(detailData) do
-                                if data.plate == depthReg then
-                                    detailData[i].active = false
-                                end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+            Items:AddButton("~o~Revoke Vehicle", "Be Careful", {}, function(onSelected)
+                if onSelected then
+                    local input = Input("Enter \"yes\" to confirm:")
+                    if input:lower() == "yes" then
+                        TriggerServerEvent("Spectrum:Garage:Revoke", Spectrum.StaffMenu.target, depthReg:upper())
+                        RageUI.GoBack()
+                        detailData = {}
+                        Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                            if verified ~= nil then
+                                detailData = verified
+                            else
+                                Notification("There was an issue refreshing this ~b~player")
                             end
-                        else
-                            Notification("Please provide a valid ~b~License Plate")
-                        end
-                    end, depthReg:upper())
+                        end, Spectrum.StaffMenu.target, 1)
+                    end
                 end
-            end
-        end)
-        Items:AddButton("~o~Reassign Vehicle", "Be Careful", {}, function(onSelected)
-            if onSelected then
-                local newPlate = Input("Enter New Plate (leave empty for random):")
-                if newPlate then
-                    newPlate = newPlate:upper()
+            end)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+            Items:AddButton("~o~Restore Vehicle", "Be Careful", {}, function(onSelected)
+                if onSelected then
+                    local input = Input("Enter \"yes\" to confirm:")
+                    if input:lower() == "yes" then
+                        Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
+                            if verified then
+                                Notification("~b~" .. depthReg .. " ~s~was restored to the most recent Garage")
+                                for i, data in ipairs(detailData) do
+                                    if data.plate == depthReg then
+                                        detailData[i].active = false
+                                    end
+                                end
+                            else
+                                Notification("Please provide a valid ~b~License Plate")
+                            end
+                        end, depthReg:upper())
+                    end
                 end
-                local input = Input("Enter \"yes\" to confirm:")
-                if input:lower() == "yes" then
-                    Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
-                        if verified then
-                            Spectrum.libs.Callbacks.callback("alterPlate", function(plate)
-                                if plate ~= nil then
-                                    for i, vehicle in ipairs(detailData) do
-                                        if vehicle.plate == depthReg then
-                                            detailData[i].plate = plate
+            end)
+            Items:AddButton("~o~Reassign Vehicle", "Be Careful", {}, function(onSelected)
+                if onSelected then
+                    local newPlate = Input("Enter New Plate (leave empty for random):")
+                    if newPlate then
+                        newPlate = newPlate:upper()
+                    end
+                    local input = Input("Enter \"yes\" to confirm:")
+                    if input and input:lower() == "yes" then
+                        Spectrum.libs.Callbacks.callback("restoreVehicle", function(verified)
+                            if verified then
+                                Spectrum.libs.Callbacks.callback("alterPlate", function(plate)
+                                    if plate ~= nil then
+                                        for i, vehicle in ipairs(detailData) do
+                                            if vehicle.plate == depthReg then
+                                                detailData[i].plate = plate
+                                            end
+                                        end
+                                        Notification("Vehicle Reassignment:\n~b~" .. depthReg .. " ~s~-> ~b~" .. plate)
+                                        depthReg = plate
+                                    else
+                                        Notification("Please provide a valid ~b~License Plate")
+                                    end
+                                end, Spectrum.StaffMenu.target, depthReg:upper(), newPlate)
+                            else
+                                Notification("Please provide a valid ~b~License Plate")
+                            end
+                        end, depthReg:upper())
+                    end
+                end
+            end)
+        end
+        if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
+            Items:AddList("~o~Assign Location", garageTbl, currentGarage, "Be Careful", {},
+                function(Index, onSelected, onListChange)
+                    if onSelected then
+                        local input = Input("Enter \"yes\" to confirm:")
+                        if input and input:lower() == "yes" then
+                            Spectrum.libs.Callbacks.callback("locationChange", function(verified)
+                                if verified then
+                                    Notification("~b~" .. depthReg .. " ~s~was moved to the specified Garage")
+                                    for i, data in ipairs(detailData) do
+                                        if data.plate == depthReg then
+                                            detailData[i].garage = garageTbl[currentGarage]
                                         end
                                     end
-                                    Notification("Vehicle Reassignment:\n~b~" .. depthReg .. " ~s~-> ~b~" .. plate)
-                                    depthReg = plate
                                 else
                                     Notification("Please provide a valid ~b~License Plate")
                                 end
-                            end, Spectrum.StaffMenu.target, depthReg:upper(), newPlate)
-                        else
-                            Notification("Please provide a valid ~b~License Plate")
+                            end, depthReg:upper(), garageTbl[currentGarage])
                         end
-                    end, depthReg:upper())
-                end
-            end
-        end)
+                    end
+                    if onListChange then
+                        currentGarage = Index
+                    end
+                end)
+        end
     end, function()
 
     end)

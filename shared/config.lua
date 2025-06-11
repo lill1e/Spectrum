@@ -4,5 +4,11 @@ Config = {
         max = 20,
         itemWeight = 1,
         weaponWeight = 5,
+    },
+    Permissions = {
+        Trial = 1,
+        Staff = 2,
+        Admin = 3,
+        Developer = 4
     }
 }

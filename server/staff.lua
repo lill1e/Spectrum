@@ -2,7 +2,7 @@ RegisterNetEvent("Spectrum:Staff:Add", function(type, item, count, target)
     local source = tostring(source)
     local player = source
     if target then player = tostring(target) end
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Developer then
         if type == "clean_cash" then
             AddCash(player, true, true, count)
         elseif type == "dirty_cash" then
@@ -29,7 +29,7 @@ RegisterNetEvent("Spectrum:Staff:Remove", function(type, item, count, target)
     local source = tostring(source)
     local player = source
     if target then player = tostring(target) end
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Developer then
         if type == "clean_cash" then
             RemoveCash(player, true, true, count)
         elseif type == "dirty_cash" then
@@ -50,7 +50,7 @@ end)
 
 RegisterNetEvent("Spectrum:Staff:Smite", function(target)
     local source = tostring(source)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] then
             TriggerClientEvent("Spectrum:Broadcast", target, 0, Spectrum.libs.Tokens.CreateToken(source))
         else
@@ -63,7 +63,7 @@ end)
 
 RegisterNetEvent("Spectrum:Staff:Revive", function(target)
     local source = tostring(source)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] then
             TriggerClientEvent("Spectrum:Broadcast", target, 1, Spectrum.libs.Tokens.CreateToken(source))
         else
@@ -76,7 +76,7 @@ end)
 
 RegisterNetEvent("Spectrum:Staff:DeleteVehicle", function()
     local source = tostring(source)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
         local v = GetClosestVehicle(source)
         if v then
             DeleteEntity(v)
@@ -88,7 +88,7 @@ end)
 
 RegisterNetEvent("Spectrum:Staff:Teleport", function(t, target)
     local source = tostring(source)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
         if t == 1 then
             TriggerClientEvent("Spectrum:Warp", source, Spectrum.libs.Tokens.CreateToken(source),
                 GetEntityCoords(GetPlayerPed(target)))
@@ -101,7 +101,7 @@ end)
 
 RegisterNetEvent("Spectrum:Staff:TeleportCoords", function(coords, waypoint)
     local source = tostring(source)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
         TriggerClientEvent("Spectrum:Warp", source, Spectrum.libs.Tokens.CreateToken(source), coords, waypoint)
     else
         -- TODO: add logging
@@ -110,7 +110,7 @@ end)
 
 RegisterCommand("dv", function(source)
     source = tostring(source)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
         local v = GetClosestVehicle(source)
         if v then
             DeleteEntity(v)

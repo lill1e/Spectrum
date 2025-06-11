@@ -51,7 +51,7 @@ Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, gar
 end
 
 Spectrum.libs.callbackFunctions.restoreVehicle = function(source, plate)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
         local query = exports["pgcfx"]:update("vehicles", { "active" }, { "false" }, "id = ?",
             { plate })
         if query > 0 then
@@ -80,7 +80,7 @@ end
 
 Spectrum.libs.callbackFunctions.alterPlate = function(source, target, plate, newPlate)
     target = tostring(target)
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] then
             if newPlate == "" or Whitespace(newPlate) then
                 newPlate = RandomPlate()
@@ -104,9 +104,9 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
     target = tostring(target)
     if Spectrum.players[source].staff > 0 then
         if Spectrum.players[target] then
-            if type == 0 then
+            if type == 0 and Spectrum.players[source].staff >= Config.Permissions.Trial then
                 return Spectrum.players[target].identifiers
-            elseif type == 1 then
+            elseif type == 1 and Spectrum.players[source].staff >= Config.Permissions.Staff then
                 local query = exports["pgcfx"]:select("vehicles", {}, "owner = ?",
                     { Spectrum.players[target].id })
                 local vehicles = {}
@@ -119,9 +119,9 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
                     })
                 end
                 return vehicles
-            elseif type == 2 then
+            elseif type == 2 and Spectrum.players[source].staff >= Config.Permissions.Admin then
                 return Spectrum.players[target].items
-            elseif type == 3 then
+            elseif type == 3 and Spectrum.players[source].staff >= Config.Permissions.Admin then
                 return Spectrum.players[target].money
             end
         else
@@ -234,7 +234,7 @@ end
 Spectrum.libs.callbackFunctions.staffAdd = function(source, type, item, count, target)
     local player = source
     if target then player = tostring(target) end
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Admin then
         if type == "clean_cash" then
             AddCash(player, true, true, count)
         elseif type == "dirty_cash" then
@@ -266,7 +266,7 @@ end
 Spectrum.libs.callbackFunctions.staffRemove = function(source, type, item, count, target)
     local player = source
     if target then player = tostring(target) end
-    if Spectrum.players[source].staff > 0 then
+    if Spectrum.players[source].staff >= Config.Permissions.Admin then
         if type == "clean_cash" then
             RemoveCash(player, true, true, count)
         elseif type == "dirty_cash" then
