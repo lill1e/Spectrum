@@ -201,4 +201,14 @@ RegisterNetEvent("Spectrum:Job:ReleaseWeapons", function()
     weaponsLocked = false
 end)
 
+local menus = {
+    Mechanic = MechanicJobMenu,
+}
+
 RegisterKeyMapping("+jobMenu", "Job Menu", "keyboard", "f4")
+RegisterCommand("+jobMenu", function()
+    if Spectrum.Job.current and menus[Spectrum.Job.current] then
+        RageUI.Visible(menus[Spectrum.Job.current], not RageUI.Visible(menus[Spectrum.Job.current]))
+    end
+end, false)
+RegisterCommand("-jobMenu", function() end, false)

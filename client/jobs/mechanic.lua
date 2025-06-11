@@ -1,10 +1,10 @@
-local jobMenu = RageUI.CreateMenu("Mechanics", "~o~Rusty")
+MechanicJobMenu = RageUI.CreateMenu("Mechanics", "~o~Rusty")
 local job = "Mechanic"
 local menus = {
-    Color = RageUI.CreateSubMenu(jobMenu, "Mechanics", "Color Wheel"),
-    Tint = RageUI.CreateSubMenu(jobMenu, "Mechanics", "Window Tints"),
-    Plate = RageUI.CreateSubMenu(jobMenu, "Mechanics", "License Plates"),
-    ModCategories = RageUI.CreateSubMenu(jobMenu, "Mechanics", "Vehicle Mods"),
+    Color = RageUI.CreateSubMenu(MechanicJobMenu, "Mechanics", "Color Wheel"),
+    Tint = RageUI.CreateSubMenu(MechanicJobMenu, "Mechanics", "Window Tints"),
+    Plate = RageUI.CreateSubMenu(MechanicJobMenu, "Mechanics", "License Plates"),
+    ModCategories = RageUI.CreateSubMenu(MechanicJobMenu, "Mechanics", "Vehicle Mods"),
 }
 menus.Category = RageUI.CreateSubMenu(menus.ModCategories, "Mechanics", "Mod Category")
 menus.Mod = RageUI.CreateSubMenu(menus.Category, "Mechanics", "Vehicle Mod")
@@ -68,11 +68,11 @@ function RageUI.PoolMenus:MechanicJob()
             end
         end
     else
-        if RageUI.Visible(jobMenu) or RageUI.AnyVisible(menusVal) then
+        if RageUI.Visible(MechanicJobMenu) or RageUI.AnyVisible(menusVal) then
             RageUI.CloseAll()
         end
     end
-    jobMenu:IsVisible(function(Items)
+    MechanicJobMenu:IsVisible(function(Items)
         Items:AddButton("Repair Vehicle",
             (Spectrum.Job.state.active and "There is already an ~b~action ~s~in progress" or (IsPedInAnyVehicle(PlayerPedId(), false) and "You must be outside of the ~b~vehicle ~s~to perform this" or "~b~Brand new")),
             { IsDisabled = Spectrum.Job.state.active or IsPedInAnyVehicle(PlayerPedId(), false) }, function(onSelected)
@@ -360,10 +360,3 @@ function RageUI.PoolMenus:MechanicJob()
 
     end)
 end
-
-RegisterCommand("+jobMenu", function()
-    if Spectrum.Job.current == job then
-        RageUI.Visible(jobMenu, not RageUI.Visible(jobMenu))
-    end
-end, false)
-RegisterCommand("-jobMenu", function() end, false)
