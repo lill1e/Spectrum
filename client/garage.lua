@@ -16,9 +16,12 @@ for _, garage in pairs(Config.Garage.Garages) do
     ::continue::
 end
 
-RegisterNetEvent("Spectrum:Garage:Reset", function(plate)
+RegisterNetEvent("Spectrum:Garage:Reset", function(plate, garage)
     if Spectrum.vehicles[plate] then
         Spectrum.vehicles[plate].active = false
+        if garage then
+            Spectrum.vehicles[plate].garage = garage
+        end
     end
 end)
 
