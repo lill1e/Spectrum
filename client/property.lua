@@ -50,6 +50,8 @@ Citizen.CreateThread(function()
                                         Spectrum.Storage = data
                                         Spectrum.Storage.active = true
                                         Spectrum.Storage.id = id
+                                        Spectrum.Storage.property = property.position
+                                        StorageMenu:SetSubtitle("Space: " .. data.space)
                                         RageUI.Visible(StorageMenu, true)
                                     else
                                         Notification("This ~b~storage ~s~is occupied")

@@ -32,6 +32,7 @@ function RageUI.PoolMenus:Interaction()
                                 Spectrum.Storage.active = true
                                 Spectrum.Storage.id = plate
                                 Spectrum.Storage.handle = handle
+                                StorageMenu:SetSubtitle("Space: " .. data.space)
                                 RageUI.Visible(StorageMenu, true)
                             else
                                 Notification("This ~b~storage ~s~is occupied")
