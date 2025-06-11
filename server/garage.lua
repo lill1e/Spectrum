@@ -5,6 +5,15 @@ RegisterNetEvent("Spectrum:Garage:Grant", function(target, vehicle, vehicleClass
         local query = exports["pgcfx"]:insert("vehicles", { "id", "owner", "vehicle" },
             { plate, Spectrum.players[target].id, vehicle })
         if query > 0 then
+            Spectrum.storages[plate] = {
+                items = {},
+                weapons = {},
+                space = Config.Vehicles.Storages[Config.Vehicles.Classes[vehicleClass]],
+                temporary = false,
+                vehicle = true,
+                occupied = false,
+                occupier = "-1"
+            }
             TriggerClientEvent("Spectrum:Vehicles:Add", target, vehicle, plate)
         end
     end
