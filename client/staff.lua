@@ -202,9 +202,13 @@ function RageUI.PoolMenus:Staff()
                 if input and tonumber(input) then
                     local playerData = Spectrum.players[input]
                     if playerData then
-                        Spectrum.StaffMenu.target = input
-                        playerStaffMenu:SetSubtitle("ID: " .. input .. " | " .. playerData.name)
-                        RageUI.Visible(playerStaffMenu, true)
+                        if (Spectrum.StaffMenu.playerType == 1 and playerData.active) or (Spectrum.StaffMenu.playerType == 2 and not playerData.active) then
+                            Spectrum.StaffMenu.target = input
+                            playerStaffMenu:SetSubtitle("ID: " .. input .. " | " .. playerData.name)
+                            RageUI.Visible(playerStaffMenu, true)
+                        else
+                            Notification("Please enter a valid ~b~ID ~s~(Wrong Category)")
+                        end
                     else
                         Notification("Please enter a valid ~b~ID")
                     end
