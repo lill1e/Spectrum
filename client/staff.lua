@@ -218,7 +218,7 @@ function RageUI.PoolMenus:Staff()
                     Items:AddSeparator("")
                     flag = true
                 end
-                Items:AddButton("[" .. id .. "] " .. playerData.name, playerData.id, {}, function(onSelected)
+                Items:AddButton(playerData.name .. " (ID: " .. id .. ")", playerData.dropReason, {}, function(onSelected)
                     if onSelected then
                         Spectrum.StaffMenu.target = id
                         playerStaffMenu:SetSubtitle("ID: " .. id .. " | " .. playerData.name)
