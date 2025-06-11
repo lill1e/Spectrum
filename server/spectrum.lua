@@ -73,7 +73,79 @@ Spectrum = {
                     "TBD")
             end,
             max = 3
-        }
+        },
+        ["ammo_pistol"] = {
+            displayName = "Ammo Pack (Handgun) - 30 Rounds",
+            illegal = false,
+            rare = false,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                AddAmmo(source, "AMMO_PISTOL", 30)
+            end,
+            max = 3
+        },
+        ["ammo_shotgun"] = {
+            displayName = "Ammo Pack (Shotgun) - 30 Rounds",
+            illegal = false,
+            rare = false,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                AddAmmo(source, "AMMO_SHOTGUN", 30)
+            end,
+            max = 3
+        },
+        ["ammo_rifle"] = {
+            displayName = "Ammo Pack (Rifle) - 30 Rounds",
+            illegal = true,
+            rare = false,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                AddAmmo(source, "AMMO_RIFLE", 30)
+            end,
+            max = 3
+        },
+        ["ammo_smg"] = {
+            displayName = "Ammo Pack (SMG) - 30 Rounds",
+            illegal = true,
+            rare = false,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                AddAmmo(source, "AMMO_SMG", 30)
+            end,
+            max = 3
+        },
+        ["ammo_mg"] = {
+            displayName = "Ammo Pack (MG) - 30 Rounds",
+            illegal = true,
+            rare = false,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                AddAmmo(source, "AMMO_MG", 30)
+            end,
+            max = 3
+        },
+        ["ammo_sniper"] = {
+            displayName = "Ammo Pack (Sniper) - 30 Rounds",
+            illegal = true,
+            rare = false,
+            usable = true,
+            removeOnUse = true,
+            swapOnUse = false,
+            handler = function(source)
+                AddAmmo(source, "AMMO_SNIPER", 30)
+            end,
+            max = 3
+        },
     },
     weapons = {},
     weaponsData = {},
