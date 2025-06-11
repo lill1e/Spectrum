@@ -4,7 +4,9 @@ Config.Jobs = {
         colour = "~o~",
         locations = {
             vector3(-209.8038, -1332.669, 30.89042),
-            vector3(-347.3336, -133.3788, 39.00957)
+            vector3(-347.3336, -133.3788, 39.00957),
+            vector3(103.0328, 6615.932, 32.4352),
+            vector3(1187.781, 2642.663, 38.40195)
         },
         parking = {
             {
@@ -45,7 +47,9 @@ Config.Jobs = {
         },
         interiors = {
             [196609] = true,
-            [234753] = true
+            [234753] = true,
+            [179457] = true,
+            [201729] = true
         },
         defaultState = {
             active = false
