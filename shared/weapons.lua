@@ -336,6 +336,22 @@ Config.Weapons = {
         displayName = "Tactical SMG",
     },
 
+    -- mp2023_02
+    WEAPON_SNOWLAUNCHER = {
+        displayName = "Snowball Launcher"
+    },
+    WEAPON_BATTLERIFLE = {
+        displayName = "Battle Rifle"
+    },
+    WEAPON_HACKINGDEVICE = {
+        displayName = "Hacking Device"
+    },
+
+    -- mp2024_01
+    WEAPON_STUNROD = {
+        displayName = "The Shocker"
+    },
+
     AMMO_PISTOL = {
         displayName = "Handgun"
     },
