@@ -139,7 +139,10 @@ Citizen.CreateThread(function()
                                 0, 0, 0, 0, 0)
                             if #(GetEntityCoords(PlayerPedId()) - loc) <= 0.75 then
                                 HelpText("Press ~INPUT_CONTEXT~ to " ..
-                                    (Spectrum.Job.current == j and "stop working as " or "work as ") ..
+                                    (Spectrum.Job.current == j and "stop" or "start") ..
+                                    " " ..
+                                    ((job.overrideText and job.overrideText.work) and job.overrideText.work or "working as") ..
+                                    " " ..
                                     (job.colour and job.colour or "~b~") ..
                                     job.displayName .. "~s~" ..
                                     (Spectrum.Job.current == j and ((TableEmpty(Config.Jobs[j].items) and TableEmpty(Config.Jobs[j].weapons)) and "" or "\nPress ~INPUT_THROW_GRENADE~ to view items/weapons") or "") ..
