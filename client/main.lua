@@ -55,8 +55,9 @@ RegisterNetEvent("Spectrum:Player:Join", function(id, data)
     Spectrum.players[id] = data
 end)
 
-RegisterNetEvent("Spectrum:Player:Drop", function(id)
+RegisterNetEvent("Spectrum:Player:Drop", function(id, reason)
     Spectrum.players[id].active = false
+    Spectrum.players[id].dropReason = reason
 end)
 
 RegisterNetEvent("Spectrum:Warp", function(token, coords, checkGround)

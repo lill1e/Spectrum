@@ -327,8 +327,9 @@ AddEventHandler("playerDropped", function(reason)
             Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
         end
         Spectrum.players[source].active = false
-        TriggerClientEvent("Spectrum:Player:Drop", -1, source)
         exports["pgcfx"]:update("users", { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin" },
+        Spectrum.players[source].dropReason = reason
+        TriggerClientEvent("Spectrum:Player:Drop", -1, source, reason)
             { Spectrum.players[source].money.clean, Spectrum.players[source].money.dirty, {
                 x = Spectrum.players[source].position.x,
                 y = Spectrum.players[source].position.y,
