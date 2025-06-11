@@ -25,6 +25,12 @@ RegisterNetEvent("Spectrum:Garage:Reset", function(plate, garage)
     end
 end)
 
+RegisterNetEvent("Spectrum:Garage:Location", function(plate, garage)
+    if Spectrum.vehicles[plate] then
+        Spectrum.vehicles[plate].garage = garage
+    end
+end)
+
 RegisterNetEvent("Spectrum:Vehicles:Add", function(model, plate)
     Spectrum.vehicles[plate] = {
         vehicle = model,
