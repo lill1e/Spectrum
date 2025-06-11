@@ -66,7 +66,7 @@ end
 
 function ApplyVehicleData(handle, state)
     SetVehicleModKit(handle, 0)
-    if state then
+    if state and state.Color and state.Dirt and state.Tint and state.Health and state.Plate and state.Mods then
         SetVehicleDirtLevel(handle, state.Dirt)
         SetVehicleCustomPrimaryColour(handle, table.unpack(state.Color.Primary))
         SetVehicleCustomSecondaryColour(handle, table.unpack(state.Color.Secondary))
