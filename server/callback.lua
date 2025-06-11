@@ -47,6 +47,10 @@ Spectrum.libs.callbackFunctions.verifyVehiclePlate = function(source, plate, gar
     local query = exports["pgcfx"]:update("vehicles", { "active", "garage", "data" }, { "false", garage, data },
         "id = ? AND owner = ?",
         { plate, Spectrum.players[source].id })
+    if query > 0 then
+        Spectrum.storages[plate].occupied = false
+        Spectrum.storages[plate].occupier = "-1"
+    end
     return query > 0
 end
 
