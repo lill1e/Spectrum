@@ -105,7 +105,7 @@ Spectrum.libs.callbackFunctions.storagePush = function(source, storage, item, qu
                     }
                 else
                     Notification(source,
-                        "There's not enough room for a ~b~" .. Config.Weapons[Spectrum.weapons[item].model])
+                        "There's not enough room for a ~b~" .. Config.Weapons[Spectrum.weapons[item].model].displayName)
                     return -1
                 end
             else
