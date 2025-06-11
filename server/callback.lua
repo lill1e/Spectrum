@@ -118,6 +118,8 @@ Spectrum.libs.callbackFunctions.alterPlate = function(source, target, plate, new
             local query = exports["pgcfx"]:update("vehicles", { "id" }, { newPlate }, "id = ? AND owner = ?",
                 { plate, Spectrum.players[target].id })
             if query > 0 then
+                Spectrum.storages[newPlate] = Spectrum.storages[plate]
+                Spectrum.storages[plate] = nil
                 TriggerClientEvent("Spectrum:Vehicles:Reassign", target, plate, newPlate)
                 return newPlate
             end
