@@ -54,7 +54,7 @@ RegisterNetEvent("Spectrum:Staff:Smite", function(target)
         if Spectrum.players[target] then
             TriggerClientEvent("Spectrum:Broadcast", target, 0, Spectrum.libs.Tokens.CreateToken(source))
         else
-            Notification(source, "Please revive a valid ~b~player")
+            Notification(source, "Please smite a valid ~b~player")
         end
     else
         -- TODO: add logging
