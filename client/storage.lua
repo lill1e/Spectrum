@@ -10,6 +10,9 @@ function RageUI.PoolMenus:Storage()
     if Spectrum.Storage.handle and ((GetVehiclePedIsIn(PlayerPedId(), false) ~= Spectrum.Storage.handle) and (GetClosest("CVehicle") ~= Spectrum.Storage.handle)) then
         RageUI.CloseAll()
     end
+    if Spectrum.Storage.property and (#(GetEntityCoords(PlayerPedId()) - Spectrum.Storage.property) > 0.75) then
+        RageUI.CloseAll()
+    end
     StorageMenu:IsVisible(function(Items)
         if Spectrum.Storage.active then
             for item, quantity in pairs(Spectrum.Storage.items) do
