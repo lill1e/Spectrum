@@ -1,4 +1,4 @@
-RegisterNetEvent("Spectrum:Garage:Grant", function(target, vehicle)
+RegisterNetEvent("Spectrum:Garage:Grant", function(target, vehicle, vehicleClass)
     local source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Admin then
         local plate = RandomPlate()

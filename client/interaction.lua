@@ -37,7 +37,7 @@ function RageUI.PoolMenus:Interaction()
                             else
                                 Notification("This ~b~storage ~s~is occupied")
                             end
-                        end, plate, true)
+                        end, plate, true, GetVehicleClass(handle))
                     else
                         Notification("Please be near a ~b~vehicle ~s~to perform this")
                     end

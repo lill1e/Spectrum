@@ -1,19 +1,27 @@
-Spectrum.libs.callbackFunctions.storageSync = function(source, storage, vehicle)
+Spectrum.libs.callbackFunctions.storageSync = function(source, storage, vehicle, vehicleClass)
     if vehicle and not Spectrum.storages[storage] then
         Spectrum.storages[storage] = {
             items = {},
             weapons = {},
-            space = 30,
+            space = vehicleClass and Config.Vehicles.Storages[Config.Vehicles.Classes[vehicleClass]] or 0,
             temporary = true,
             vehicle = true,
             occupied = false,
             occupier = "-1"
         }
     end
+    if vehicle and Spectrum.storages[storage].space == -1 then
+        Spectrum.storages[storage].space = Config.Vehicles.Storages[Config.Vehicles.Classes[vehicleClass]]
+    end
     if Spectrum.storages[storage] and not Spectrum.storages[storage].occupied then
         Spectrum.storages[storage].occupied = true
         Spectrum.storages[storage].occupier = source
-        return { items = Spectrum.storages[storage].items, weapons = Spectrum.storages[storage].weapons }
+        return {
+            items = Spectrum.storages[storage].items,
+            weapons = Spectrum.storages[storage].weapons,
+            space = Spectrum
+                .storages[storage].space
+        }
     elseif Spectrum.storages[storage] and Spectrum.storages[storage].occupied then
         return nil
     end

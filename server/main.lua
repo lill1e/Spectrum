@@ -37,7 +37,7 @@ exports["pgcfx"]:ready(function()
         Spectrum.storages[data.id] = {
             items = data.data.items,
             weapons = {},
-            space = 30,
+            space = -1,
             occupied = false,
             occupier = "-1",
             vehicle = true
