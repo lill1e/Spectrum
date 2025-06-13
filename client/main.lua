@@ -149,7 +149,15 @@ Citizen.CreateThread(function()
             end
 
             if Spectrum.PlayerData.dead then
-                ApplyDamageToPed(PlayerPedId(), 200, false)
+                if Spectrum.CanRevive or Spectrum.CanRespawn then
+                    Spectrum.PlayerData.dead = false
+                    Spectrum.PlayerData.health = GetEntityHealth(PlayerPedId())
+                    Spectrum.PlayerData.armor = 0
+                    SetEntityHealth(PlayerPedId(), Spectrum.PlayerData.health)
+                    SetPedArmour(PlayerPedId(), Spectrum.PlayerData.armor)
+                else
+                    ApplyDamageToPed(PlayerPedId(), 200, false)
+                end
             else
                 SetEntityHealth(PlayerPedId(), Spectrum.PlayerData.health)
                 SetPedArmour(PlayerPedId(), Spectrum.PlayerData.armor)
@@ -175,8 +183,9 @@ Citizen.CreateThread(function()
             end
         end
 
-        if IsEntityDead(PlayerPedId()) and not Spectrum.DeathTimer then
+        if IsEntityDead(PlayerPedId()) and not Spectrum.DeathTimer and not Spectrum.PlayerData.dead then
             Spectrum.DeathTimer = GetGameTimer()
+            Spectrum.PlayerData.dead = true
             TriggerServerEvent("Spectrum:Dead")
         elseif not IsEntityDead(PlayerPedId()) and Spectrum.DeathTimer then
             Spectrum.DeathTimer = nil

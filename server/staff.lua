@@ -52,7 +52,7 @@ RegisterNetEvent("Spectrum:Staff:Smite", function(target)
     local source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] then
-            TriggerClientEvent("Spectrum:Broadcast", target, 0, Spectrum.libs.Tokens.CreateToken(source))
+            TriggerClientEvent("Spectrum:Broadcast", target, 0, Spectrum.libs.Tokens.CreateToken(target))
         else
             Notification(source, "Please smite a valid ~b~player")
         end
@@ -61,11 +61,14 @@ RegisterNetEvent("Spectrum:Staff:Smite", function(target)
     end
 end)
 
-RegisterNetEvent("Spectrum:Staff:Revive", function(target)
+RegisterNetEvent("Spectrum:Staff:Revive", function(target, maxHealth)
     local source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] then
-            TriggerClientEvent("Spectrum:Broadcast", target, 1, Spectrum.libs.Tokens.CreateToken(source))
+            TriggerClientEvent("Spectrum:Broadcast", target, 1, Spectrum.libs.Tokens.CreateToken(target))
+            Spectrum.players[target].dead = false
+            Spectrum.players[target].health = Spectrum.players[target].skin.Sex == 1 and 200 or 175
+            Spectrum.players[target].armor = 0
         else
             Notification(source, "Please revive a valid ~b~player")
         end
