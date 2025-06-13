@@ -27,7 +27,8 @@ Config.Jobs = {
                 displayName = "Employee"
             },
             [2] = {
-                displayName = "Boss"
+                displayName = "Boss",
+                fund = true
             },
         },
         items = {

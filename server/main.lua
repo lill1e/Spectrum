@@ -52,6 +52,14 @@ exports["pgcfx"]:ready(function()
             end
         end
     end
+    local allFunds = exports["pgcfx"]:select("funds", {}, nil, nil)
+    for _, fund in ipairs(allFunds) do
+        Spectrum.funds[fund.job and "jobs" or "regular"][fund.job and fund.job or fund.id] = {
+            id = fund.id,
+            total = fund.total,
+            clean = fund.clean
+        }
+    end
     for _, playerId in ipairs(GetPlayers()) do
         local identifier = GetSteamHex(playerId)
         local user = exports["pgcfx"]:selectOne("Users",
@@ -197,6 +205,12 @@ exports["pgcfx"]:ready(function()
                         { storageId })
                 end
                 ::continue::
+            end
+            for _, v in pairs(Spectrum.funds.regular) do
+                exports["pgcfx"]:update("funds", { "total" }, { v.total }, "id = ?", { v.id })
+            end
+            for j, v in pairs(Spectrum.funds.jobs) do
+                exports["pgcfx"]:update("funds", { "total" }, { v.total }, "id = ?", { v.id })
             end
         end
     end)

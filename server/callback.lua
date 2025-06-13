@@ -359,3 +359,39 @@ Spectrum.libs.callbackFunctions.addExternalProperty = function(source, target, l
         end
     end
 end
+
+Spectrum.libs.callbackFunctions.getJobFund = function(source, job)
+    if Spectrum.players[source] and Spectrum.jobs[job] and Spectrum.jobs[job][source] and Spectrum.players[source].jobs[job] and Config.Jobs[job].ranks[Spectrum.players[source].jobs[job]].fund and Spectrum.funds.jobs[job] then
+        return Spectrum.funds.jobs[job].total, Spectrum.funds.jobs[job].clean
+    else
+        return nil
+    end
+end
+
+Spectrum.libs.callbackFunctions.depositFund = function(source, job, count)
+    if Spectrum.players[source] and Spectrum.jobs[job] and Spectrum.jobs[job][source] and Spectrum.players[source].jobs[job] and Config.Jobs[job].ranks[Spectrum.players[source].jobs[job]].fund and Spectrum.funds.jobs[job] then
+        if HasCash(source, true, Spectrum.funds.jobs[job].clean, count) then
+            RemoveCash(source, true, Spectrum.funds.jobs[job].clean, count)
+            Spectrum.funds.jobs[job].total = Spectrum.funds.jobs[job].total + count
+            return true
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+end
+
+Spectrum.libs.callbackFunctions.withdrawFund = function(source, job, count)
+    if Spectrum.players[source] and Spectrum.jobs[job] and Spectrum.jobs[job][source] and Spectrum.players[source].jobs[job] and Config.Jobs[job].ranks[Spectrum.players[source].jobs[job]].fund and Spectrum.funds.jobs[job] then
+        if Spectrum.funds.jobs[job].total >= count then
+            Spectrum.funds.jobs[job].total = Spectrum.funds.jobs[job].total - count
+            AddCash(source, true, Spectrum.funds.jobs[job].clean, count)
+            return true
+        else
+            return nil
+        end
+    else
+        return nil
+    end
+end

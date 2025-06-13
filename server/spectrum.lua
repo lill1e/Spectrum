@@ -155,6 +155,10 @@ Spectrum = {
     properties = {},
     storages = {},
     bills = {},
+    funds = {
+        regular = {},
+        jobs = {}
+    },
     stores = {
         twentyfourseven = {
             colour = "~g~",

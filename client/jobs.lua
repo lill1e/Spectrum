@@ -129,6 +129,14 @@ end
 Citizen.CreateThread(function()
     while true do
         Wait(0)
+        if not Spectrum.Job.current and RageUI.Visible(FundMenu) then
+            RageUI.CloseAll()
+        end
+        if Spectrum.Job.current then
+            if (Spectrum.Job.location == nil or (#(GetEntityCoords(PlayerPedId()) - Config.Jobs[Spectrum.Job.current].locations[Spectrum.Job.location]) > 0.75)) and RageUI.Visible(FundMenu) then
+                RageUI.CloseAll()
+            end
+        end
         for j, job in pairs(Config.Jobs) do
             for i, loc in pairs(job.locations) do
                 if Spectrum.Job.current == nil or Spectrum.Job.current == j then
@@ -147,6 +155,7 @@ Citizen.CreateThread(function()
                                     job.displayName .. "~s~" ..
                                     (Spectrum.Job.current == j and ((TableEmpty(Config.Jobs[j].items) and TableEmpty(Config.Jobs[j].weapons)) and "" or "\nPress ~INPUT_THROW_GRENADE~ to view items/weapons") or "") ..
                                     (Spectrum.Job.current == j and (TableEmpty(Config.Jobs[j].vehicles) and "" or "\nPress ~INPUT_SPECIAL_ABILITY_SECONDARY~ to view vehicles") or "") ..
+                                    (Spectrum.Job.current == j and Config.Jobs[j].ranks[Spectrum.PlayerData.jobs[j]].fund and "\nPress ~INPUT_SELECT_CHARACTER_FRANKLIN~ to view the fund" or "") ..
                                     (job.public and "" or ("\nRank: " .. Config.Jobs[j].ranks[Spectrum.PlayerData.jobs[j]].displayName .. " (" .. Spectrum.PlayerData.jobs[j] .. ")")))
                                 if Spectrum.Job.current ~= nil then
                                     Spectrum.Job.location = i
