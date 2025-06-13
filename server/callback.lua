@@ -323,6 +323,135 @@ Spectrum.libs.callbackFunctions.staffRemove = function(source, type, item, count
     end
 end
 
+Spectrum.libs.callbackFunctions.getShipments = function(source, job)
+    if Spectrum.players[source] and Spectrum.jobs[job][source] then
+        -- if os.time() >= Spectrum.Shipment.Last + 60 then
+        --     Spectrum.Shipment.Last = os.time()
+        -- end
+        local ret = {
+            shipments = {},
+            dist = Spectrum.Shipment.Last and ((Spectrum.Shipment.Last + Spectrum.Shipment.Cooldown) - os.time()) * 1000 or
+                0
+        }
+        for k, shipment in pairs(Spectrum.shipments) do
+            if job == shipment.job or (shipment.jobs and shipment.jobs[job]) then
+                ret.shipments[k] = {
+                    name = shipment.displayName,
+                    cost = shipment.cost,
+                    method = {
+                        vehicle = shipment.method.vehicle and shipment.method.model or nil,
+                        object = not shipment.method.vehicle
+                    }
+                }
+            end
+        end
+        return ret
+    else
+        -- TODO: add logging
+    end
+end
+
+Spectrum.libs.callbackFunctions.orderShipment = function(source, job, shipment)
+    if Spectrum.players[source] and Spectrum.jobs[job][source] then
+        if Spectrum.shipments[shipment].job == job or (Spectrum.shipments[shipment].jobs and Spectrum.shipments[shipment].jobs[job]) then
+            if HasCash(source, true, false, Spectrum.shipments[shipment].cost) then
+                if Spectrum.Shipment.Last == nil or os.time() >= Spectrum.Shipment.Last + Spectrum.Shipment.Cooldown then
+                    Spectrum.Shipment.Last = os.time()
+                    TriggerClientEvent("Spectrum:Job:NicheTerminate", -1,
+                        ((Spectrum.Shipment.Last + Spectrum.Shipment.Cooldown) - os.time()) * 1000)
+                    RemoveCash(source, true, false, Spectrum.shipments[shipment].cost)
+                    local chances = {
+                        items = {},
+                        weapons = {}
+                    }
+                    local temp = 0.0
+                    for k, v in pairs(Spectrum.shipments[shipment].items) do
+                        chances.items[temp] = {
+                            item = k,
+                            chance = v
+                        }
+                        temp = temp + v
+                    end
+                    temp = 0.0
+                    for k, v in pairs(Spectrum.shipments[shipment].weapons) do
+                        chances.weapons[temp] = {
+                            item = k,
+                            chance = v
+                        }
+                        temp = temp + v
+                    end
+                    local result = {
+                        items = {},
+                        weapons = {}
+                    }
+                    for _ = 1, Spectrum.shipments[shipment].count.items do
+                        local n = math.random()
+                        for k, v in pairs(chances.items) do
+                            if n >= k and n < (k + v.chance) then
+                                table.insert(result.items, v.item)
+                                break
+                            end
+                        end
+                    end
+                    for _ = 1, Spectrum.shipments[shipment].count.weapons do
+                        local n = math.random()
+                        for k, v in pairs(chances.weapons) do
+                            if n >= k and n < (k + v.chance) then
+                                table.insert(result.weapons, v.item)
+                                break
+                            end
+                        end
+                    end
+                    local method = Spectrum.shipments[shipment].method
+                    local locations = method.locations
+                    local location = locations[math.random(#locations)]
+                    if method.vehicle then
+                        local vehicle = CreateVehicleServerSetter(method.model, method.vehicleType, location[1],
+                            location[2], true)
+                        Citizen.CreateThread(function()
+                            while not DoesEntityExist(vehicle) do Wait(0) end
+                            while GetVehicleNumberPlateText(vehicle) == "" do Wait(0) end
+                            local items = {}
+                            local weapons = {}
+                            for _, item in ipairs(result.items) do
+                                if items[item] then
+                                    items[item] = items[item] + 1
+                                else
+                                    items[item] = 1
+                                end
+                            end
+                            for _, weaponModel in ipairs(result.weapons) do
+                                local weapon = CreateWeapon(weaponModel)
+                                weapons[weapon] = {
+                                    model = weaponModel,
+                                    rounds = Config.MaxAmmo[weaponModel] and Config.MaxAmmo[weaponModel] or 90
+                                }
+                            end
+                            Spectrum.storages[GetVehicleNumberPlateText(vehicle)] = {
+                                items = items,
+                                weapons = weapons,
+                                space = #result.items + (#result.weapons * 5),
+                                temporary = true,
+                                vehicle = true,
+                                occupied = false,
+                                occupier = "-1"
+                            }
+                            TriggerClientEvent("Spectrum:Job:Shipment", source, location[1])
+                        end)
+                    else
+                        local object = CreateObject(method.model, location[1], true, false)
+                        -- Citizen.CreateThread(function ()
+                        --     while not DoesEntityExist(object)
+                        -- end)
+                    end
+                end
+            else
+                Notification(source, "You're unable to pay for this ~o~order")
+            end
+        end
+    end
+end
+
 Spectrum.libs.callbackFunctions.addExternalProperty = function(source, target, location, space)
     target = tostring(target)
     if Spectrum.players[source].staff >= 3 then

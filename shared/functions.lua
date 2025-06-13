@@ -67,3 +67,13 @@ function TableEmpty(tbl)
     end
     return true
 end
+
+function ConvertTime(seconds)
+    seconds = seconds / 1000
+    local secs = math.floor(seconds % 60)
+    seconds = seconds / 60
+    local mins = math.floor(seconds % 60)
+    seconds = seconds / 60
+    local hours = math.floor(seconds % 24)
+    return string.format("%02d:%02d:%02d", hours, mins, secs)
+end

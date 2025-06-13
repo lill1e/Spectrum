@@ -213,6 +213,11 @@ end)
 
 local menus = {
     Mechanic = MechanicJobMenu,
+    BeachDealer = DealerJobMenu,
+    MilitaryDealer = DealerJobMenu,
+    AsiaDealer = DealerJobMenu,
+    MafiaDealer = DealerJobMenu,
+    ExclusiveDealer = DealerJobMenu,
 }
 
 RegisterKeyMapping("+jobMenu", "Job Menu", "keyboard", "f4")

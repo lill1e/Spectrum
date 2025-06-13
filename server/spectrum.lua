@@ -74,6 +74,14 @@ Spectrum = {
             end,
             max = 3
         },
+        ["electronics"] = {
+            displayName = "Electronic Parts",
+            illegal = false,
+            rare = true,
+            removeOnUse = false,
+            swapOnUse = false,
+            max = 10
+        },
         ["ammo_pistol"] = {
             displayName = "Ammo Pack (Handgun) - 30 Rounds",
             illegal = false,
@@ -151,6 +159,11 @@ Spectrum = {
     weaponsData = {},
     jobs = {
         Mechanic = {},
+        BeachDealer = {},
+        MilitaryDealer = {},
+        AsiaDealer = {},
+        MafiaDealer = {},
+        ExclusiveDealer = {},
     },
     properties = {},
     storages = {},
@@ -158,6 +171,148 @@ Spectrum = {
     funds = {
         regular = {},
         jobs = {}
+    },
+    shipments = {
+        Toys = {
+            displayName = "Toys to cause chaos",
+            job = "ExclusiveDealer",
+            cost = 30000,
+            items = {
+                ammo_rifle = 0.3,
+                ammo_smg = 0.3,
+                ammo_mg = 0.3,
+                ammo_sniper = 0.1
+            },
+            weapons = {
+                WEAPON_ASSAULTRIFLE_MK2 = 0.3,
+                WEAPON_MG = 0.2,
+                WEAPON_ASSAULTSMG = 0.2,
+                WEAPON_COMBATPDW = 0.1,
+                WEAPON_SNIPERRIFLE = 0.1,
+                WEAPON_MOLOTOV = 0.05,
+                WEAPON_REVOLVER_MK2 = 0.05,
+            },
+            count = {
+                items = 20,
+                weapons = 20
+            },
+            method = {
+                vehicle = true,
+                model = "kalahari",
+                vehicleType = "automobile",
+                locations = {
+                    { vector3(-174.681, -155.116, 43.0595), 69.410194396973 }
+                }
+            }
+        },
+        Ammo = {
+            displayName = "Ammunition",
+            jobs = {
+                BeachDealer = true,
+                MilitaryDealer = true,
+                AsiaDealer = true,
+                MafiaDealer = true
+            },
+            cost = 200000,
+            items = {},
+            weapons = {},
+            count = {
+                items = 12,
+                weapons = 0
+            },
+            method = {
+                vehicle = true,
+                model = "bison",
+                vehicleType = "automobile",
+                locations = {}
+            }
+        },
+        Shores = {
+            displayName = "Mobile Arms",
+            job = "BeachDealer",
+            cost = 50000,
+            items = {
+                electronics = 1.0
+            },
+            weapons = {
+                WEAPON_MACHINEPISTOL = 0.5,
+                WEAPON_SMG = 0.1,
+                WEAPON_MICROSMG = 0.3,
+                WEAPON_COMPACTRIFLE = 0.1
+            },
+            count = {
+                items = 4,
+                weapons = 6
+            },
+            method = {
+                vehicle = true,
+                model = "bison",
+                vehicleType = "automobile",
+                locations = {
+                    { vector3(-1228.254, -637.5385, 39.78923), 39.528873443604 },
+                    { vector3(-1225.753, -635.7253, 39.78909), 40.03649520874 },
+                    { vector3(-1220.629, -655.6896, 39.78934), 310.42840576172 },
+                    { vector3(-1226.544, -669.409, 39.78952),  130.16098022461 }
+                }
+            }
+        },
+        OP = {
+            displayName = "LS Port Arms",
+            job = "BeachDealer",
+            cost = 100000,
+            attribute = "Debug",
+            items = {},
+            weapons = {
+                WEAPON_GUSENBERG = 0.3,
+                WEAPON_MICROSMG = 0.3,
+                WEAPON_CARBINERIFLE_MK2 = 0.3,
+                WEAPON_MG = 0.1
+            },
+            count = {
+                items = 0,
+                weapons = 10
+            },
+            method = {
+                vehicle = true,
+                model = "mesa3",
+                vehicleType = "automobile",
+                locations = {
+                    { vector3(-1200.461, -1768.055, 3.416306), 273.76452636719 },
+                    { vector3(-1194.198, -1767.643, 3.415898), 273.77209472656 }
+                }
+            }
+        },
+        MilitaryGuns = {
+            displayName = "Military Weapons",
+            job = "MilitaryDealer",
+            cost = 400000,
+            attribute = "Debug",
+            items = {},
+            weapons = {
+                WEAPON_COMBATPDW = 0.3,
+                WEAPON_TACTICALRIFLE = 0.2,
+                WEAPON_GRENADE = 0.2,
+                WEAPON_BATTLERIFLE = 0.1,
+                WEAPON_SPECIALCARBINE = 0.1,
+                WEAPON_MG = 0.1
+            },
+            count = {
+                items = 0,
+                weapons = 10
+            },
+            method = {
+                vehicle = true,
+                model = "mesa3",
+                vehicleType = "automobile",
+                locations = {
+                    { vector3(714.2627, 2553.948, 72.59023), 177.06973266602 },
+                }
+            }
+        }
+    },
+    Shipment = {
+        Last = nil,
+        Cooldown = 60
     },
     stores = {
         twentyfourseven = {

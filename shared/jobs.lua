@@ -56,5 +56,146 @@ Config.Jobs = {
             active = false
         },
         billing = true
+    },
+    BeachDealer = {
+        displayName = "Shipments",
+        overrideText = {
+            work = "ordering"
+        },
+        colour = "~o~",
+        locations = {
+            vector3(-1147.297, -1562.163, 4.392972)
+        },
+        parking = {},
+        shadow = true,
+        ranks = {
+            [0] = {
+                displayName = "Dealer"
+            },
+            [1] = {
+                displayName = "Manager"
+            }
+        },
+        items = {},
+        weapons = {},
+        vehicles = {},
+        defaultState = {
+            last = nil,
+            available = false
+        },
+        billing = false
+    },
+    MilitaryDealer = {
+        displayName = "Shipments",
+        overrideText = {
+            work = "ordering"
+        },
+        colour = "~o~",
+        locations = {
+            vector3(980.296, 2666.659, 40.04804)
+        },
+        parking = {},
+        shadow = true,
+        ranks = {
+            [0] = {
+                displayName = "Dealer"
+            },
+            [1] = {
+                displayName = "Manager"
+            }
+        },
+        items = {},
+        weapons = {},
+        vehicles = {},
+        defaultState = {
+            last = nil,
+            available = false
+        },
+        billing = false
+    },
+    AsiaDealer = {
+        displayName = "Shipments",
+        overrideText = {
+            work = "ordering"
+        },
+        colour = "~o~",
+        locations = {
+            vector3(1897.774, 3731.938, 32.75693)
+        },
+        parking = {},
+        shadow = true,
+        ranks = {
+            [0] = {
+                displayName = "Dealer"
+            },
+            [1] = {
+                displayName = "Manager"
+            }
+        },
+        items = {},
+        weapons = {},
+        vehicles = {},
+        defaultState = {
+            last = nil,
+            available = false
+        },
+        billing = false
+    },
+    MafiaDealer = {
+        displayName = "Shipments",
+        overrideText = {
+            work = "ordering"
+        },
+        colour = "~o~",
+        locations = {
+            vector3(-309.9734, 6272.378, 31.49231)
+        },
+        parking = {},
+        shadow = true,
+        ranks = {
+            [0] = {
+                displayName = "Dealer"
+            },
+            [1] = {
+                displayName = "Manager"
+            }
+        },
+        items = {},
+        weapons = {},
+        vehicles = {},
+        defaultState = {
+            last = nil,
+            available = false
+        },
+        billing = false
+    },
+    ExclusiveDealer = {
+        displayName = "Shipments",
+        overrideText = {
+            work = "ordering"
+        },
+        blip = {
+            sprite = 888,
+            colour = 12
+        },
+        colour = "~o~",
+        locations = {
+            vector3(-153.4369, -160.1485, 43.62131)
+        },
+        parking = {},
+        shadow = true,
+        ranks = {
+            [0] = {
+                displayName = "Dealer"
+            }
+        },
+        items = {},
+        weapons = {},
+        vehicles = {},
+        defaultState = {
+            last = nil,
+            available = false
+        },
+        billing = false
     }
 }
