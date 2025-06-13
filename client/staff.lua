@@ -265,6 +265,17 @@ function RageUI.PoolMenus:Staff()
         if Spectrum.StaffMenu.playerType == 1 then
             Items:AddSeparator("")
             if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+                Items:AddButton("Kick Player", "Give them the boot", { RightBadge = RageUI.BadgeStyle.Star },
+                    function(onSelected)
+                        if onSelected then
+                            local input = Input("Kick Reason:")
+                            if input then
+                                TriggerServerEvent("Spectrum:Staff:Kick", Spectrum.StaffMenu.target,
+                                    input ~= "" and input or nil)
+                            end
+                        end
+                    end)
+                Items:AddSeparator("")
                 Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
                     if onSelected then
                         TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)

@@ -48,6 +48,16 @@ RegisterNetEvent("Spectrum:Staff:Remove", function(type, item, count, target)
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:Kick", function(target, reason)
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        if Spectrum.players[target] and Spectrum.players[target].active then
+            DropPlayer(target,
+                "You have been kicked by " .. Spectrum.players[source].name .. " (Reason: " .. reason .. ")")
+        end
+    end
+end)
+
 RegisterNetEvent("Spectrum:Staff:Smite", function(target)
     local source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
