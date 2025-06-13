@@ -1,4 +1,6 @@
 local interactionMenu = RageUI.CreateMenu("Interaction", "~y~Handy Dandy")
+local selfMenu = RageUI.CreateSubMenu(interactionMenu, "Interaction", "~b~Self")
+local jobsMenu = RageUI.CreateSubMenu(selfMenu, "Interaction", "~o~Jobs")
 
 RegisterKeyMapping("+interaction", "Interaction Menu", "keyboard", "m")
 RegisterCommand("+interaction", function()
@@ -10,6 +12,10 @@ RegisterCommand("-interaction", function() end, false)
 
 function RageUI.PoolMenus:Interaction()
     interactionMenu:IsVisible(function(Items)
+        Items:AddButton("~b~Self", nil, { RightLabel = "→→→" }, function()
+
+        end, selfMenu)
+        Items:AddSeparator("")
         Items:AddButton("Inspect Vehicle", nil,
             {
                 RightLabel = "→→→",
@@ -43,6 +49,33 @@ function RageUI.PoolMenus:Interaction()
                     end
                 end
             end)
+    end, function()
+
+    end)
+    selfMenu:IsVisible(function(Items)
+        Items:AddButton("Server ID", nil, { RightLabel = "ID: " .. GetPlayerServerId(PlayerId()) }, function()
+
+        end)
+        Items:AddButton("Current Employment", nil,
+            { RightLabel = ((Spectrum.Job.current == nil or Config.Jobs[Spectrum.Job.current] == nil or Config.Jobs[Spectrum.Job.current].shadow) and "Unemployed" or Config.Jobs[Spectrum.Job.current].displayName) },
+            function()
+
+            end)
+        Items:AddButton("~o~Jobs", nil, { RightLabel = "→→→" }, function()
+
+        end, jobsMenu)
+    end, function()
+
+    end)
+    jobsMenu:IsVisible(function(Items)
+        for job, rank in pairs(Spectrum.PlayerData.jobs) do
+            if Config.Jobs[job] and not Config.Jobs[job].shadow then
+                Items:AddButton(Config.Jobs[job].displayName, "Rank: " .. Config.Jobs[job].ranks[rank].displayName, {},
+                    function()
+
+                    end)
+            end
+        end
     end, function()
 
     end)
