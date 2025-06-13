@@ -140,7 +140,8 @@ exports["pgcfx"]:ready(function()
             position = v.position,
             attributes = v.attributes,
             name = v.name,
-            active = v.active
+            active = v.active,
+            staff = v.staff
         }
     end
     TriggerClientEvent("Spectrum:Players", -1, players)
@@ -322,7 +323,8 @@ AddEventHandler("playerJoining", function()
                     position = v.position,
                     attributes = v.attributes,
                     name = v.name,
-                    active = v.active
+                    active = v.active,
+                    staff = v.staff
                 }
             end
             for _, v in ipairs(GetPlayers()) do
@@ -332,7 +334,8 @@ AddEventHandler("playerJoining", function()
                         position = Spectrum.players[source].position,
                         attributes = Spectrum.players[source].attributes,
                         name = Spectrum.players[source].name,
-                        active = Spectrum.players[source].active
+                        active = Spectrum.players[source].active,
+                        staff = Spectrum.players[source].staff
                     })
                 end
             end
