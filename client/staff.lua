@@ -191,6 +191,21 @@ function RageUI.PoolMenus:Staff()
                 toggles.constantMarker = Checked
             end
         end)
+        Items:AddButton("Add External Property", nil, { RightBadge = RageUI.BadgeStyle.Key },
+            function(onSelected)
+                if onSelected then
+                    local space = Input("Storage Space:")
+                    if space and tonumber(space) then
+                        Spectrum.libs.Callbacks.callback("addExternalProperty", function(result)
+                            if result then
+                                Notification("The property was added!!")
+                            else
+                                Notification("There was a problem adding the ~y~property")
+                            end
+                        end, GetPlayerServerId(PlayerId()), GetEntityCoords(PlayerPedId()), space)
+                    end
+                end
+            end)
     end, function()
 
     end)
