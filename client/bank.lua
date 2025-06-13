@@ -40,7 +40,7 @@ function RageUI.PoolMenus:Bank()
                 if input and tonumber(input) then
                     local inputNum = tonumber(input)
                     if inputNum > Spectrum.PlayerData.money.bank or inputNum <= 0 then
-                        Notification("You can deposit a maximum of ~g~$" .. FormatMoney(Spectrum.PlayerData.money.bank))
+                        Notification("You can withdraw a maximum of ~g~$" .. FormatMoney(Spectrum.PlayerData.money.bank))
                     else
                         bankLock = true
                         Spectrum.libs.Callbacks.callback("withdrawBank", function(status)
