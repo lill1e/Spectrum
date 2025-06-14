@@ -24,6 +24,11 @@ end)
 
 RegisterNetEvent("Spectrum:Players", function(players)
     Spectrum.players = players
+    for _, player in pairs(players) do
+        if player.active then
+            Spectrum.activePlayers = Spectrum.activePlayers + 1
+        end
+    end
 end)
 
 RegisterNetEvent("Spectrum:Vehicles", function(vehicles, vehicleCount)
@@ -53,11 +58,23 @@ end)
 
 RegisterNetEvent("Spectrum:Player:Join", function(id, data)
     Spectrum.players[id] = data
+    Spectrum.activePlayers = 0
+    for _, player in pairs(Spectrum.players) do
+        if player.active then
+            Spectrum.activePlayers = Spectrum.activePlayers + 1
+        end
+    end
 end)
 
 RegisterNetEvent("Spectrum:Player:Drop", function(id, reason)
     Spectrum.players[id].active = false
     Spectrum.players[id].dropReason = reason
+    Spectrum.activePlayers = 0
+    for _, player in pairs(Spectrum.players) do
+        if player.active then
+            Spectrum.activePlayers = Spectrum.activePlayers + 1
+        end
+    end
 end)
 
 RegisterNetEvent("Spectrum:Warp", function(token, coords, checkGround)

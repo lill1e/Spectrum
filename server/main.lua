@@ -145,6 +145,7 @@ exports["pgcfx"]:ready(function()
         }
     end
     TriggerClientEvent("Spectrum:Players", -1, players)
+    TriggerClientEvent("Spectrum:Players:Max", -1, GetConvarInt("sv_maxClients", 32))
     Spectrum.loaded = true
 
     Citizen.CreateThread(function()
@@ -316,6 +317,7 @@ AddEventHandler("playerJoining", function()
             TriggerClientEvent("Spectrum:Outfits", source,
                 exports["pgcfx"]:select("outfits", { "id", "components", "props" }, "owner = ?",
                     { steamHex }, { ["ORDER BY"] = "created" }, nil))
+            TriggerClientEvent("Spectrum:Players:Max", source, GetConvarInt("sv_maxClients", 32))
             local players = {}
             for k, v in pairs(Spectrum.players) do
                 players[k] = {

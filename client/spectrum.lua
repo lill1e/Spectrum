@@ -51,6 +51,7 @@ Spectrum = {
     jobs = {},
     stores = {},
     players = {},
+    activePlayers = 0,
     vehicles = {},
     vehicleCount = 0,
     properties = {},

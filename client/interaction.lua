@@ -15,6 +15,11 @@ function RageUI.PoolMenus:Interaction()
         Items:AddButton("~b~Self", nil, { RightLabel = "→→→" }, function()
 
         end, selfMenu)
+        Items:CheckBox("Show IDs", "Useful for reporting players", DrawingOverhead, {}, function(onSelected, Checked)
+            if onSelected then
+                DrawingOverhead = Checked
+            end
+        end)
         Items:AddSeparator("")
         Items:AddButton("Inspect Vehicle", nil,
             {
