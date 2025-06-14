@@ -4,14 +4,13 @@ Scaleform.__index = Scaleform
 function Scaleform.Load(movie)
     local movieInstance = RequestScaleformMovie(movie)
     while not HasScaleformMovieLoaded(movieInstance) do Wait(0) end
-    return movieInstance
+    return setmetatable({ handle = movieInstance }, Scaleform)
 end
 
-function Scaleform.Create(movie, method, ...)
-    local scaleform = Scaleform.Load(movie)
-    local scaleformParameters = { ... }
-    BeginScaleformMovieMethod(scaleform, method)
-    for _, parameter in ipairs(scaleformParameters) do
+function Scaleform:Call(method, ...)
+    local parameters = { ... }
+    BeginScaleformMovieMethod(self.handle, method)
+    for _, parameter in ipairs(parameters) do
         if type(parameter) == "number" then
             PushScaleformMovieMethodParameterInt(parameter)
         elseif type(parameter) == "string" then
@@ -21,11 +20,14 @@ function Scaleform.Create(movie, method, ...)
         end
     end
     EndScaleformMovieMethod()
-    return setmetatable({ handle = scaleform }, Scaleform)
 end
 
-function Scaleform:Draw()
+function Scaleform:DrawFullscreen()
     DrawScaleformMovieFullscreen(self.handle, 255, 255, 255, 255, -1)
+end
+
+function Scaleform:Draw(x, y, width, height)
+    DrawScaleformMovie(self.handle, x or 0, y or 0, width or 0, height or 0, 255, 255, 255, 255, 0)
 end
 
 Spectrum.libs.Scaleform = Scaleform
