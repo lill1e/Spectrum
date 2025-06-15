@@ -85,14 +85,14 @@ function AddWeapon(source, id, ammo)
         Spectrum.libs.Tokens.CreateToken(source))
 end
 
-function RemoveWeapon(source, weapon)
+function RemoveWeapon(source, weapon, ammo)
     if not Spectrum.weapons[weapon] or Spectrum.weapons[weapon].owner ~= Spectrum.players[source].id then
         return
     end
     local id = Spectrum.weapons[weapon].model
     Spectrum.weapons[weapon].owner = nil
     Spectrum.players[source].weapons[tostring(weapon)] = nil
-    TriggerClientEvent("Spectrum:Inventory", source, id, weapon, 2, 2)
+    TriggerClientEvent("Spectrum:Inventory", source, id, weapon, 2, 2, ammo)
 end
 
 function HasWeapon(source, weapon)

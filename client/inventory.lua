@@ -61,6 +61,8 @@ RegisterNetEvent("Spectrum:Inventory", function(item, quantity, type, itemType, 
             end
             Spectrum.PlayerData.weapons[quantity] = nil
             RemoveWeaponFromPed(PlayerPedId(), GetHashKey(item))
+            SetPedAmmoByType(PlayerPedId(), Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)],
+                Spectrum.PlayerData.ammo[Config.Ammo[GetPedAmmoTypeFromWeapon_2(PlayerPedId(), item)]] - ammo)
         else
             Spectrum.PlayerData.ammo[item] = Spectrum.PlayerData.ammo[item] >= quantity and
                 Spectrum.PlayerData.ammo[item] - quantity or 0
