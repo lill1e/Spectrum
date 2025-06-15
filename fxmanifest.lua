@@ -38,3 +38,5 @@ server_scripts {
     "server/spectrum.lua",
     "server/*.lua"
 }
+
+dependency "pgcfx"
