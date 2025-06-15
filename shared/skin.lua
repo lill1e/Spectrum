@@ -370,7 +370,19 @@ Config.Skin = {
         "White Small/Pupil",
         "Glossed Over"
     },
-
+    Disabled = {
+        Components = {},
+        Props = {
+            [0] = {
+                [189] = true,
+                [190] = true,
+                [200] = true,
+                [201] = true,
+                [206] = true,
+                [207] = true
+            }
+        }
+    },
     Menu = {
         Features = {
             { displayName = "Brow",         type = "Features", name = "Brow" },

@@ -28,15 +28,16 @@ end
 local nTbl = {}
 local noneTbl = {}
 
-function nTable(n, none, filter)
-    if nTbl[n] then return (none and noneTbl[n] or nTbl[n]) end
+function nTable(n, none, filter, prop)
+    -- if nTbl[n] then return (none and noneTbl[n] or nTbl[n]) end
     local t = (none and { "None" } or {})
     for i = 0, n - 1 do
-        if not filter or not IsPedComponentVariationGen9Exclusive(PlayerPedId(), filter, i) then
+        if ((not prop or not Config.Skin.Disabled.Props[prop]) and true or not Config.Skin.Disabled.Props[prop][i])
+            and (prop or (not filter or not IsPedComponentVariationGen9Exclusive(PlayerPedId(), filter, i))) then
             table.insert(t, i)
         end
     end
-    nTbl[n] = t
+    -- nTbl[n] = t
     return t
 end
 
@@ -192,7 +193,7 @@ function RandomizeSkin()
     end
     for _, prop in pairs(Config.Skin.Props) do
         Spectrum.PlayerData.skin.Props[tostring(prop)] = {
-            GetPedPropIndex(PlayerPedId(), prop) + 2,
+            GetPedPropIndex(PlayerPedId(), prop),
             GetPedPropTextureIndex(PlayerPedId(), prop) + 1
         }
     end
@@ -252,8 +253,8 @@ function ApplyClothes()
         end
     end
     for k, prop in pairs(Config.Skin.Props) do
-        if Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2 ~= -1 then
-            SetPedPropIndex(PlayerPedId(), prop, Spectrum.PlayerData.skin.Props[tostring(prop)][1] - 2,
+        if Spectrum.PlayerData.skin.Props[tostring(prop)][1] ~= -1 then
+            SetPedPropIndex(PlayerPedId(), prop, Spectrum.PlayerData.skin.Props[tostring(prop)][1],
                 Spectrum.PlayerData.skin.Props[tostring(prop)][2], true)
         end
     end
@@ -345,7 +346,7 @@ function apparelMenuItems(Items)
                 Items:AddList(value.displayName .. " (Style)",
                     nTable(
                         GetNumberOfPedTextureVariations(PlayerPedId(), value.name,
-                            GetPedDrawableVariation(PlayerPedId(), value.name)), false),
+                            GetPedDrawableVariation(PlayerPedId(), value.name)), false, nil, value.name),
                     GetPedTextureVariation(PlayerPedId(), value.name) + 1,
                     "Total: " ..
                     GetNumberOfPedTextureVariations(PlayerPedId(), value.name,
@@ -362,18 +363,37 @@ function apparelMenuItems(Items)
                     end)
             end
         else
+            local tbl = nTable(GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), true, nil, value.name)
+            local revMap = {}
+            for i, v in ipairs(tbl) do
+                if v ~= "None" then
+                    revMap[v] = i
+                end
+            end
             Items:AddList(value.displayName,
-                nTable(GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), true),
-                GetPedPropIndex(PlayerPedId(), value.name) + 2,
+                tbl,
+                GetPedPropIndex(PlayerPedId(), value.name) == -1 and 1 or
+                revMap[GetPedPropIndex(PlayerPedId(), value.name)],
                 "Total: " .. GetNumberOfPedPropDrawableVariations(PlayerPedId(), value.name), {},
                 function(Index, onSelected, onListChange)
+                    if onSelected then
+                        local input = Input("Variation:")
+                        if input and tonumber(input) and (not Config.Skin.Disabled.Props[value.name] or not Config.Skin.Disabled.Props[value.name][tonumber(input)]) then
+                            Spectrum.PlayerData.skin.Props[tostring(value.name)] = { tonumber(input), 0 }
+                            if tonumber(input) ~= -1 then
+                                SetPedPropIndex(PlayerPedId(), value.name, tonumber(input), 0, true)
+                            else
+                                ClearPedProp(PlayerPedId(), value.name)
+                            end
+                        end
+                    end
                     if onListChange then
                         if Index == 1 then
                             Spectrum.PlayerData.skin.Props[tostring(value.name)] = { -1, 0 }
                             ClearPedProp(PlayerPedId(), value.name)
                         else
-                            Spectrum.PlayerData.skin.Props[tostring(value.name)] = { Index, 0 }
-                            SetPedPropIndex(PlayerPedId(), value.name, Index - 2, 0, true)
+                            Spectrum.PlayerData.skin.Props[tostring(value.name)] = { tbl[Index], 0 }
+                            SetPedPropIndex(PlayerPedId(), value.name, tbl[Index], 0, true)
                         end
                     end
                 end)
