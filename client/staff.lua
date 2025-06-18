@@ -642,7 +642,6 @@ function RageUI.PoolMenus:Staff()
                         local item = input
                         input = Input("Quantity:")
                         if input and tonumber(input) then
-                            print(detailData[item], type(detailData[item]))
                             if detailData[item] and detailData[item] >= tonumber(input) then
                                 Spectrum.libs.Callbacks.callback("staffRemove", function(status)
                                     if status and detailData[item] then
