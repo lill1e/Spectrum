@@ -259,12 +259,16 @@ function RageUI.PoolMenus:Staff()
                     flag = true
                 end
                 Items:AddButton(playerData.name .. " (ID: " .. id .. ")", playerData.dropReason,
-                    { RightBadge = playerData.staff and RageUI.BadgeStyle.Heart or nil }, function(onSelected)
-                    if onSelected then
-                        Spectrum.StaffMenu.target = id
-                        playerStaffMenu:SetSubtitle("ID: " .. id .. " | " .. playerData.name)
-                    end
-                end, playerStaffMenu)
+                    {
+                        RightBadge = playerData.staff > 0 and
+                            (playerData.spectating and RageUI.BadgeStyle.Mask or RageUI.BadgeStyle.Heart) or nil
+                    },
+                    function(onSelected)
+                        if onSelected then
+                            Spectrum.StaffMenu.target = id
+                            playerStaffMenu:SetSubtitle("ID: " .. id .. " | " .. playerData.name)
+                        end
+                    end, playerStaffMenu)
             end
         end
         if not flag then
