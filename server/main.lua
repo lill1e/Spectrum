@@ -150,7 +150,7 @@ Spectrum.loaded = true
 
 Citizen.CreateThread(function()
     while true do
-        Wait(15000)
+        Wait(1000)
         for source, _ in pairs(Spectrum.players) do
             if DoesEntityExist(GetPlayerPed(source)) then
                 Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
