@@ -84,7 +84,6 @@ end
 
 Spectrum.libs.callbackFunctions.locationChange = function(source, plate, garage)
     if Spectrum.players[source].staff >= Config.Permissions.Admin then
-        print(plate, garage)
         local query = exports["pgcfx"]:update("vehicles", { "garage" }, { garage }, "id = ?",
             { plate })
         if query > 0 then
