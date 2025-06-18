@@ -210,6 +210,7 @@ Citizen.CreateThread(function()
             Spectrum.DeathTimer = GetGameTimer()
             Spectrum.PlayerData.dead = true
             TriggerServerEvent("Spectrum:Dead")
+            RageUI.CloseAll()
         elseif not IsEntityDead(PlayerPedId()) and Spectrum.DeathTimer then
             Spectrum.DeathTimer = nil
             Spectrum.CanRespawn = false

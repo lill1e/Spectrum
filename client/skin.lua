@@ -767,7 +767,7 @@ end)
 
 RegisterKeyMapping("+skin", "Skin Menu", "keyboard", "f9")
 RegisterCommand("+skin", function()
-    if Spectrum.Loaded and (Spectrum.PlayerData.staff > Config.Permissions.Admin or Spectrum.debug or Spectrum.skin.IsEditing) then
+    if Spectrum.Loaded and (Spectrum.PlayerData.staff > Config.Permissions.Admin or Spectrum.debug or Spectrum.skin.IsEditing) and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
         Spectrum.skin.Outfit = false
         Spectrum.skin.IsEditing = true
     end

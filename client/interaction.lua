@@ -4,7 +4,7 @@ local jobsMenu = RageUI.CreateSubMenu(selfMenu, "Interaction", "~o~Jobs")
 
 RegisterKeyMapping("+interaction", "Interaction Menu", "keyboard", "m")
 RegisterCommand("+interaction", function()
-    if Spectrum.Loaded then
+    if Spectrum.Loaded and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
         RageUI.Visible(interactionMenu, not RageUI.Visible(interactionMenu))
     end
 end, false)

@@ -101,7 +101,7 @@ Citizen.CreateThread(function()
             Spectrum.Garage.current = nil
         end
         for k, garage in pairs(Config.Garage.Garages) do
-            if #(GetEntityCoords(PlayerPedId()) - garage.position) <= garage.range then
+            if #(GetEntityCoords(PlayerPedId()) - garage.position) <= garage.range and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
                 if IsPedInAnyVehicle(PlayerPedId(), false) and Spectrum.vehicles then
                     local vehicle = GetVehiclePedIsIn(PlayerPedId(), false)
                     local plate = GetVehicleNumberPlateText(vehicle)

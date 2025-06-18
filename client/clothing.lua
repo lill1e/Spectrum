@@ -12,7 +12,7 @@ local store = nil
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        if Config.Clothing.Interiors[GetInteriorFromEntity(PlayerPedId())] then
+        if Config.Clothing.Interiors[GetInteriorFromEntity(PlayerPedId())] and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
             if not RageUI.AnyVisible({ ClothingMenu, SoloApparelMenu }) then
                 HelpText("Press ~INPUT_CONTEXT~ to browse ~b~clothing")
                 if IsControlJustPressed(0, 51) then

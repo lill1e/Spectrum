@@ -59,7 +59,7 @@ Citizen.CreateThread(function()
     while true do
         Wait(0)
         for _, coord in ipairs(Config.Banks) do
-            if #(GetEntityCoords(PlayerPedId()) - coord) <= 3 then
+            if #(GetEntityCoords(PlayerPedId()) - coord) <= 3 and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
                 if not RageUI.Visible(bankMenu) then
                     HelpText("Press ~INPUT_CONTEXT~ to manage your ~g~money")
                 end

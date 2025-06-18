@@ -3,20 +3,22 @@ local fundLock = false
 
 RegisterKeyMapping("+fund", "Fund Menu", "keyboard", "f6")
 RegisterCommand("+fund", function()
-    if Spectrum.Job.current and Config.Jobs[Spectrum.Job.current].ranks and Config.Jobs[Spectrum.Job.current].ranks[Spectrum.PlayerData.jobs[Spectrum.Job.current]].fund and (#(GetEntityCoords(PlayerPedId()) - Config.Jobs[Spectrum.Job.current].locations[Spectrum.Job.location]) <= 0.75) then
-        if not RageUI.Visible(FundMenu) then
-            Spectrum.libs.Callbacks.callback("getJobFund", function(fund, clean)
-                if fund then
-                    Spectrum.Job.fund = fund
-                    Spectrum.Job.clean = clean
-                    RageUI.Visible(FundMenu, true)
-                else
-                    Notification("There was an issue requesting the ~b~fund")
-                end
-            end, Spectrum.Job.current)
-        else
-            Spectrum.Job.fund = nil
-            RageUI.Visible(FundMenu, false)
+    if not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+        if Spectrum.Job.current and Config.Jobs[Spectrum.Job.current].ranks and Config.Jobs[Spectrum.Job.current].ranks[Spectrum.PlayerData.jobs[Spectrum.Job.current]].fund and (#(GetEntityCoords(PlayerPedId()) - Config.Jobs[Spectrum.Job.current].locations[Spectrum.Job.location]) <= 0.75) then
+            if not RageUI.Visible(FundMenu) then
+                Spectrum.libs.Callbacks.callback("getJobFund", function(fund, clean)
+                    if fund then
+                        Spectrum.Job.fund = fund
+                        Spectrum.Job.clean = clean
+                        RageUI.Visible(FundMenu, true)
+                    else
+                        Notification("There was an issue requesting the ~b~fund")
+                    end
+                end, Spectrum.Job.current)
+            else
+                Spectrum.Job.fund = nil
+                RageUI.Visible(FundMenu, false)
+            end
         end
     end
 end, false)

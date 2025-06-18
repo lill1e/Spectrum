@@ -139,7 +139,7 @@ Citizen.CreateThread(function()
         end
         for j, job in pairs(Config.Jobs) do
             for i, loc in pairs(job.locations) do
-                if Spectrum.Job.current == nil or Spectrum.Job.current == j then
+                if (Spectrum.Job.current == nil or Spectrum.Job.current == j) and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
                     if job.public or Spectrum.PlayerData.jobs[j] or Spectrum.debug then
                         if #(GetEntityCoords(PlayerPedId()) - loc) <= 20 then
                             DrawMarker(1, loc.x, loc.y, loc.z - 1, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 0.5, 255, 255, 255, 100, 0,
@@ -222,7 +222,7 @@ local menus = {
 
 RegisterKeyMapping("+jobMenu", "Job Menu", "keyboard", "f4")
 RegisterCommand("+jobMenu", function()
-    if Spectrum.Job.current and menus[Spectrum.Job.current] then
+    if Spectrum.Job.current and menus[Spectrum.Job.current] and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
         RageUI.Visible(menus[Spectrum.Job.current], not RageUI.Visible(menus[Spectrum.Job.current]))
     end
 end, false)

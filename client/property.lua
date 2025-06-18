@@ -38,7 +38,7 @@ Citizen.CreateThread(function()
     while true do
         Wait(0)
         for id, property in pairs(Spectrum.properties) do
-            if #(GetEntityCoords(PlayerPedId()) - property.position) <= 20 then
+            if #(GetEntityCoords(PlayerPedId()) - property.position) <= 20 and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
                 if property.owned then
                     DrawMarker(1, property.x, property.y, property.z - 1, 0, 0, 0, 0, 0, 0, 1.5, 1.5, 0.5, 255, 255, 255,
                         100,

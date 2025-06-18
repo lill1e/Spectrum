@@ -2,7 +2,7 @@ local billingMenu = RageUI.CreateMenu("Billing", "~g~What do you owe?")
 
 RegisterKeyMapping("+billing", "Billing/Invoices Menu", "keyboard", "f7")
 RegisterCommand("+billing", function()
-    if Spectrum.Loaded then
+    if Spectrum.Loaded and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
         RageUI.Visible(billingMenu, not RageUI.Visible(billingMenu))
     end
 end, false)
@@ -30,7 +30,7 @@ function RageUI.PoolMenus:Billing()
                                     Notification(
                                         "There was an issue sending the ~y~bill ~s~to the nearest player, please try again")
                                 end
-                            end, tonumber(input), target) -- TODO add this
+                            end, tonumber(input), target)
                         end
                     else
                         Notification("You must be in range of another ~b~player ~s~in order to send them a ~y~bill")
