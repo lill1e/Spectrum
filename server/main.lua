@@ -1,3 +1,4 @@
+Wait(500)
 local rawWeapons = exports["pgcfx"]:select("Weapons", { "id", "(to_jsonb(weapons) - 'id') AS data" }, nil, nil,
     { ["GROUP BY"] = "id" })
 for _, v in ipairs(rawWeapons) do
