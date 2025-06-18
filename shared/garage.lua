@@ -103,6 +103,16 @@ Config.Garage = {
                 sprite = 357,
                 colour = 3
             }
+        },
+        Vinewood = {
+            displayName = "Vinewood",
+            position = vector3(374.5948, 279.9266, 103.3256),
+            range = 15,
+            public = true,
+            blip = {
+                sprite = 357,
+                colour = 3
+            }
         }
     }
 }
