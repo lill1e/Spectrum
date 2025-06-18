@@ -349,7 +349,7 @@ Spectrum = {
             -- description: String
             -- banner: String | nil
             menu = {
-                title = "#1",
+                title = "",
                 description = "~y~Just a simple store",
                 banner = "shopui_title_conveniencestore"
             }
