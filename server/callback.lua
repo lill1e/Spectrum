@@ -578,6 +578,47 @@ Spectrum.libs.callbackFunctions.withdrawFund = function(source, job, count)
     end
 end
 
+Spectrum.libs.callbackFunctions.dealershipPurchase = function(source, dealership, class, vehicle)
+    if Config.Dealership[dealership] and Config.Dealership[dealership].vehicles[class] and Config.Dealership[dealership].vehicles[class][vehicle] then
+        if TableContains(Spectrum.players[source].licenses, Config.Dealership[dealership].license) then
+            local cost = Config.Dealership[dealership].vehicles[class][vehicle]
+            if HasCash(source, true, true, cost) or HasCash(source, false, true, cost) then
+                if HasCash(source, true, true, cost) then
+                    RemoveCash(source, true, true, cost)
+                else
+                    RemoveCash(source, false, true, cost)
+                end
+                local plate = RandomPlate()
+                local query = exports["pgcfx"]:insert("vehicles", { "id", "owner", "vehicle", "active" },
+                    { plate, Spectrum.players[source].id, vehicle, true })
+                if query > 0 then
+                    Spectrum.storages[plate] = {
+                        items = {},
+                        weapons = {},
+                        space = Config.Vehicles.Storages[Config.Vehicles.Classes[class]],
+                        temporary = false,
+                        vehicle = true,
+                        occupied = false,
+                        occupier = "-1"
+                    }
+                    TriggerClientEvent("Spectrum:Vehicles:Add", source, vehicle, plate)
+                    return plate
+                else
+                    return nil
+                end
+            else
+                Notification(source, "You do not have enough ~g~money ~s~to purchase this vehicle")
+                return nil
+            end
+        else
+            Notification(source, "You do not have the correct ~g~license ~s~to purchase this vehicle")
+            return nil
+        end
+    else
+        return nil
+    end
+end
+
 Spectrum.libs.callbackFunctions.getLocation = function(source, target)
     target = tostring(target)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
