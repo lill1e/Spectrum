@@ -159,29 +159,33 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+function savePlayer(source)
+    if DoesEntityExist(GetPlayerPed(source)) then
+        Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
+        if Spectrum.players[source].health == nil then
+            Spectrum.players[source].health = GetEntityHealth(GetPlayerPed(source))
+        end
+        Spectrum.players[source].armor = GetPedArmour(GetPlayerPed(source))
+    end
+    exports["pgcfx"]:update("users",
+        { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin", "health", "armor", "dead", "licenses" },
+        { Spectrum.players[source].money.clean, Spectrum.players[source].money.dirty, {
+            x = Spectrum.players[source].position.x,
+            y = Spectrum.players[source].position.y,
+            z = Spectrum.players[source].position.z
+        }, Spectrum.players[source].items, Spectrum.players[source].ammo, Spectrum.players[source].skin, Spectrum
+            .players[source].health, Spectrum.players[source].armor, Spectrum.players[source].dead, Spectrum.players
+            [source].licenses }, "id = ?",
+        { Spectrum.players[source].id })
+end
+
 Citizen.CreateThread(function()
     while true do
         Wait(60000 * 3)
         for source, playerData in pairs(Spectrum.players) do
             if playerData.active then
-                if DoesEntityExist(GetPlayerPed(source)) then
-                    Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
-                    if playerData.health == nil then
-                        Spectrum.players[source].health = GetEntityHealth(GetPlayerPed(source))
-                    end
-                    Spectrum.players[source].armor = GetPedArmour(GetPlayerPed(source))
-                end
-                exports["pgcfx"]:update("users",
-                    { "clean_money", "dirty_money", "bank", "position", "inventory", "ammo", "skin", "health",
-                        "armor", "dead" },
-                    { playerData.money.clean, playerData.money.dirty, playerData.money.bank,
-                        {
-                            x = Spectrum.players[source].position.x,
-                            y = Spectrum.players[source].position.y,
-                            z = Spectrum.players[source].position.z
-                        },
-                        playerData.items, playerData.ammo, playerData.skin, Spectrum.players[source].health, Spectrum
-                        .players[source].armor, playerData.dead }, "id = ?", { playerData.id })
+                savePlayer(source)
             end
         end
         for weaponId, weaponData in pairs(Spectrum.weapons) do
@@ -357,25 +361,10 @@ AddEventHandler("playerDropped", function(reason)
     local source = tostring(source)
 
     if Spectrum.players[source] ~= nil then
-        if DoesEntityExist(GetPlayerPed(source)) then
-            Spectrum.players[source].position = GetEntityCoords(GetPlayerPed(source))
-            if Spectrum.players[source].health == nil then
-                Spectrum.players[source].health = GetEntityHealth(GetPlayerPed(source))
-            end
-            Spectrum.players[source].armor = GetPedArmour(GetPlayerPed(source))
-        end
         Spectrum.players[source].active = false
         Spectrum.players[source].dropReason = reason
-        TriggerClientEvent("Spectrum:Player:Drop", -1, source, reason)
-        exports["pgcfx"]:update("users",
-            { "clean_money", "dirty_money", "position", "inventory", "ammo", "skin", "health", "armor", "dead" },
-            { Spectrum.players[source].money.clean, Spectrum.players[source].money.dirty, {
-                x = Spectrum.players[source].position.x,
-                y = Spectrum.players[source].position.y,
-                z = Spectrum.players[source].position.z
-            }, Spectrum.players[source].items, Spectrum.players[source].ammo, Spectrum.players[source].skin, Spectrum
-                .players[source].health, Spectrum.players[source].armor, Spectrum.players[source].dead }, "id = ?",
-            { Spectrum.players[source].id })
+        TriggerClientEvent("Spectrum:Player:Drop", -1, source, reason, Spectrum.players[source].position)
+        savePlayer(source)
     end
 end)
 
