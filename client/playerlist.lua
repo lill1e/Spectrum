@@ -122,6 +122,9 @@ Citizen.CreateThread(function()
                 DrawingOverhead = false
             end
             page = 1
+        elseif GetGameTimer() - startedAt >= 8000 and doingOverhead then
+            doingOverhead = false
+            DrawingOverhead = false
         end
     end
 end)
@@ -151,6 +154,13 @@ RegisterCommand("+playerlist", function()
             end
             startedAt = GetGameTimer()
         end
+    elseif not DrawingOverhead then
+        doingOverhead = true
+        DrawingOverhead = true
+        startedAt = GetGameTimer()
+    elseif DrawingOverhead then
+        doingOverhead = false
+        DrawingOverhead = false
     end
 end, false)
 RegisterCommand("-playerlist", function() end, false)
