@@ -31,7 +31,8 @@ Spectrum = {
             Sex = 1,
         },
         identifiers = {},
-        jobs = {}
+        jobs = {},
+        licenses = {}
     },
     Loaded = false,
     Spawned = false,

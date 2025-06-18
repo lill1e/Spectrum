@@ -119,6 +119,7 @@ for _, playerId in ipairs(GetPlayers()) do
         name = GetPlayerName(playerId),
         active = true,
         jobs = user.jobs,
+        licenses = user.licenses,
         spectating = false
     }
 
@@ -324,6 +325,7 @@ AddEventHandler("playerJoining", function()
                 name = GetPlayerName(source),
                 active = true,
                 jobs = user.jobs,
+                licenses = user.licenses,
                 spectating = false
             }
 

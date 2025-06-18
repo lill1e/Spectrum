@@ -1,6 +1,7 @@
 local interactionMenu = RageUI.CreateMenu("Interaction", "~y~Handy Dandy")
 local selfMenu = RageUI.CreateSubMenu(interactionMenu, "Interaction", "~b~Self")
 local jobsMenu = RageUI.CreateSubMenu(selfMenu, "Interaction", "~o~Jobs")
+local licensesMenu = RageUI.CreateSubMenu(selfMenu, "Interaction", "~g~Licenses")
 
 RegisterKeyMapping("+interaction", "Interaction Menu", "keyboard", "m")
 RegisterCommand("+interaction", function()
@@ -69,6 +70,9 @@ function RageUI.PoolMenus:Interaction()
         Items:AddButton("~o~Jobs", nil, { RightLabel = "→→→" }, function()
 
         end, jobsMenu)
+        Items:AddButton("~g~Licenses", "What you can and can't do", { RightLabel = "→→→" }, function()
+
+        end, licensesMenu)
     end, function()
 
     end)
@@ -80,6 +84,19 @@ function RageUI.PoolMenus:Interaction()
 
                     end)
             end
+        end
+    end, function()
+
+    end)
+    licensesMenu:IsVisible(function(Items)
+        for _, license in ipairs(Spectrum.PlayerData.licenses) do
+            if Config.Licenses[license] then
+                Items:AddButton(Config.Licenses[license].displayName, nil, {}, function() end)
+            end
+        end
+        if #Spectrum.PlayerData.licenses == 0 then
+            Items:AddButton("You currently have no ~g~licenses", "Seeking ~b~Legal Counsel ~s~might help", {},
+                function() end)
         end
     end, function()
 
