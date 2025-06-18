@@ -162,6 +162,7 @@ Spectrum = {
     weaponsData = {},
     jobs = {
         Mechanic = {},
+        Legal = {},
         BeachDealer = {},
         MilitaryDealer = {},
         AsiaDealer = {},

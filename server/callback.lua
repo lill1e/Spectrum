@@ -323,6 +323,59 @@ Spectrum.libs.callbackFunctions.staffRemove = function(source, type, item, count
     end
 end
 
+Spectrum.libs.callbackFunctions.legalPlateChange = function(source, plate, newPlate)
+    if Spectrum.jobs.Legal[source] then
+        plate = StripPlate(plate:upper())
+        newPlate = StripPlate(newPlate:upper())
+        local identifierQuery = exports["pgcfx"]:selectOne("vehicles", { "owner" }, "id = ?", { plate })
+        local identifier = nil
+        local target = nil
+        if identifierQuery then
+            identifier = identifierQuery.owner
+            for id, player in pairs(Spectrum.players) do
+                if player.id == identifier and player.active then
+                    target = id
+                end
+            end
+        else
+            Notification(source, "This ~b~vehicle ~s~is not owned by anyone, this has been reported")
+            -- TODO: add logging
+            return nil
+        end
+        if target then
+            local query = exports["pgcfx"]:update("vehicles", { "active", "garage" }, { "false", "Alta" }, "id = ?",
+                { plate })
+            if query > 0 then
+                Spectrum.storages[newPlate] = Spectrum.storages[plate]
+                Spectrum.storages[plate] = nil
+                local paddedPlate = PadPlate(plate)
+                for _, entity in ipairs(GetAllVehicles()) do
+                    if GetEntityType(entity) == 2 and GetVehicleNumberPlateText(entity) == paddedPlate then
+                        DeleteEntity(entity)
+                    end
+                end
+                TriggerClientEvent("Spectrum:Garage:Reset", target, plate, "Alta")
+                if newPlate == "" or Whitespace(newPlate) then
+                    newPlate = RandomPlate()
+                end
+                local updateQuery = exports["pgcfx"]:update("vehicles", { "id" }, { newPlate },
+                    "id = ? AND owner = ?",
+                    { plate, Spectrum.players[target].id })
+                if updateQuery > 0 then
+                    TriggerClientEvent("Spectrum:Vehicles:Reassign", target, plate, newPlate)
+                    return newPlate
+                else
+                    Notification(source, "There was an issue performing this action, please report this")
+                    return nil
+                end
+            end
+        else
+            Notification(source, "The ~b~owner ~s~of the vehicle must be around to perform this action")
+            return nil
+        end
+    end
+end
+
 Spectrum.libs.callbackFunctions.getShipments = function(source, job)
     if Spectrum.players[source] and Spectrum.jobs[job][source] then
         -- if os.time() >= Spectrum.Shipment.Last + 60 then
@@ -533,6 +586,26 @@ Spectrum.libs.callbackFunctions.getLocation = function(source, target)
         else
             return GetEntityCoords(GetPlayerPed(target))
         end
+    else
+        return nil
+    end
+end
+
+Spectrum.libs.callbackFunctions.legalFetchLicenses = function(source, target)
+    target = tostring(target)
+    if Spectrum.jobs.Legal[source] and Spectrum.players[target] and Spectrum.players[target].active then
+        return Spectrum.players[target].licenses
+    else
+        return nil
+    end
+end
+
+Spectrum.libs.callbackFunctions.legalGrantLicense = function(source, target, license)
+    target = tostring(target)
+    if Spectrum.jobs.Legal[source] and Spectrum.players[target] and Spectrum.players[target].active and Spectrum.players[target].licenses and not TableContains(Spectrum.players[target].licenses, license) and Config.Licenses[license] then
+        table.insert(Spectrum.players[target].licenses, license)
+        TriggerClientEvent("Spectrum:Licenses:Grant", target, license)
+        return true
     else
         return nil
     end

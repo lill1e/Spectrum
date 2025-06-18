@@ -57,6 +57,46 @@ Config.Jobs = {
         },
         billing = true
     },
+    Legal = {
+        displayName = "Legal Services",
+        colour = "~b~",
+        locations = {
+            vector3(235.51, -411.3741, 48.1119)
+        },
+        parking = {
+            {
+                { vector3(263.8785, -379.354, 44.11589),  247.70501708984 },
+                { vector3(258.7982, -377.3946, 44.03638), 250.98385620117 },
+                { vector3(253.0873, -375.4162, 43.9127),  250.65982055664 },
+                { vector3(241.4881, -371.5179, 43.7375),  251.15829467773 },
+                { vector3(236.2057, -369.6609, 43.68188), 251.17471313477 },
+                { vector3(230.424, -367.7496, 43.61177),  251.3215637207 }
+            }
+        },
+        blip = {
+            sprite = 498
+        },
+        ranks = {
+            [0] = {
+                displayName = "Intern"
+            },
+            [1] = {
+                displayName = "Employee"
+            },
+            [2] = {
+                displayName = "Boss"
+            }
+        },
+        items = {},
+        weapons = {},
+        vehicles = {
+            fugitive = {
+                rank = 1
+            }
+        },
+        defaultState = {},
+        billing = true
+    },
     BeachDealer = {
         displayName = "Shipments",
         overrideText = {

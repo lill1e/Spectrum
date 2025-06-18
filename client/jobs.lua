@@ -213,6 +213,7 @@ end)
 
 local menus = {
     Mechanic = MechanicJobMenu,
+    Legal = LegalJobMenu,
     BeachDealer = DealerJobMenu,
     MilitaryDealer = DealerJobMenu,
     AsiaDealer = DealerJobMenu,
