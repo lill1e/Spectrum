@@ -148,6 +148,8 @@ end
 TriggerClientEvent("Spectrum:Players", -1, players)
 TriggerClientEvent("Spectrum:Players:Max", -1, GetConvarInt("sv_maxClients", 32))
 Spectrum.loaded = true
+Spectrum.start = os.time()
+Spectrum.closed = false
 
 Citizen.CreateThread(function()
     while true do
@@ -226,23 +228,35 @@ AddEventHandler("playerConnecting", function(_, _, deferrals)
     local source = source
     local steamHex = GetSteamHex(source)
 
-    if steamHex then
-        local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
-        if user == nil then
-            local insertion = exports["pgcfx"]:insert("Users", { "id" }, { steamHex })
-            if insertion then
-                user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
+    if Spectrum.closed then
+        deferrals.done("The server is currently closed")
+    else
+        if steamHex then
+            local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
+            if user == nil then
+                local insertion = exports["pgcfx"]:insert("Users", { "id" }, { steamHex })
+                if insertion then
+                    user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
+                else
+                    deferrals.done("There was an error fetching your data, please reconnect and try again")
+                end
+            end
+            if user then
+                if Spectrum.locked then
+                    if user.staff > 0 then
+                        deferrals.done()
+                    else
+                        deferrals.done("The server is currently closed for general access")
+                    end
+                else
+                    deferrals.done()
+                end
             else
                 deferrals.done("There was an error fetching your data, please reconnect and try again")
             end
-        end
-        if user then
-            deferrals.done()
         else
-            deferrals.done("There was an error fetching your data, please reconnect and try again")
+            deferrals.done("Steam is required")
         end
-    else
-        deferrals.done("Steam is required")
     end
 end)
 

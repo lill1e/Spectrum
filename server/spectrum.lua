@@ -1,6 +1,9 @@
 Spectrum = {
     debug = false,
     loaded = false,
+    locked = true,
+    closed = true,
+    start = nil,
     players = {},
     tokens = {},
     libs = {
