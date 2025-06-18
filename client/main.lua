@@ -77,6 +77,12 @@ RegisterNetEvent("Spectrum:Player:Drop", function(id, reason)
     end
 end)
 
+RegisterNetEvent("Spectrum:Player:ToggleS", function(id, s)
+    if Spectrum.players[id] then
+        Spectrum.players[id].spectating = s
+    end
+end)
+
 RegisterNetEvent("Spectrum:Warp", function(token, coords, checkGround)
     Spectrum.libs.Callbacks.callback("verifyToken", function(verified)
         if verified then

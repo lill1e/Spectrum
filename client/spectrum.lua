@@ -45,7 +45,14 @@ Spectrum = {
     },
     StaffMenu = {
         target = nil,
-        playerType = 1
+        playerType = 1,
+        spectating = false,
+        spectateData = {
+            entrance = nil,
+            player = nil,
+            ped = nil,
+            id = nil
+        }
     },
     items = {},
     jobs = {},

@@ -24,6 +24,9 @@ local listIndex = {
     moneyAuditAdd = 1,
     moneyAuditRemove = 1
 }
+local locks = {
+    spectate = false
+}
 local moneyTypes = { "bank", "clean_cash", "dirty_cash" }
 local moneyTypesAlt = { "bank", "clean", "dirty" }
 
@@ -40,6 +43,24 @@ RegisterCommand("+staff", function()
     end
 end, false)
 RegisterCommand("-staff", function() end, false)
+
+function ToggleSpectate(status)
+    if status then
+        FreezeEntityPosition(PlayerPedId(), true)
+        NetworkSetEntityInvisibleToNetwork(PlayerPedId(), true)
+        SetEntityVisible(PlayerPedId(), false, false)
+        SetEntityCollision(PlayerPedId(), false, false)
+    else
+        NetworkSetInSpectatorMode(false, Spectrum.StaffMenu.spectateData.ped)
+        FreezeEntityPosition(PlayerPedId(), false)
+        Wait(250)
+        NetworkSetEntityInvisibleToNetwork(PlayerPedId(), false)
+        SetEntityVisible(PlayerPedId(), true, false)
+        SetEntityCollision(PlayerPedId(), true, true)
+        SetEntityCoordsNoOffset(PlayerPedId(), Spectrum.StaffMenu.spectateData.entrance,
+            false, false, true)
+    end
+end
 
 function RageUI.PoolMenus:Staff()
     staffMenu:IsVisible(function(Items)
@@ -298,6 +319,59 @@ function RageUI.PoolMenus:Staff()
                     TriggerServerEvent("Spectrum:Staff:Teleport", 2, Spectrum.StaffMenu.target)
                 end
             end)
+            Items:AddButton("Spectate Player", "okay you creep",
+                { RightBadge = RageUI.BadgeStyle.Mask, IsDisabled = locks.spectate or Spectrum.StaffMenu.spectating },
+                function(onSelected)
+                    if onSelected then
+                        locks.spectate = true
+                        Spectrum.libs.Callbacks.callback("getLocation", function(position)
+                            if position ~= nil then
+                                DoScreenFadeOut(500)
+                                while not IsScreenFadedOut() do Wait(0) end
+                                Spectrum.StaffMenu.spectating = true
+                                Spectrum.StaffMenu.spectateData.entrance = GetEntityCoords(PlayerPedId())
+                                ToggleSpectate(true)
+                                Wait(250)
+                                RequestCollisionAtCoord(position)
+                                SetEntityCoordsNoOffset(PlayerPedId(), position - vector3(0, 0, 10.0), false, false, true)
+                                local target = GetPlayerFromServerId(tonumber(Spectrum.StaffMenu.target))
+                                local time = 0
+                                while target <= 0 or not DoesEntityExist(GetPlayerPed(target)) do
+                                    Wait(0)
+                                    time = time + 1
+                                    target = GetPlayerFromServerId(tonumber(Spectrum.StaffMenu.target))
+                                    if time > 5000 then
+                                        goto skip
+                                    end
+                                end
+                                RequestCollisionAtCoord(GetEntityCoords(GetPlayerPed(target)))
+                                NetworkSetInSpectatorMode(true, GetPlayerPed(target))
+                                ::skip::
+                                if time > 5000 then
+                                    Spectrum.StaffMenu.spectating = false
+                                    FreezeEntityPosition(PlayerPedId(), false)
+                                    NetworkSetEntityInvisibleToNetwork(PlayerPedId(), false)
+                                    SetEntityVisible(PlayerPedId(), true, false)
+                                    SetEntityCollision(PlayerPedId(), true, true)
+                                    SetEntityCoordsNoOffset(PlayerPedId(), Spectrum.StaffMenu.spectateData.entrance,
+                                        false, false, true)
+                                    DoScreenFadeIn(500)
+                                    while not IsScreenFadedIn() do Wait(0) end
+                                    Notification("There was an issue fetching this ~b~player")
+                                else
+                                    TriggerServerEvent("Spectrum:Staff:ToggleSpectate", Spectrum.StaffMenu.target, true)
+                                    Spectrum.StaffMenu.spectateData.id = Spectrum.StaffMenu.target
+                                    Spectrum.StaffMenu.spectateData.player = target
+                                    Spectrum.StaffMenu.spectateData.ped = GetPlayerPed(target)
+                                    DoScreenFadeIn(500)
+                                end
+                            else
+                                Notification("There was an issue fetching this ~b~player")
+                            end
+                            locks.spectate = false
+                        end, Spectrum.StaffMenu.target)
+                    end
+                end)
         end
     end, function(Panels)
 
@@ -750,6 +824,32 @@ Citizen.CreateThread(function()
                 255,
                 255,
                 100, 0, 0, 0, 0, 0, 0, 0)
+        end
+        if Spectrum.StaffMenu.spectating then
+            if DoesEntityExist(Spectrum.StaffMenu.spectateData.ped) then
+                HelpText("~b~" .. Spectrum.players[Spectrum.StaffMenu.spectateData.id].name ..
+                    " ~s~(ID: " .. Spectrum.StaffMenu.spectateData.id .. ")" ..
+                    "\n~g~Health: ~s~" .. GetEntityHealth(Spectrum.StaffMenu.spectateData.ped) ..
+                    "\n~b~Armor: ~s~" .. GetPedArmour(Spectrum.StaffMenu.spectateData.ped) ..
+                    "\nPress ~INPUT_CONTEXT~ to ~o~stop ~s~spectating")
+                if IsControlJustPressed(0, 51) then
+                    DoScreenFadeOut(500)
+                    while not IsScreenFadedOut() do Wait(0) end
+                    Spectrum.StaffMenu.spectating = false
+                    ToggleSpectate(false)
+                    TriggerServerEvent("Spectrum:Staff:ToggleSpectate", Spectrum.StaffMenu.spectateData.id, false)
+                    DoScreenFadeIn(500)
+                end
+            elseif IsScreenFadedIn() then
+                DoScreenFadeOut(500)
+                while not IsScreenFadedOut() do Wait(0) end
+                Spectrum.StaffMenu.spectating = false
+                ToggleSpectate(false)
+                TriggerServerEvent("Spectrum:Staff:ToggleSpectate", Spectrum.StaffMenu.spectateData.id, false)
+                DoScreenFadeIn(500)
+                while not IsScreenFadedIn() do Wait(0) end
+                Notification("The ~b~player ~s~is no longer accessible")
+            end
         end
     end
 end)

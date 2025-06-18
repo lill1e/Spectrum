@@ -524,3 +524,16 @@ Spectrum.libs.callbackFunctions.withdrawFund = function(source, job, count)
         return nil
     end
 end
+
+Spectrum.libs.callbackFunctions.getLocation = function(source, target)
+    target = tostring(target)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        if not Spectrum.players[target] or not Spectrum.players[target].active or Spectrum.players[target].spectating or not DoesEntityExist(GetPlayerPed(target)) then
+            return nil
+        else
+            return GetEntityCoords(GetPlayerPed(target))
+        end
+    else
+        return nil
+    end
+end

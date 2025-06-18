@@ -122,6 +122,18 @@ RegisterNetEvent("Spectrum:Staff:TeleportCoords", function(coords, waypoint)
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:ToggleSpectate", function(target, status)
+    local source = tostring(source)
+    target = tostring(target)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        Spectrum.players[source].spectating = status
+        if Spectrum.players[source].spectating then
+            -- TODO: add logging
+        end
+        TriggerClientEvent("Spectrum:Player:ToggleS", -1, source, Spectrum.players[source].spectating)
+    end
+end)
+
 RegisterCommand("dv", function(source)
     source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Trial then

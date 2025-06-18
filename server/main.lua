@@ -117,7 +117,8 @@ for _, playerId in ipairs(GetPlayers()) do
         skin = user.skin,
         name = GetPlayerName(playerId),
         active = true,
-        jobs = user.jobs
+        jobs = user.jobs,
+        spectating = false
     }
 
     TriggerClientEvent("Spectrum:PlayerData", playerId, Spectrum.players[tostring(playerId)],
@@ -139,7 +140,8 @@ for k, v in pairs(Spectrum.players) do
         attributes = v.attributes,
         name = v.name,
         active = v.active,
-        staff = v.staff
+        staff = v.staff,
+        spectating = v.spectating
     }
 end
 TriggerClientEvent("Spectrum:Players", -1, players)
@@ -302,7 +304,8 @@ AddEventHandler("playerJoining", function()
                 skin = user.skin,
                 name = GetPlayerName(source),
                 active = true,
-                jobs = user.jobs
+                jobs = user.jobs,
+                spectating = false
             }
 
             TriggerClientEvent("Spectrum:PlayerData", source, Spectrum.players[source], { debug = Spectrum.debug })
@@ -323,7 +326,8 @@ AddEventHandler("playerJoining", function()
                     attributes = v.attributes,
                     name = v.name,
                     active = v.active,
-                    staff = v.staff
+                    staff = v.staff,
+                    v.spectating
                 }
             end
             for _, v in ipairs(GetPlayers()) do
@@ -334,7 +338,8 @@ AddEventHandler("playerJoining", function()
                         attributes = Spectrum.players[source].attributes,
                         name = Spectrum.players[source].name,
                         active = Spectrum.players[source].active,
-                        staff = Spectrum.players[source].staff
+                        staff = Spectrum.players[source].staff,
+                        spectating = Spectrum.players[source].spectating
                     })
                 end
             end
