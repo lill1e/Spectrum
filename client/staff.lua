@@ -856,3 +856,21 @@ Citizen.CreateThread(function()
         end
     end
 end)
+
+RegisterCommand("goto", function(source, args)
+    if Spectrum.PlayerData.staff >= Config.Permissions.Trial then
+        if #args > 0 then
+            local target = args[1]
+            if Spectrum.players[target] then
+                -- TODO: add logging
+                local player = Spectrum.players[target]
+                Spectrum.StaffMenu.playerType = player.active and 1 or 2
+                Spectrum.StaffMenu.target = target
+                playerStaffMenu:SetSubtitle("ID: " .. target .. " | " .. player.name)
+                RageUI.Visible(playerStaffMenu, true)
+            end
+        else
+            Notification("Please provide an ~b~ID ~s~of a player")
+        end
+    end
+end, false)
