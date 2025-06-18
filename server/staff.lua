@@ -53,7 +53,8 @@ RegisterNetEvent("Spectrum:Staff:Kick", function(target, reason)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] and Spectrum.players[target].active then
             DropPlayer(target,
-                "You have been kicked by " .. Spectrum.players[source].name .. " (Reason: " .. reason .. ")")
+                "You have been kicked by " ..
+                Spectrum.players[source].name .. (reason ~= nil and " (Reason: " .. reason .. ")" or nil))
         end
     end
 end)
