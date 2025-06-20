@@ -1,5 +1,5 @@
 function GetSteamHex(source)
-    return Spectrum.debug and "steam:debug" or GetPlayerIdentifierByType(source, "steam")
+    return GetPlayerIdentifierByType(source, "steam") or (Spectrum.debug and "steam:debug" or nil)
 end
 
 function GetAllIdentifiers(source)
