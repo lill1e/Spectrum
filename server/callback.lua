@@ -650,3 +650,13 @@ Spectrum.libs.callbackFunctions.legalGrantLicense = function(source, target, lic
         return nil
     end
 end
+
+Spectrum.libs.callbackFunctions.getEntityOrigin = function(source, entity)
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
+        local handle = NetworkGetEntityFromNetworkId(entity)
+        if DoesEntityExist(handle) then
+            return NetworkGetFirstEntityOwner(handle)
+        end
+    end
+    return nil
+end

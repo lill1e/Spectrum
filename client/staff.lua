@@ -8,11 +8,13 @@ local playerStaffMenu = RageUI.CreateSubMenu(playersStaffMenu, "agony", "Players
 local playerManageStaffMenu = RageUI.CreateSubMenu(playerStaffMenu, "agony", "Player Management")
 local detailsMenu = RageUI.CreateSubMenu(playerManageStaffMenu)
 local vehicleManageMenu = RageUI.CreateSubMenu(detailsMenu)
+local entityManageMenu = RageUI.CreateMenu("Entity", "Literally Minecraft")
 local detail = nil
 local detailData = {}
 local depthReg = nil
 local toggles = {
-    constantMarker = false
+    constantMarker = false,
+    entityGun = false
 }
 local map = {
     markerDist = 5.0
@@ -26,6 +28,11 @@ local listIndex = {
 }
 local locks = {
     spectate = false
+}
+local entityData = {
+    model = nil,
+    entity = nil,
+    origin = nil
 }
 local moneyTypes = { "bank", "clean_cash", "dirty_cash" }
 local moneyTypesAlt = { "bank", "clean", "dirty" }
@@ -127,6 +134,33 @@ function RageUI.PoolMenus:Staff()
             end)
         end
         if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+            Items:AddButton("Snowballs (Staff)", "okay snowflake", {}, function(onSelected)
+                if onSelected then
+                    TriggerServerEvent("Spectrum:Staff:Snowflake")
+                end
+            end)
+            Items:AddButton("Snowball Launcher (Staff)", "okay snowflake", {}, function(onSelected)
+                if onSelected then
+                    TriggerServerEvent("Spectrum:Staff:SnowflakeAlt")
+                end
+            end)
+            Items:CheckBox("Entity Gun", "yikers", toggles.entityGun, {}, function(onSelected, Checked)
+                if onSelected then
+                    toggles.entityGun = Checked
+                    if toggles.entityGun then
+                        entityData = {
+                            model = nil,
+                            entity = nil,
+                            origin = nil
+                        }
+                        if HasPedGotWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", false) then
+                            SetCurrentPedWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", true)
+                        elseif HasPedGotWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", false) then
+                            SetCurrentPedWeapon(PlayerPedId(), "WEAPON_SNOWBALL", true)
+                        end
+                    end
+                end
+            end)
             Items:AddButton("Respawn", "loser", { RightLabel = "💔" }, function(onSelected)
                 if onSelected then
                     Spectrum.CanRespawn = true
@@ -816,6 +850,52 @@ function RageUI.PoolMenus:Staff()
     end, function()
 
     end)
+    entityManageMenu:IsVisible(function(Items)
+        if not entityData.entity or entityData.entity < 0 or not entityData.model or entityData.model == 0 then
+            RageUI.CloseAll()
+            goto skip
+        end
+        Items:AddButton("Entity", nil, { RightLabel = entityData.entity }, function() end)
+        Items:AddButton("Model", nil, { RightLabel = entityData.model }, function() end)
+        Items:AddButton("Owner", nil, { RightLabel = entityData.origin or "N/A" }, function(onSelected)
+            if onSelected then
+                if Spectrum.PlayerData.staff >= Config.Permissions.Trial then
+                    local id = tostring(entityData.origin)
+                    if Spectrum.players[id] then
+                        local player = Spectrum.players[id]
+                        Spectrum.StaffMenu.playerType = player.active and 1 or 2
+                        Spectrum.StaffMenu.target = id
+                        playerStaffMenu:SetSubtitle("ID: " .. id .. " | " .. player.name)
+                        RageUI.Visible(playerStaffMenu, true)
+                    end
+                end
+            end
+        end)
+        Items:AddSeparator("")
+        Items:CheckBox("Entity Gun", "yikers", toggles.entityGun, {}, function(onSelected, Checked)
+            if onSelected then
+                toggles.entityGun = Checked
+                if toggles.entityGun then
+                    entityData = {
+                        model = nil,
+                        entity = nil,
+                        origin = nil
+                    }
+                    if HasPedGotWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", false) then
+                        SetCurrentPedWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", true)
+                    elseif HasPedGotWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", false) then
+                        SetCurrentPedWeapon(PlayerPedId(), "WEAPON_SNOWBALL", true)
+                    end
+                end
+            end
+        end)
+        Items:AddButton("~r~Delete Entity", nil, { RightLabel = "→→→" }, function(onSelected)
+            if onSelected then
+                TriggerServerEvent("Spectrum:Staff:DeleteEntity", NetworkGetNetworkIdFromEntity(entityData.entity))
+            end
+        end)
+        ::skip::
+    end, function() end)
 end
 
 Citizen.CreateThread(function()
@@ -854,6 +934,26 @@ Citizen.CreateThread(function()
                 Notification("The ~b~player ~s~is no longer accessible")
             end
         end
+        if toggles.entityGun then
+            DisableControlAction(0, 24, true)
+            DisablePlayerFiring(PlayerId(), true)
+            local isAimingAtEntity, entity = GetEntityPlayerIsFreeAimingAt(PlayerId())
+            if isAimingAtEntity and entity ~= 0 and DoesEntityExist(entity) then
+                entityData.entity = entity
+                entityData.model = GetEntityModel(entity)
+                if IsDisabledControlJustPressed(0, 24) then
+                    Spectrum.libs.Callbacks.callback("getEntityOrigin", function(origin)
+                        if origin ~= nil then
+                            entityData.origin = origin
+                            RageUI.Visible(entityManageMenu, true)
+                        end
+                    end, NetworkGetNetworkIdFromEntity(entityData.entity))
+                end
+            end
+            if entityData.entity and entityData.entity ~= 0 and entityData.model and entityData.model ~= 0 then
+                HelpText("~b~Entity: ~s~" .. entityData.entity .. "\n~b~Model: ~s~" .. entityData.model)
+            end
+        end
     end
 end)
 
@@ -871,6 +971,24 @@ RegisterCommand("goto", function(source, args)
             end
         else
             Notification("Please provide an ~b~ID ~s~of a player")
+        end
+    end
+end, false)
+
+RegisterCommand("egun", function(source, args)
+    if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+        toggles.entityGun = not toggles.entityGun
+        if toggles.entityGun then
+            entityData = {
+                model = nil,
+                entity = nil,
+                origin = nil
+            }
+            if HasPedGotWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", false) then
+                SetCurrentPedWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", true)
+            elseif HasPedGotWeapon(PlayerPedId(), "WEAPON_SNOWLAUNCHER", false) then
+                SetCurrentPedWeapon(PlayerPedId(), "WEAPON_SNOWBALL", true)
+            end
         end
     end
 end, false)

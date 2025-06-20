@@ -100,6 +100,40 @@ RegisterNetEvent("Spectrum:Staff:DeleteVehicle", function()
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:DeleteEntity", function(entity)
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
+        local handle = NetworkGetEntityFromNetworkId(entity)
+        if DoesEntityExist(handle) then
+            DeleteEntity(handle)
+        end
+    else
+        -- TODO: add logging
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:Snowflake", function()
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        if HasWeapon(source, "WEAPON_SNOWBALL") then
+            AddAmmo(source, "AMMO_SNOWBALL", 10)
+        else
+            AddWeapon(source, CreateWeapon("WEAPON_SNOWBALL"), 10)
+        end
+    else
+        -- TODO: add logging
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:SnowflakeAlt", function()
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        AddWeapon(source, CreateWeapon("WEAPON_SNOWLAUNCHER"), 60)
+    else
+        -- TODO: add logging
+    end
+end)
+
 RegisterNetEvent("Spectrum:Staff:Teleport", function(t, target)
     local source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Trial then
