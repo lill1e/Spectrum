@@ -173,7 +173,7 @@ Spectrum.libs.callbackFunctions.declareAmmo = function(source, token, ammoType, 
         -- TODO: violation (this should not happen)
     end
     if isMatch and ammoType and ammo then
-        Spectrum.players[source].ammo[ammoType] = Spectrum.players[source].ammo[ammoType] + ammo
+        Spectrum.players[source].ammo[ammoType] = (Spectrum.players[source].ammo[ammoType] or 0) + ammo
     end
     return isMatch
 end
