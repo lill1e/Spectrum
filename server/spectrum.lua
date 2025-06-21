@@ -318,6 +318,15 @@ Spectrum = {
         Last = nil,
         Cooldown = 60
     },
+    Environment = {
+        weather = "EXTRASUNNY",
+        time = {
+            base = 0,
+            hour = 0,
+            minute = 0
+        },
+        CycleTimer = 0
+    },
     stores = {
         twentyfourseven = {
             colour = "~g~",

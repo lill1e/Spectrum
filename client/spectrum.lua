@@ -83,5 +83,11 @@ Spectrum = {
     },
     Storage = {},
     bills = {},
-    outfits = {}
+    outfits = {},
+    Environment = {
+        weather = "EXTRASUNNY",
+        time = 0,
+        update = false,
+        baseChangeTime = 0
+    }
 }
