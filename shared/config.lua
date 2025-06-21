@@ -10,5 +10,13 @@ Config = {
         Staff = 2,
         Admin = 3,
         Developer = 4
+    },
+    Death = {
+        Respawn = {
+            Cooldown = 60,
+            Locations = {
+                vector3(0.0, 0.0, 70.0)
+            }
+        }
     }
 }

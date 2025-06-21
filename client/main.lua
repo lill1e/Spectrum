@@ -142,7 +142,13 @@ Citizen.CreateThread(function()
             NetworkSetFriendlyFireOption(true)
             SetCanAttackFriendly(PlayerPedId(), true, true)
 
-            local coords = vector3(0, 0, 75)
+            local coords = Config.Death.Respawn.Locations[1] or vector3(0, 0, 75)
+            local currPos = GetEntityCoords(PlayerPedId())
+            for _, coord in ipairs(Config.Death.Respawn.Locations) do
+                if #(currPos - coord) < #(currPos - coords) then
+                    coords = coord
+                end
+            end
             if Spectrum.CanRevive then coords = GetEntityCoords(PlayerPedId()) end
             if not Spectrum.Spawned then
                 coords = Spectrum.PlayerData.position
@@ -215,6 +221,17 @@ Citizen.CreateThread(function()
             Spectrum.DeathTimer = nil
             Spectrum.CanRespawn = false
             Spectrum.CanRevive = false
+        end
+
+        if Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating and not Spectrum.CanRespawn and not Spectrum.CanRevive then
+            local respawnTime = Spectrum.DeathTimer + Config.Death.Respawn
+            local canRespawn = GetGameTimer() > respawnTime
+            HelpText("Press ~INPUT_CONTEXT~ to ~" ..
+                (canRespawn and "g" or "r") .. "~respawn" ..
+                canRespawn and ("\n~s~Available in " .. ConvertTime(GetGameTimer())) or "")
+            if IsControlJustPressed(0, 51) and canRespawn then
+                Spectrum.CanRespawn = true
+            end
         end
     end
 end)
