@@ -15,7 +15,8 @@ local playersPerPage = 16
 local playerlist = {}
 
 local scaleform = Scaleform.Load("MP_MM_CARD_FREEMODE")
-scaleform:Call("SET_TITLE", "Player List", NetworkGetNumConnectedPlayers() .. "/" .. maxPlayers, 5)
+scaleform:Call("SET_TITLE", "Players: " .. NetworkGetNumConnectedPlayers() .. "/" .. maxPlayers,
+    "(" .. page .. "/" .. pages .. ")", 5)
 for i = 0, 31 do
     scaleform:Call("SET_DATA_SLOT_EMPTY", i)
 end
