@@ -468,42 +468,6 @@ function RageUI.PoolMenus:Staff()
     end)
 
     inventoryStaffMenu:IsVisible(function(Items)
-        Items:AddButton("~g~Add Bank", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Amout of Money (bank):")
-                if input and tonumber(input) then
-                    TriggerServerEvent("Spectrum:Staff:Add", "bank", nil, tonumber(input))
-                end
-            end
-        end)
-        Items:AddButton("~g~Add Cash", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Amount of Cash (clean):")
-                if input and tonumber(input) then
-                    TriggerServerEvent("Spectrum:Staff:Add", "clean_cash", nil, tonumber(input))
-                end
-            end
-        end)
-        Items:AddButton("~r~Add Cash", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Amount of Cash (dirty):")
-                if input and tonumber(input) then
-                    TriggerServerEvent("Spectrum:Staff:Add", "dirty_cash", nil, tonumber(input))
-                end
-            end
-        end)
-        Items:AddButton("~b~Add Item", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Item:")
-                if input then
-                    local item = input
-                    input = Input("Quantity:")
-                    if input and tonumber(input) then
-                        TriggerServerEvent("Spectrum:Staff:Add", "item", item, tonumber(input))
-                    end
-                end
-            end
-        end)
         Items:AddButton("~o~Add Weapon", nil, {}, function(onSelected)
             if onSelected then
                 local input = Input("Weapon:")
@@ -525,42 +489,6 @@ function RageUI.PoolMenus:Staff()
             end
         end)
         Items:AddSeparator("")
-        Items:AddButton("~g~Remove Bank", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Amout of Money (bank):")
-                if input and tonumber(input) then
-                    TriggerServerEvent("Spectrum:Staff:Remove", "bank", nil, tonumber(input))
-                end
-            end
-        end)
-        Items:AddButton("~g~Remove Cash", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Amount of Cash (clean):")
-                if input and tonumber(input) then
-                    TriggerServerEvent("Spectrum:Staff:Remove", "clean_cash", nil, tonumber(input))
-                end
-            end
-        end)
-        Items:AddButton("~r~Remove Cash", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Amount of Cash (dirty):")
-                if input and tonumber(input) then
-                    TriggerServerEvent("Spectrum:Staff:Remove", "dirty_cash", nil, tonumber(input))
-                end
-            end
-        end)
-        Items:AddButton("~b~Remove Item", nil, {}, function(onSelected)
-            if onSelected then
-                local input = Input("Item:")
-                if input then
-                    local item = input
-                    input = Input("Quantity:")
-                    if input and tonumber(input) then
-                        TriggerServerEvent("Spectrum:Staff:Remove", "item", item, tonumber(input))
-                    end
-                end
-            end
-        end)
         Items:AddButton("~o~Remove Weapon", nil, {}, function(onSelected)
             if onSelected then
                 local input = Input("Weapon (Serial):")
