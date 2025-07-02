@@ -86,7 +86,11 @@ Spectrum = {
     outfits = {},
     Environment = {
         weather = "EXTRASUNNY",
-        time = 0,
+        time = {
+            base = 0,
+            hour = 0,
+            minute = 0
+        },
         update = false,
         baseChangeTime = 0
     }

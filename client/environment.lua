@@ -32,7 +32,7 @@ end)
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        if GetGameTimer() + 500 > Spectrum.Environment.baseChangeTime then
+        if GetGameTimer() - 500 > Spectrum.Environment.baseChangeTime then
             Spectrum.Environment.time.base = Spectrum.Environment.time.base + 0.25
             Spectrum.Environment.baseChangeTime = GetGameTimer()
         end

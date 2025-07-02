@@ -148,6 +148,7 @@ for k, v in pairs(Spectrum.players) do
 end
 TriggerClientEvent("Spectrum:Players", -1, players)
 TriggerClientEvent("Spectrum:Players:Max", -1, GetConvarInt("sv_maxClients", 32))
+TriggerClientEvent("Spectrum:Environment", -1, Spectrum.Environment.weather, Spectrum.Environment.time.base)
 Spectrum.loaded = true
 Spectrum.start = os.time()
 Spectrum.closed = false
@@ -365,6 +366,8 @@ AddEventHandler("playerJoining", function()
                 end
             end
             TriggerClientEvent("Spectrum:Players", source, players)
+            TriggerClientEvent("Spectrum:Environment", source, Spectrum.Environment.weather,
+                Spectrum.Environment.time.base)
         else
             DropPlayer(source, "There was an error fetching your data, please reconnect and try again")
         end
