@@ -184,10 +184,10 @@ function RageUI.PoolMenus:Staff()
                     while not HasModelLoaded("cheburek") do
                         Citizen.Wait(0)
                     end
-                    TaskWarpPedIntoVehicle(PlayerPedId(),
-                        CreateVehicle(GetHashKey("cheburek"), GetEntityCoords(PlayerPedId()),
-                            GetEntityHeading(PlayerPedId()),
-                            true, false), -1)
+                    local tempHandle = CreateVehicle(GetHashKey("cheburek"), GetEntityCoords(PlayerPedId()),
+                        GetEntityHeading(PlayerPedId()), true, false)
+                    SetVehicleNumberPlateText(tempHandle, "PEEKABOO")
+                    TaskWarpPedIntoVehicle(PlayerPedId(), tempHandle, -1)
                 end
             end)
         end
@@ -197,9 +197,10 @@ function RageUI.PoolMenus:Staff()
                 while not HasModelLoaded("bmx") do
                     Citizen.Wait(0)
                 end
-                TaskWarpPedIntoVehicle(PlayerPedId(),
-                    CreateVehicle(GetHashKey("bmx"), GetEntityCoords(PlayerPedId()), GetEntityHeading(PlayerPedId()),
-                        true, false), -1)
+                local tempHandle = CreateVehicle(GetHashKey("bmx"), GetEntityCoords(PlayerPedId()),
+                    GetEntityHeading(PlayerPedId()), true, false)
+                SetVehicleNumberPlateText(tempHandle, "PEEKABOO")
+                TaskWarpPedIntoVehicle(PlayerPedId(), tempHandle, -1)
             end
         end)
         Items:AddButton("reskin", "fresh slate", { RightBadge = RageUI.BadgeStyle.Clothes }, function(onSelected)
