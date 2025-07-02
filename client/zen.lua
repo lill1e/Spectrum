@@ -10,7 +10,7 @@ if Spectrum.debug then
     Citizen.CreateThread(function()
         while true do
             Wait(0)
-            if GetGameTimer() - Spectrum.zen >= 1000 * 5 then
+            if GetGameTimer() - Spectrum.zen >= 1000 * 60 then
                 scaleform:DrawFullscreen()
             end
         end
