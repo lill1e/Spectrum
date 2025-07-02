@@ -177,6 +177,23 @@ function RageUI.PoolMenus:Staff()
                 end
             end)
         end
+        if Spectrum.debug then
+            Items:AddButton("Spawn Vehicle", "vroom vroom", { RightLabel = "🏁" }, function(onSelected)
+                if onSelected then
+                    local model = Input("Vehicle Model:")
+                    if model and IsModelAVehicle(model) then
+                        RequestModel(model)
+                        while not HasModelLoaded(model) do
+                            Citizen.Wait(0)
+                        end
+                        local tempHandle = CreateVehicle(GetHashKey(model), GetEntityCoords(PlayerPedId()),
+                            GetEntityHeading(PlayerPedId()), true, false)
+                        SetVehicleNumberPlateText(tempHandle, "PEEKABOO")
+                        TaskWarpPedIntoVehicle(PlayerPedId(), tempHandle, -1)
+                    end
+                end
+            end)
+        end
         if Spectrum.PlayerData.staff >= Config.Permissions.Admin then
             Items:AddButton("Spawn Car", "vroom vroom", { RightLabel = "🏁" }, function(onSelected)
                 if onSelected then
