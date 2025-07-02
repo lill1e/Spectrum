@@ -13,6 +13,22 @@ RegisterCommand("-interaction", function() end, false)
 
 function RageUI.PoolMenus:Interaction()
     interactionMenu:IsVisible(function(Items)
+        local hours = GetClockHours()
+        local minutes = GetClockMinutes()
+        local sector = hours > 11 and " PM" or " AM"
+        if GetProfileSetting(227) == 0 then
+            hours = hours % 12
+            if hours == 0 then
+                hours = 12
+            end
+        else
+            sector = ""
+        end
+        Items:AddButton(
+            "~b~Time: ~s~" ..
+            (hours < 10 and "0" or "") .. hours .. ":" .. (minutes < 10 and "0" or "") .. minutes .. sector,
+            "Better than the pause menu", {},
+            function() end)
         Items:AddButton("~b~Self", nil, { RightLabel = "→→→" }, function()
 
         end, selfMenu)
