@@ -60,6 +60,7 @@ Spectrum = {
     stores = {},
     players = {},
     activePlayers = 0,
+    reports = {},
     vehicles = {},
     vehicleCount = 0,
     properties = {},

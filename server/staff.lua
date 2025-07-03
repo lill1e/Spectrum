@@ -190,6 +190,59 @@ RegisterNetEvent("Spectrum:Staff:ToggleSpectate", function(target, status)
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:Report", function(reason, target)
+    local source = tostring(source)
+    if target then
+        target = tostring(target)
+        if not Spectrum.players[target] then
+            goto bypass
+        end
+    end
+    local id = math.random(999999)
+    while Spectrum.reports[id] do
+        id = math.random(999999)
+    end
+    Spectrum.reports[id] = {
+        reporter = source,
+        reason = reason,
+        target = target,
+        status = false
+    }
+    PerformHttpRequest(
+        Spectrum.Logs.Reports,
+        function() end, "POST",
+        json.encode({
+            content = "**ID:** " ..
+                id ..
+                "\n**Reporter:** " ..
+                Spectrum.players[source].name .. " (ID: " .. source .. ")" ..
+                (target and ("\n**Reported:** " .. Spectrum.players[target].name .. " (ID: " .. target .. ")") or "") ..
+                "\n**Reason:** " .. reason
+        }), { ["Content-Type"] = "application/json" })
+    for _, playerId in ipairs(GetPlayers()) do
+        if Spectrum.players[tostring(playerId)].staff then
+            TriggerClientEvent("Spectrum:Staff:NewReport", playerId, id, source, reason, target)
+        end
+    end
+    ::bypass::
+end)
+
+RegisterNetEvent("Spectrum:Staff:EndReport", function(report)
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Trial then
+        if Spectrum.reports[report] and not Spectrum.reports[report].status then
+            Spectrum.reports[report].status = true
+            TriggerClientEvent("Spectrum:Staff:ReportEnded", -1, report)
+            PerformHttpRequest(
+                Spectrum.Logs.Staff,
+                function() end, "POST",
+                json.encode({
+                    content = "**" .. Spectrum.players[source].name .. "** marked report " .. report .. " as resolved"
+                }), { ["Content-Type"] = "application/json" })
+        end
+    end
+end)
+
 RegisterCommand("dv", function(source)
     source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Trial then

@@ -378,6 +378,9 @@ AddEventHandler("playerJoining", function()
             TriggerClientEvent("Spectrum:Players", source, players)
             TriggerClientEvent("Spectrum:Environment", source, Spectrum.Environment.weather,
                 Spectrum.Environment.time.base)
+            if user.staff >= Config.Permissions.Trial then
+                TriggerClientEvent("Spectrum:Staff:Reports", source, Spectrum.reports)
+            end
         else
             DropPlayer(source, "There was an error fetching your data, please reconnect and try again")
         end

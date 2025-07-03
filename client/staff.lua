@@ -9,12 +9,17 @@ local playerManageStaffMenu = RageUI.CreateSubMenu(playerStaffMenu, "agony", "Pl
 local detailsMenu = RageUI.CreateSubMenu(playerManageStaffMenu)
 local vehicleManageMenu = RageUI.CreateSubMenu(detailsMenu)
 local entityManageMenu = RageUI.CreateMenu("Entity", "Literally Minecraft")
+local reportsMenu = RageUI.CreateSubMenu(staffMenu, "agony", "~o~Staff Reports")
+local archivedReportsMenu = RageUI.CreateSubMenu(reportsMenu, "agony", "~o~Staff Reports")
+local reportMenu = RageUI.CreateSubMenu(reportsMenu, "agony", "~o~Staff Reports")
 local detail = nil
 local detailData = {}
 local depthReg = nil
+local currentReport = nil
 local toggles = {
     constantMarker = false,
-    entityGun = false
+    entityGun = false,
+    reportsOpt = false
 }
 local map = {
     markerDist = 5.0
@@ -77,6 +82,7 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Players (Disconnected)", "f8?", { RightLabel = "→→→" }, function(onSelected)
             Spectrum.StaffMenu.playerType = 2
         end, playersStaffMenu)
+        Items:AddButton("Staff Reports", "help some people ffs", { RightLabel = "→→→" }, function() end, reportsMenu)
         Items:AddButton("Self", "me <3", { RightLabel = "→→→" }, function(onSelected)
 
         end, selfStaffMenu)
@@ -898,6 +904,86 @@ function RageUI.PoolMenus:Staff()
         end)
         ::skip::
     end, function() end)
+    reportsMenu:IsVisible(function(Items)
+        Items:CheckBox("Reports Opt-In", "Enable this if you would like to be notified about ~b~player reports",
+            toggles.reportsOpt, {}, function(onSelected, Checked)
+                if onSelected then
+                    toggles.reportsOpt = Checked
+                end
+            end)
+        Items:AddSeparator("")
+        if TableEmpty(Spectrum.reports) then
+            Items:AddButton("There are no ~b~reports ~s~to resolve", nil, {}, function() end)
+        end
+        for id, report in pairs(Spectrum.reports) do
+            if not report.status then
+                Items:AddButton("ID: " .. id, "Reporter: " .. report.reporter,
+                    { RightLabel = report.status and "Completed" or "" }, function(onSelected)
+                        if onSelected then
+                            currentReport = id
+                        end
+                    end, reportMenu)
+            end
+        end
+        Items:AddButton("Archived Reports", "All reports that are no longer active", {}, function() end,
+            archivedReportsMenu)
+    end, function() end)
+    archivedReportsMenu:IsVisible(function(Items)
+        if TableEmpty(Spectrum.reports) then
+            Items:AddButton("There are no ~b~reports ~s~that have been archived", nil, {}, function() end)
+        end
+        for id, report in pairs(Spectrum.reports) do
+            if report.status then
+                Items:AddButton("ID: " .. id, "Reporter: " .. report.reporter,
+                    { RightLabel = report.status and "Completed" or "" }, function(onSelected)
+                        if onSelected then
+                            currentReport = id
+                        end
+                    end, reportMenu)
+            end
+        end
+    end, function() end)
+    reportMenu:IsVisible(function(Items)
+        if Spectrum.reports[currentReport] then
+            Items:AddButton("Reason", Spectrum.reports[currentReport].reason, {}, function() end)
+            Items:AddButton("Reporter: " .. Spectrum.players[Spectrum.reports[currentReport].reporter].name,
+                "ID: " .. Spectrum.reports[currentReport].reporter, {}, function(onSelected)
+                    if onSelected then
+                        Spectrum.StaffMenu.playerType = Spectrum.players[Spectrum.reports[currentReport].reporter]
+                            .active and
+                            1 or 2
+                        Spectrum.StaffMenu.target = Spectrum.reports[currentReport].reporter
+                        playerStaffMenu:SetSubtitle("ID: " ..
+                            Spectrum.reports[currentReport].reporter ..
+                            " | " .. Spectrum.players[Spectrum.reports[currentReport].reporter].name)
+                        RageUI.Visible(playerStaffMenu, true)
+                    end
+                end)
+            if Spectrum.reports[currentReport].target then
+                Items:AddButton("Reported: " .. Spectrum.players[Spectrum.reports[currentReport].target].name,
+                    "ID: " .. Spectrum.reports[currentReport].target, {}, function(onSelected)
+                        if onSelected then
+                            Spectrum.StaffMenu.playerType = Spectrum.players[Spectrum.reports[currentReport].target]
+                                .active and
+                                1 or 2
+                            Spectrum.StaffMenu.target = Spectrum.reports[currentReport].target
+                            playerStaffMenu:SetSubtitle("ID: " ..
+                                Spectrum.reports[currentReport].target ..
+                                " | " .. Spectrum.players[Spectrum.reports[currentReport].target].name)
+                            RageUI.Visible(playerStaffMenu, true)
+                        end
+                    end)
+            end
+            Items:StopLight("Status", "Is this an ongoing concern?", Spectrum.reports[currentReport].status, {},
+                function(onSelected, Checked)
+                    if onSelected and not Spectrum.reports[currentReport].status then
+                        TriggerServerEvent("Spectrum:Staff:EndReport", currentReport)
+                    end
+                end)
+        else
+            Items:AddButton("Return", "This report does not seem to exist", {}, function() end, reportsMenu)
+        end
+    end, function() end)
 end
 
 Citizen.CreateThread(function()
@@ -994,3 +1080,48 @@ RegisterCommand("egun", function(source, args)
         end
     end
 end, false)
+RegisterCommand("report", function()
+    local reason = Input("Reason:")
+    if reason and reason ~= "" then
+        local target = Input("Player ID (if applicable):")
+        if target and target ~= "" then
+            if tonumber(target) and Spectrum.players[target] then
+                TriggerServerEvent("Spectrum:Staff:Report", reason, target)
+            else
+                Notification("Please provide a valid ~b~Player ID ~s~to report")
+            end
+        else
+            TriggerServerEvent("Spectrum:Staff:Report", reason)
+        end
+    end
+    if reason == "" then
+        Notification("Please provide a ~b~reason ~s~so staff can help you")
+    end
+end, false)
+
+RegisterCommand("calladmin", function()
+    ExecuteCommand("report")
+end, false)
+
+RegisterNetEvent("Spectrum:Staff:NewReport", function(id, reporter, reason, target)
+    Spectrum.reports[id] = {
+        reporter = reporter,
+        reason = reason,
+        target = target,
+        status = false
+    }
+    print("New Report (ID: " .. id .. "): " .. reason)
+    if toggles.reportsOpt then
+        Notification("A new ~b~player report ~s~(ID: " .. id .. ") has come in, check your staff menu")
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:ReportEnded", function(report)
+    if Spectrum.reports[report] and not Spectrum.reports[report].status then
+        Spectrum.reports[report].status = true
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:Reports", function(reports)
+    Spectrum.reports = reports
+end)

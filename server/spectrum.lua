@@ -5,6 +5,7 @@ Spectrum = {
     closed = true,
     start = nil,
     players = {},
+    reports = {},
     tokens = {},
     libs = {
         callbacks = {},
