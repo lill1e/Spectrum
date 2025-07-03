@@ -402,6 +402,14 @@ function RageUI.PoolMenus:Staff()
                         end
                     end)
                 Items:AddSeparator("")
+                Items:AddButton("Send Message", "need to tell them something?", {}, function(onSelected)
+                    if onSelected then
+                        local input = Input("Message:")
+                        if input and input ~= "" then
+                            TriggerServerEvent("Spectrum:Staff:Message", Spectrum.StaffMenu.target, input)
+                        end
+                    end
+                end)
                 Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
                     if onSelected then
                         TriggerServerEvent("Spectrum:Staff:Smite", Spectrum.StaffMenu.target)
@@ -580,6 +588,17 @@ function RageUI.PoolMenus:Staff()
     end)
 
     toolsStaffMenu:IsVisible(function(Items)
+        if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+            Items:AddButton("Server Announcement", "Tell 'em", { RightBadge = RageUI.BadgeStyle.Alert },
+                function(onSelected)
+                    if onSelected then
+                        local input = Input("Announcement Message:")
+                        if input and input ~= "" then
+                            TriggerServerEvent("Spectrum:Staff:Announcement", input)
+                        end
+                    end
+                end)
+        end
         Items:AddButton("Delete Vehicle", "Command: ~b~/dv", { RightBadge = RageUI.BadgeStyle.Car }, function(onSelected)
             if onSelected then
                 TriggerServerEvent("Spectrum:Staff:DeleteVehicle")
@@ -1080,6 +1099,7 @@ RegisterCommand("egun", function(source, args)
         end
     end
 end, false)
+
 RegisterCommand("report", function()
     local reason = Input("Reason:")
     if reason and reason ~= "" then
@@ -1124,4 +1144,26 @@ end)
 
 RegisterNetEvent("Spectrum:Staff:Reports", function(reports)
     Spectrum.reports = reports
+end)
+
+RegisterNetEvent("Spectrum:Server:Announcement", function(text)
+    announcementScaleform:Call("SHOW_SHARD_MIDSIZED_MESSAGE", "Announcement", text, 2, false, false)
+    local start = GetGameTimer()
+    Citizen.CreateThread(function()
+        while GetGameTimer() < start + 5000 do
+            Wait(0)
+            announcementScaleform:DrawFullscreen()
+        end
+    end)
+end)
+
+RegisterNetEvent("Spectrum:Player:Message", function(message)
+    announcementScaleform:Call("SHOW_SHARD_MIDSIZED_MESSAGE", "Staff Message", message, 2, false, false)
+    local start = GetGameTimer()
+    Citizen.CreateThread(function()
+        while GetGameTimer() < start + 5000 do
+            Wait(0)
+            announcementScaleform:DrawFullscreen()
+        end
+    end)
 end)

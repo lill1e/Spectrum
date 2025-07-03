@@ -245,6 +245,39 @@ RegisterNetEvent("Spectrum:Staff:EndReport", function(report)
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:Announcement", function(text)
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        TriggerClientEvent("Spectrum:Server:Announcement", -1, text)
+        PerformHttpRequest(
+            Spectrum.Logs.Staff,
+            function() end, "POST",
+            json.encode({
+                content = "**" ..
+                    Spectrum.players[source].name ..
+                    "** (ID: " .. source .. ") sent an announcement: " .. text
+            }), { ["Content-Type"] = "application/json" })
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:Message", function(target, text)
+    local source = tostring(source)
+    target = tostring(target)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff and Spectrum.players[target] and Spectrum.players[target].active then
+        TriggerClientEvent("Spectrum:Player:Message", target, text)
+        PerformHttpRequest(
+            Spectrum.Logs.Staff,
+            function() end, "POST",
+            json.encode({
+                content = "**" ..
+                    Spectrum.players[source].name ..
+                    "** (ID: " ..
+                    source ..
+                    ") sent a message to **" .. Spectrum.players[target].name .. "** (ID: " .. target .. "): " .. text
+            }), { ["Content-Type"] = "application/json" })
+    end
+end)
+
 RegisterCommand("dv", function(source)
     source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Trial then
