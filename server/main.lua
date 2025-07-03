@@ -235,7 +235,8 @@ AddEventHandler("playerConnecting", function(_, _, deferrals)
         deferrals.done("The server is currently closed")
     else
         if steamHex then
-            local bans = exports["pgcfx"]:select("bans", {}, "\"user\" = ? AND expiry > ?", { steamHex, os.time() })
+            local bans = exports["pgcfx"]:select("bans", {}, "\"user\" = ? AND expiry > ? AND active",
+                { steamHex, os.time() })
             local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
             if user == nil then
                 local insertion = exports["pgcfx"]:insert("Users", { "id" }, { steamHex })
