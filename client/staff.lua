@@ -47,6 +47,7 @@ local garageTbl = {}
 for garage, _ in pairs(Config.Garage.Garages) do
     table.insert(garageTbl, garage)
 end
+local announcementScaleform = Scaleform.Load("MIDSIZED_MESSAGE")
 
 RegisterKeyMapping("+staff", "Staff Menu", "keyboard", "f5")
 RegisterCommand("+staff", function()
