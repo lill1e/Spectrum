@@ -59,6 +59,28 @@ RegisterNetEvent("Spectrum:Staff:Kick", function(target, reason)
     end
 end)
 
+RegisterNetEvent("Spectrum:Staff:Ban", function(target, reason, days, hours, minutes)
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        if Spectrum.players[target] then
+            local expiry = os.time() + (minutes * 60) + (hours * 60 * 60) + (days * 60 * 60 * 24)
+            local insertion = exports["pgcfx"]:insert("bans", { "expiry", "reason", "staff", "\"user\"" },
+                { expiry, reason, Spectrum.players[source].id, Spectrum.players[target].id })
+            print(insertion)
+            DropPlayer(target, "\nYou have been banned from this server\nReason: " ..
+                (reason ~= nil and reason or "None") ..
+                "\nBanned By: " ..
+                Spectrum.players[source].name .. "\nExpires At: " .. os.date("%Y-%m-%d %H:%M:%S", expiry) .. "\n")
+            if insertion == 0 then
+                -- TODO: add logging (failed to fully ban)
+            end
+            -- TODO: add logging
+        end
+    else
+        -- TODO: add logging
+    end
+end)
+
 RegisterNetEvent("Spectrum:Staff:Smite", function(target)
     local source = tostring(source)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then

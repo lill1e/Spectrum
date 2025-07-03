@@ -235,6 +235,7 @@ AddEventHandler("playerConnecting", function(_, _, deferrals)
         deferrals.done("The server is currently closed")
     else
         if steamHex then
+            local bans = exports["pgcfx"]:select("bans", {}, "\"user\" = ? AND expiry > ?", { steamHex, os.time() })
             local user = exports["pgcfx"]:selectOne("Users", {}, "id = ?", { steamHex })
             if user == nil then
                 local insertion = exports["pgcfx"]:insert("Users", { "id" }, { steamHex })
@@ -245,14 +246,21 @@ AddEventHandler("playerConnecting", function(_, _, deferrals)
                 end
             end
             if user then
-                if Spectrum.locked then
-                    if user.staff > 0 then
-                        deferrals.done()
-                    else
-                        deferrals.done("The server is currently closed for general access")
-                    end
+                if #bans > 0 then
+                    deferrals.done("\nYou are currently banned from this server (ID: " .. bans[1].id .. ")\nReason: " ..
+                        bans[1].reason ..
+                        "\nBanned By: " ..
+                        bans[1].staff .. "\nExpires At: " .. os.date("%Y-%m-%d %H:%M:%S", bans[1].expiry) .. "\n")
                 else
-                    deferrals.done()
+                    if Spectrum.locked then
+                        if user.staff > 0 then
+                            deferrals.done()
+                        else
+                            deferrals.done("The server is currently closed for general access")
+                        end
+                    else
+                        deferrals.done()
+                    end
                 end
             else
                 deferrals.done("There was an error fetching your data, please reconnect and try again")

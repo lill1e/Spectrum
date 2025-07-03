@@ -353,6 +353,33 @@ function RageUI.PoolMenus:Staff()
                             end
                         end
                     end)
+                Items:AddButton("Ban Player", "Keep them out", { RightBadge = RageUI.BadgeStyle.Star },
+                    function(onSelected)
+                        if onSelected then
+                            local input = Input("Ban Reason:")
+                            if input then
+                                local days = Input("Ban Length (Days)")
+                                local hours = Input("Ban Length (Hours)")
+                                local minutes = Input("Ban Length (Minutes)")
+                                local daysNum = 0
+                                local hoursNum = 0
+                                local minutesNum = 0
+                                if days and tonumber(days) then
+                                    daysNum = tonumber(days) or 0
+                                end
+                                if hours and tonumber(hours) then
+                                    hoursNum = tonumber(hours) or 0
+                                end
+                                if minutes and tonumber(minutes) then
+                                    minutesNum = tonumber(minutes) or 0
+                                end
+                                if days and hours and minutes then
+                                    TriggerServerEvent("Spectrum:Staff:Ban", Spectrum.StaffMenu.target,
+                                        input ~= "" and input or nil, daysNum, hoursNum, minutesNum)
+                                end
+                            end
+                        end
+                    end)
                 Items:AddSeparator("")
                 Items:AddButton("Smite", "Zap!!", {}, function(onSelected)
                     if onSelected then
