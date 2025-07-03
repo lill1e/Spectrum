@@ -466,5 +466,8 @@ Spectrum = {
                 banner = "shopui_title_gasstation"
             }
         }
+    },
+    Logs = {
+        Reports = nil
     }
 }
