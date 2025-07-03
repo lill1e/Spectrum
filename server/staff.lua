@@ -55,6 +55,17 @@ RegisterNetEvent("Spectrum:Staff:Kick", function(target, reason)
             DropPlayer(target,
                 "You have been kicked by " ..
                 Spectrum.players[source].name .. (reason ~= nil and " (Reason: " .. reason .. ")" or nil))
+            PerformHttpRequest(
+                Spectrum.Logs.Bans,
+                function() end, "POST",
+                json.encode({
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " ..
+                        source ..
+                        ") kicked **" ..
+                        Spectrum.players[target].name .. "** (ID: " .. target .. "): " .. reason
+                }), { ["Content-Type"] = "application/json" })
         end
     end
 end)
@@ -70,10 +81,21 @@ RegisterNetEvent("Spectrum:Staff:Ban", function(target, reason, days, hours, min
                 (reason ~= nil and reason or "None") ..
                 "\nBanned By: " ..
                 Spectrum.players[source].name .. "\nExpires At: " .. os.date("%Y-%m-%d %H:%M:%S", expiry) .. "\n")
+            PerformHttpRequest(
+                Spectrum.Logs.Bans,
+                function() end, "POST",
+                json.encode({
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " ..
+                        source ..
+                        ") banned **" ..
+                        Spectrum.players[target].name ..
+                        "** (ID: " .. target .. ") until <t:" .. expiry .. ":f>: " .. reason
+                }), { ["Content-Type"] = "application/json" })
             if insertion == 0 then
                 -- TODO: add logging (failed to fully ban)
             end
-            -- TODO: add logging
         end
     else
         -- TODO: add logging
@@ -85,6 +107,16 @@ RegisterNetEvent("Spectrum:Staff:Smite", function(target)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
         if Spectrum.players[target] then
             TriggerClientEvent("Spectrum:Broadcast", target, 0, Spectrum.libs.Tokens.CreateToken(target))
+            PerformHttpRequest(
+                Spectrum.Logs.Staff,
+                function() end, "POST",
+                json.encode({
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " ..
+                        source ..
+                        ") smited **" .. Spectrum.players[target].name .. "** (ID: " .. target .. ")"
+                }), { ["Content-Type"] = "application/json" })
         else
             Notification(source, "Please smite a valid ~b~player")
         end
@@ -101,6 +133,16 @@ RegisterNetEvent("Spectrum:Staff:Revive", function(target, maxHealth)
             Spectrum.players[target].dead = false
             Spectrum.players[target].health = Spectrum.players[target].skin.Sex == 1 and 200 or 175
             Spectrum.players[target].armor = 0
+            PerformHttpRequest(
+                Spectrum.Logs.Staff,
+                function() end, "POST",
+                json.encode({
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " ..
+                        source ..
+                        ") revived **" .. Spectrum.players[target].name .. "** (ID: " .. target .. ")"
+                }), { ["Content-Type"] = "application/json" })
         else
             Notification(source, "Please revive a valid ~b~player")
         end
@@ -165,6 +207,17 @@ RegisterNetEvent("Spectrum:Staff:Teleport", function(t, target)
             TriggerClientEvent("Spectrum:Warp", target, Spectrum.libs.Tokens.CreateToken(target),
                 GetEntityCoords(GetPlayerPed(source)))
         end
+        PerformHttpRequest(
+            Spectrum.Logs.Staff,
+            function() end, "POST",
+            json.encode({
+                content = "**" ..
+                    Spectrum.players[source].name ..
+                    "** (ID: " ..
+                    source ..
+                    ") " ..
+                    (t == 1 and "to" or "") .. " **" .. Spectrum.players[target].name .. "** (ID: " .. target .. ")"
+            }), { ["Content-Type"] = "application/json" })
     end
 end)
 
@@ -183,7 +236,16 @@ RegisterNetEvent("Spectrum:Staff:ToggleSpectate", function(target, status)
     if Spectrum.players[source].staff >= Config.Permissions.Staff then
         Spectrum.players[source].spectating = status
         if Spectrum.players[source].spectating then
-            -- TODO: add logging
+            PerformHttpRequest(
+                Spectrum.Logs.Staff,
+                function() end, "POST",
+                json.encode({
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " ..
+                        source ..
+                        ") started spectating **" .. Spectrum.players[target].name .. "** (ID: " .. target .. ")"
+                }), { ["Content-Type"] = "application/json" })
         end
         TriggerClientEvent("Spectrum:Player:ToggleS", -1, source, Spectrum.players[source].spectating)
     end
@@ -285,7 +347,7 @@ RegisterNetEvent("Spectrum:Staff:Warn", function(target, reason)
                 { reason, Spectrum.players[source].id, Spectrum.players[target].id })
             TriggerClientEvent("Spectrum:Player:Warning", target, reason)
             PerformHttpRequest(
-                Spectrum.Logs.Staff,
+                Spectrum.Logs.Bans,
                 function() end, "POST",
                 json.encode({
                     content = "**" ..
