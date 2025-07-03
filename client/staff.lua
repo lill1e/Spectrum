@@ -341,6 +341,21 @@ function RageUI.PoolMenus:Staff()
 
         end, playerManageStaffMenu)
         if Spectrum.StaffMenu.playerType == 1 then
+        Items:AddButton("User History", "Have they been acting bad???", { RightLabel = "→→→" }, function(onSelected)
+            if onSelected then
+                if onSelected then
+                    detailData = {}
+                    detail = "userStaffRecord"
+                    Spectrum.libs.Callbacks.callback("auditDetails", function(verified)
+                        if verified ~= nil then
+                            detailData = verified
+                        else
+                            Notification("There was an issue requesting this ~b~player")
+                        end
+                    end, Spectrum.StaffMenu.target, 5)
+                end
+            end
+        end, detailsMenu)
             Items:AddSeparator("")
             if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
                 Items:AddButton("Kick Player", "Give them the boot", { RightBadge = RageUI.BadgeStyle.Star },
@@ -718,6 +733,20 @@ function RageUI.PoolMenus:Staff()
                         end
                     end
                 end)
+            ::skip::
+        elseif detail == "userStaffRecord" then
+            if TableEmpty(detailData) then
+                Items:AddButton("~y~Squeaky Clean ~s~Record", nil, {}, function() end)
+                goto skip
+            end
+            for _, ban in ipairs(detailData) do
+                Items:CheckBox(ban.reason .. " (ID: " .. ban.id .. ")", "Expired At: ~o~" .. ban.expiry, ban.active, {},
+                    function(onSelected)
+                        if onSelected then
+                            Notification("Banned By: ~b~" .. ban.staff)
+                        end
+                    end)
+            end
             ::skip::
         end
     end, function()

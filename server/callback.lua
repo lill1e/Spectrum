@@ -154,6 +154,20 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
                 return Spectrum.players[target].items
             elseif type == 3 and Spectrum.players[source].staff >= Config.Permissions.Admin then
                 return Spectrum.players[target].money
+            elseif type == 5 and Spectrum.players[source].staff >= Config.Permissions.Trial then
+                local query = exports["pgcfx"]:select("bans", {}, "\"user\" = ?",
+                    { Spectrum.players[target].id })
+                local final = {}
+                for _, data in ipairs(query) do
+                    table.insert(final, {
+                        reason = data.reason,
+                        id = data.id,
+                        staff = data.staff,
+                        expiry = os.date("%Y-%m-%d %H:%M:%S", data.expiry),
+                        active = data.active
+                    })
+                end
+                return final
             end
         else
             return nil
