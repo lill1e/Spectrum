@@ -790,6 +790,7 @@ function RageUI.PoolMenus:Staff()
                                 Notification("Banned By: ~b~" .. ban.staff)
                             end
                         end)
+                end
             end
             ::skip::
         end
