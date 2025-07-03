@@ -209,7 +209,7 @@ RegisterNetEvent("Spectrum:Staff:Report", function(reason, target)
         status = false
     }
     PerformHttpRequest(
-        Spectrum.Logs.Reports,
+        Spectrum.Logs.Bans,
         function() end, "POST",
         json.encode({
             content = "**ID:** " ..
@@ -275,6 +275,33 @@ RegisterNetEvent("Spectrum:Staff:Message", function(target, text)
                     source ..
                     ") sent a message to **" .. Spectrum.players[target].name .. "** (ID: " .. target .. "): " .. text
             }), { ["Content-Type"] = "application/json" })
+    end
+end)
+
+RegisterNetEvent("Spectrum:Staff:Warn", function(target, reason)
+    local source = tostring(source)
+    if Spectrum.players[source].staff >= Config.Permissions.Staff then
+        if Spectrum.players[target] then
+            local insertion = exports["pgcfx"]:insert("warnings", { "reason", "staff", "\"user\"" },
+                { reason, Spectrum.players[source].id, Spectrum.players[target].id })
+            TriggerClientEvent("Spectrum:Player:Warning", target, reason)
+            PerformHttpRequest(
+                Spectrum.Logs.Staff,
+                function() end, "POST",
+                json.encode({
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " ..
+                        source ..
+                        ") warned **" ..
+                        Spectrum.players[target].name .. "** (ID: " .. target .. "): " .. reason
+                }), { ["Content-Type"] = "application/json" })
+            if insertion == 0 then
+                -- TODO: add logging (failed to add wanring)
+            end
+        end
+    else
+        -- TODO: add logging
     end
 end)
 

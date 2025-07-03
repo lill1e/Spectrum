@@ -365,6 +365,15 @@ function RageUI.PoolMenus:Staff()
         if Spectrum.StaffMenu.playerType == 1 and (Spectrum.StaffMenu.target ~= tostring(GetPlayerServerId(PlayerId())) or Spectrum.debug) then
             Items:AddSeparator("")
             if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+                Items:AddButton("Warn Player", "Give them a slap on the wrist", { RightBadge = RageUI.BadgeStyle.Star },
+                    function(onSelected)
+                        if onSelected then
+                            local input = Input("Warn Reason:")
+                            if input and input ~= "" then
+                                TriggerServerEvent("Spectrum:Staff:Warn", Spectrum.StaffMenu.target, input)
+                            end
+                        end
+                    end)
                 Items:AddButton("Kick Player", "Give them the boot", { RightBadge = RageUI.BadgeStyle.Star },
                     function(onSelected)
                         if onSelected then
@@ -766,12 +775,21 @@ function RageUI.PoolMenus:Staff()
                 goto skip
             end
             for _, ban in ipairs(detailData) do
-                Items:CheckBox(ban.reason .. " (ID: " .. ban.id .. ")", "Expired At: ~o~" .. ban.expiry, ban.active, {},
-                    function(onSelected)
-                        if onSelected then
-                            Notification("Banned By: ~b~" .. ban.staff)
-                        end
-                    end)
+                if ban.warning then
+                    Items:AddButton(ban.reason .. " (ID: " .. ban.id .. ")", "~y~Warning Issued", {},
+                        function(onSelected)
+                            if onSelected then
+                                Notification("Warned By: ~b~" .. ban.staff)
+                            end
+                        end)
+                else
+                    Items:CheckBox(ban.reason .. " (ID: " .. ban.id .. ")", "Expired At: ~o~" .. ban.expiry, ban.active,
+                        {},
+                        function(onSelected)
+                            if onSelected then
+                                Notification("Banned By: ~b~" .. ban.staff)
+                            end
+                        end)
             end
             ::skip::
         end
@@ -1160,6 +1178,17 @@ end)
 
 RegisterNetEvent("Spectrum:Player:Message", function(message)
     announcementScaleform:Call("SHOW_SHARD_MIDSIZED_MESSAGE", "Staff Message", message, 2, false, false)
+    local start = GetGameTimer()
+    Citizen.CreateThread(function()
+        while GetGameTimer() < start + 5000 do
+            Wait(0)
+            announcementScaleform:DrawFullscreen()
+        end
+    end)
+end)
+
+RegisterNetEvent("Spectrum:Player:Warning", function(message)
+    announcementScaleform:Call("SHOW_SHARD_MIDSIZED_MESSAGE", "Staff Warning", message, 2, false, false)
     local start = GetGameTimer()
     Citizen.CreateThread(function()
         while GetGameTimer() < start + 5000 do
