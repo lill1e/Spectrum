@@ -237,7 +237,9 @@ RegisterNetEvent("Spectrum:Staff:EndReport", function(report)
                 Spectrum.Logs.Staff,
                 function() end, "POST",
                 json.encode({
-                    content = "**" .. Spectrum.players[source].name .. "** marked report " .. report .. " as resolved"
+                    content = "**" ..
+                        Spectrum.players[source].name ..
+                        "** (ID: " .. source .. ") marked report " .. report .. " as resolved"
                 }), { ["Content-Type"] = "application/json" })
         end
     end
