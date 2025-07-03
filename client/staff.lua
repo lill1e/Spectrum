@@ -411,7 +411,6 @@ function RageUI.PoolMenus:Staff()
                             end
                         end
                     end)
-                Items:AddSeparator("")
                 Items:AddButton("Send Message", "need to tell them something?", {}, function(onSelected)
                     if onSelected then
                         local input = Input("Message:")
