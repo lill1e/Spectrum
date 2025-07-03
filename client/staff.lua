@@ -362,6 +362,7 @@ function RageUI.PoolMenus:Staff()
                 end
             end
         end, detailsMenu)
+        if Spectrum.StaffMenu.playerType == 1 and (Spectrum.StaffMenu.target ~= tostring(GetPlayerServerId(PlayerId())) or Spectrum.debug) then
             Items:AddSeparator("")
             if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
                 Items:AddButton("Kick Player", "Give them the boot", { RightBadge = RageUI.BadgeStyle.Star },
