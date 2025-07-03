@@ -230,6 +230,7 @@ AddEventHandler("playerConnecting", function(_, _, deferrals)
     local source = source
     local steamHex = GetSteamHex(source)
 
+    deferrals.update("Connecting with the system...")
     if Spectrum.closed then
         deferrals.done("The server is currently closed")
     else
