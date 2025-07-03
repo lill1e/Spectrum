@@ -346,7 +346,6 @@ function RageUI.PoolMenus:Staff()
         Items:AddButton("Management", "watch it :eyes:", { RightLabel = "→→→" }, function(onSelected)
 
         end, playerManageStaffMenu)
-        if Spectrum.StaffMenu.playerType == 1 then
         Items:AddButton("User History", "Have they been acting bad???", { RightLabel = "→→→" }, function(onSelected)
             if onSelected then
                 if onSelected then
