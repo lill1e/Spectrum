@@ -157,7 +157,17 @@ Spectrum.libs.callbackFunctions.auditDetails = function(source, target, type)
             elseif type == 5 and Spectrum.players[source].staff >= Config.Permissions.Trial then
                 local query = exports["pgcfx"]:select("bans", {}, "\"user\" = ?",
                     { Spectrum.players[target].id })
+                local warnings = exports["pgcfx"]:select("warnings", {}, "\"user\" = ?",
+                    { Spectrum.players[target].id })
                 local final = {}
+                for _, warning in ipairs(warnings) do
+                    table.insert(final, {
+                        reason = warning.reason,
+                        id = warning.id,
+                        staff = warning.staff,
+                        warning = true
+                    })
+                end
                 for _, data in ipairs(query) do
                     table.insert(final, {
                         reason = data.reason,
