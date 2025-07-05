@@ -215,8 +215,8 @@ RegisterNetEvent("Spectrum:Staff:Teleport", function(t, target)
                     Spectrum.players[source].name ..
                     "** (ID: " ..
                     source ..
-                    ") " ..
-                    (t == 1 and "to" or "") .. " **" .. Spectrum.players[target].name .. "** (ID: " .. target .. ")"
+                    ") teleported" ..
+                    (t == 1 and " to" or "") .. " **" .. Spectrum.players[target].name .. "** (ID: " .. target .. ")"
             }), { ["Content-Type"] = "application/json" })
     end
 end)
