@@ -53,6 +53,16 @@ Spectrum = {
             player = nil,
             ped = nil,
             id = nil
+        },
+        freecamData = {
+            enabled = false,
+            cam = nil,
+            rotations = {
+                x = 0.0,
+                y = 0.0,
+                z = 0.0
+            },
+            entrance = nil
         }
     },
     items = {},

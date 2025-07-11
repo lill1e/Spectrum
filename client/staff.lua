@@ -32,7 +32,8 @@ local listIndex = {
     moneyAuditRemove = 1
 }
 local locks = {
-    spectate = false
+    spectate = false,
+    freecamWarp = false
 }
 local entityData = {
     model = nil,
@@ -608,6 +609,11 @@ function RageUI.PoolMenus:Staff()
                     end
                 end)
         end
+        Items:AddButton("Free Cam", "Always Watching", { RightBadge = RageUI.BadgeStyle.Heli }, function(onSelected)
+            if onSelected then
+                ExecuteCommand("+freecam")
+            end
+        end)
         Items:AddButton("Delete Vehicle", "Command: ~b~/dv", { RightBadge = RageUI.BadgeStyle.Car }, function(onSelected)
             if onSelected then
                 TriggerServerEvent("Spectrum:Staff:DeleteVehicle")
@@ -1080,6 +1086,93 @@ Citizen.CreateThread(function()
                 HelpText("~b~Entity: ~s~" .. entityData.entity .. "\n~b~Model: ~s~" .. entityData.model)
             end
         end
+        if Spectrum.StaffMenu.freecamData.enabled then
+            DisplayRadar(false)
+            DisableControlAction(0, 30, true) -- A+D
+            DisableControlAction(0, 31, true) -- W+S
+            DisableControlAction(0, 51, true) -- E
+            DisableControlAction(0, 52, true) -- Q
+            DisableControlAction(0, 23, true) -- F
+            DisableControlAction(0, 21, true) -- Shift
+
+            local coords = GetCamCoord(Spectrum.StaffMenu.freecamData.cam)
+            if #(coords - GetEntityCoords(PlayerPedId())) >= 25 and not locks.freecamWarp then
+                SetEntityCoordsNoOffset(PlayerPedId(), coords - vector3(0, 0, 5.0), false, false, true)
+                locks.freecamWarp = true
+            elseif locks.freecamWarp then
+                locks.freecamWarp = false
+            end
+            local x, y, z = coords.x, coords.y, coords.z
+            local speed = 0.1
+
+            if IsDisabledControlPressed(0, 21) then
+                speed = 0.3
+            end
+            if IsDisabledControlPressed(0, 32) then
+                x = x - speed * Sin(Spectrum.StaffMenu.freecamData.rotations.z)
+                y = y + speed * Cos(Spectrum.StaffMenu.freecamData.rotations.z)
+                z = z + speed * Sin(Spectrum.StaffMenu.freecamData.rotations.x)
+            end
+            if IsDisabledControlPressed(0, 33) then
+                x = x + speed * Sin(Spectrum.StaffMenu.freecamData.rotations.z)
+                y = y - speed * Cos(Spectrum.StaffMenu.freecamData.rotations.z)
+                z = z - speed * Sin(Spectrum.StaffMenu.freecamData.rotations.x)
+            end
+            if IsDisabledControlPressed(0, 34) then
+                x = x - speed * Sin(Spectrum.StaffMenu.freecamData.rotations.z + 90.0)
+                y = y + speed * Cos(Spectrum.StaffMenu.freecamData.rotations.z + 90.0)
+                z = z + speed * Sin(Spectrum.StaffMenu.freecamData.rotations.y)
+            end
+            if IsDisabledControlPressed(0, 35) then
+                x = x + speed * Sin(Spectrum.StaffMenu.freecamData.rotations.z + 90.0)
+                y = y - speed * Cos(Spectrum.StaffMenu.freecamData.rotations.z + 90.0)
+                z = z - speed * Sin(Spectrum.StaffMenu.freecamData.rotations.y)
+            end
+            if IsDisabledControlPressed(0, 51) then
+                z = z + 0.1
+            end
+            if IsDisabledControlPressed(0, 52) then
+                z = z - 0.1
+            end
+            if Spectrum.StaffMenu.freecamData.rotations.x > 90.0 then
+                Spectrum.StaffMenu.freecamData.rotations.x = 90.0
+            elseif Spectrum.StaffMenu.freecamData.rotations.x < -90.0 then
+                Spectrum.StaffMenu.freecamData.rotations.x = -90.0
+            end
+            if Spectrum.StaffMenu.freecamData.rotations.y > 90.0 then
+                Spectrum.StaffMenu.freecamData.rotations.y = 90.0
+            elseif Spectrum.StaffMenu.freecamData.rotations.y < -90.0 then
+                Spectrum.StaffMenu.freecamData.rotations.y = -90.0
+            end
+            if Spectrum.StaffMenu.freecamData.rotations.z > 360.0 then
+                Spectrum.StaffMenu.freecamData.rotations.z = Spectrum.StaffMenu.freecamData.rotations.z - 360.0
+            elseif Spectrum.StaffMenu.freecamData.rotations.z < -360.0 then
+                Spectrum.StaffMenu.freecamData.rotations.z = Spectrum.StaffMenu.freecamData.rotations.z + 360.0
+            end
+            Spectrum.StaffMenu.freecamData.rotations.x = Spectrum.StaffMenu.freecamData.rotations.x -
+                GetDisabledControlNormal(1, 2) * 8
+            Spectrum.StaffMenu.freecamData.rotations.z = Spectrum.StaffMenu.freecamData.rotations.z -
+                GetDisabledControlNormal(1, 1) * 8
+            if IsDisabledControlJustPressed(0, 23) then
+                FreezeEntityPosition(PlayerPedId(), false)
+                NetworkSetEntityInvisibleToNetwork(PlayerPedId(), false)
+                SetEntityVisible(PlayerPedId(), true, false)
+                SetEntityCollision(PlayerPedId(), true, true)
+                RequestCollisionAtCoord(Spectrum.StaffMenu.freecamData.entrance)
+                SetEntityCoordsNoOffset(PlayerPedId(), coords, false, false, false)
+                DestroyCam(Spectrum.StaffMenu.freecamData.cam, false)
+                RenderScriptCams(false, false, 0, true, false)
+                Spectrum.StaffMenu.freecamData.enabled = false
+                Spectrum.StaffMenu.freecamData.cam = nil
+            end
+            SetFocusPosAndVel(x, y, z, Spectrum.StaffMenu.freecamData.rotations.x,
+                Spectrum.StaffMenu.freecamData.rotations.y, Spectrum.StaffMenu.freecamData.rotations.z)
+            SetCamCoord(Spectrum.StaffMenu.freecamData.cam, x, y, z)
+            SetCamRot(Spectrum.StaffMenu.freecamData.cam, Spectrum.StaffMenu.freecamData.rotations.x,
+                Spectrum.StaffMenu.freecamData.rotations.y, Spectrum.StaffMenu.freecamData.rotations.z, 2)
+        elseif IsRadarHidden() then
+            DisplayRadar(true)
+        end
     end
 end)
 
@@ -1197,3 +1290,33 @@ RegisterNetEvent("Spectrum:Player:Warning", function(message)
         end
     end)
 end)
+
+RegisterKeyMapping("+freecam", "Staff Action (1)", "keyboard", "f2")
+RegisterCommand("+freecam", function()
+    if Spectrum.PlayerData.staff >= Config.Permissions.Staff then
+        if not Spectrum.StaffMenu.freecamData.enabled then
+            Spectrum.StaffMenu.freecamData.cam = CreateCam("DEFAULT_SCRIPTED_CAMERA", false)
+            Spectrum.StaffMenu.freecamData.entrance = GetEntityCoords(PlayerPedId())
+            FreezeEntityPosition(PlayerPedId(), true)
+            NetworkSetEntityInvisibleToNetwork(PlayerPedId(), true)
+            SetEntityVisible(PlayerPedId(), false, false)
+            SetEntityCollision(PlayerPedId(), false, false)
+            SetCamActive(Spectrum.StaffMenu.freecamData.cam, true)
+            SetCamCoord(Spectrum.StaffMenu.freecamData.cam, GetEntityCoords(PlayerPedId()))
+            RenderScriptCams(true, false, 0, true, false)
+            Spectrum.StaffMenu.freecamData.enabled = true
+        else
+            FreezeEntityPosition(PlayerPedId(), false)
+            NetworkSetEntityInvisibleToNetwork(PlayerPedId(), false)
+            SetEntityVisible(PlayerPedId(), true, false)
+            SetEntityCollision(PlayerPedId(), true, true)
+            RequestCollisionAtCoord(Spectrum.StaffMenu.freecamData.entrance)
+            SetEntityCoordsNoOffset(PlayerPedId(), Spectrum.StaffMenu.freecamData.entrance, false, false, false)
+            DestroyCam(Spectrum.StaffMenu.freecamData.cam, false)
+            RenderScriptCams(false, false, 0, true, false)
+            Spectrum.StaffMenu.freecamData.enabled = false
+            Spectrum.StaffMenu.freecamData.cam = nil
+        end
+    end
+end, false)
+RegisterCommand("-freecam", function() end, false)
