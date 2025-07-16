@@ -223,7 +223,7 @@ local menus = {
 
 RegisterKeyMapping("+jobMenu", "Job Menu", "keyboard", "f4")
 RegisterCommand("+jobMenu", function()
-    if Spectrum.Job.current and menus[Spectrum.Job.current] and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+    if Spectrum.Job.current and menus[Spectrum.Job.current] and IsPlayerActive() then
         RageUI.Visible(menus[Spectrum.Job.current], not RageUI.Visible(menus[Spectrum.Job.current]))
     end
 end, false)

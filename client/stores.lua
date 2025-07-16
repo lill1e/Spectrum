@@ -29,7 +29,7 @@ Citizen.CreateThread(function()
         Wait(0)
         for store, storeData in pairs(Spectrum.stores) do
             for _, location in ipairs(storeData.locations) do
-                if #(GetEntityCoords(PlayerPedId()) - location) <= storeData.range and (not storeData.attribute or Spectrum.PlayerData.attributes[storeData.attribute]) and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+                if #(GetEntityCoords(PlayerPedId()) - location) <= storeData.range and (not storeData.attribute or Spectrum.PlayerData.attributes[storeData.attribute]) and IsPlayerActive() then
                     if Spectrum.currentStore.current == nil then
                         HelpText("Press ~INPUT_CONTEXT~ to view " ..
                             (storeData.colour and storeData.colour or "~s~") .. storeData.name)

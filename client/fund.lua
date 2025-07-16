@@ -3,7 +3,7 @@ local fundLock = false
 
 RegisterKeyMapping("+fund", "Fund Menu", "keyboard", "f6")
 RegisterCommand("+fund", function()
-    if not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+    if IsPlayerActive() then
         if Spectrum.Job.current and Config.Jobs[Spectrum.Job.current].ranks and Config.Jobs[Spectrum.Job.current].ranks[Spectrum.PlayerData.jobs[Spectrum.Job.current]].fund and (#(GetEntityCoords(PlayerPedId()) - Config.Jobs[Spectrum.Job.current].locations[Spectrum.Job.location]) <= 0.75) then
             if not RageUI.Visible(FundMenu) then
                 Spectrum.libs.Callbacks.callback("getJobFund", function(fund, clean)

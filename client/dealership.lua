@@ -153,7 +153,7 @@ Citizen.CreateThread(function()
                     end
                     HelpText("Press ~INPUT_CONTEXT~ to browse ~b~Vehicles")
                 end
-                if IsControlJustPressed(0, 51) and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+                if IsControlJustPressed(0, 51) and IsPlayerActive() then
                     if currentDealership == nil then
                         currentDealership = d
                         RageUI.Visible(dealershipMenu, true)

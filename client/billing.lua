@@ -2,7 +2,7 @@ local billingMenu = RageUI.CreateMenu("Billing", "~g~What do you owe?")
 
 RegisterKeyMapping("+billing", "Billing/Invoices Menu", "keyboard", "f7")
 RegisterCommand("+billing", function()
-    if Spectrum.Loaded and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+    if Spectrum.Loaded and IsPlayerActive() then
         RageUI.Visible(billingMenu, not RageUI.Visible(billingMenu))
     end
 end, false)

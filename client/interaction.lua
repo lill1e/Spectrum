@@ -5,7 +5,7 @@ local licensesMenu = RageUI.CreateSubMenu(selfMenu, "Interaction", "~g~Licenses"
 
 RegisterKeyMapping("+interaction", "Interaction Menu", "keyboard", "m")
 RegisterCommand("+interaction", function()
-    if Spectrum.Loaded and not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating then
+    if Spectrum.Loaded and IsPlayerActive() then
         RageUI.Visible(interactionMenu, not RageUI.Visible(interactionMenu))
     end
 end, false)

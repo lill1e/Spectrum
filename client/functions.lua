@@ -95,3 +95,8 @@ function GetClosestPlayer()
     end
     return target and GetPlayerServerId(target) or target
 end
+
+function IsPlayerActive()
+    return not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating and
+        not Spectrum.StaffMenu.freecamData.enabled
+end
