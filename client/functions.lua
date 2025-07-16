@@ -96,6 +96,22 @@ function GetClosestPlayer()
     return target and GetPlayerServerId(target) or target
 end
 
+function GetClosestNPC()
+    local meCoords = GetEntityCoords(PlayerPedId())
+    local target = nil
+    local dist = nil
+    for _, entity in ipairs(GetGamePool("CPed")) do
+        if not IsPedAPlayer(entity) then
+            local coords = GetEntityCoords(entity)
+            if (dist and (#(meCoords - coords) < dist) or (#(meCoords - coords) <= 1)) then
+                target = entity
+                dist = #(meCoords - coords)
+            end
+        end
+    end
+    return target
+end
+
 function IsPlayerActive()
     return not Spectrum.PlayerData.dead and not Spectrum.StaffMenu.spectating and
         not Spectrum.StaffMenu.freecamData.enabled

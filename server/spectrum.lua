@@ -158,6 +158,42 @@ Spectrum = {
             end,
             max = 3
         },
+        ["weed_bag"] = {
+            displayName = "Marijuana (Bag)",
+            illegal = false,
+            rare = false,
+            usable = false,
+            removeOnUse = false,
+            swapOnUse = false,
+            handler = function(source)
+                Notification(source, "Maybe if someone's interested in ~o~this")
+            end,
+            max = 25
+        },
+        ["meth_bag"] = {
+            displayName = "Meth (Bag)",
+            illegal = true,
+            rare = false,
+            usable = false,
+            removeOnUse = false,
+            swapOnUse = false,
+            handler = function(source)
+                Notification(source, "Maybe if someone's interested in ~o~this")
+            end,
+            max = 25
+        },
+        ["cocaine_bag"] = {
+            displayName = "Cocaine (Bag)",
+            illegal = true,
+            rare = false,
+            usable = false,
+            removeOnUse = false,
+            swapOnUse = false,
+            handler = function(source)
+                Notification(source, "Maybe if someone's interested in ~o~this")
+            end,
+            max = 25
+        },
     },
     weapons = {},
     weaponsData = {},
