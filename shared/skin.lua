@@ -335,7 +335,7 @@ Config.Skin = {
             "Skinbyrd", "Neat Bun", "Short Bob",
             "Impotent Rage", "Afro", "Pixie Wavy",
             "Short Tucked Bob", "Shaggy Mullet", "Buzzcut",
-            "Baby Braids", "Knotless Braids"
+            "Baby Braids", "Knotless Braids", "Shaggy Octopus"
         }
     },
     EyeColours = {
