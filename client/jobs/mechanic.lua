@@ -344,17 +344,19 @@ function RageUI.PoolMenus:MechanicJob()
             end
         end)
         for i = 0, GetNumVehicleMods(state.handle, menuData.mod) - 1 do
-            Items:CheckBox("Mod (#" .. i .. ")", nil, state.Mods[menuData.mod] == i, {}, function(onSelected, Checked)
-                if onSelected then
-                    if Checked then
-                        state.Mods[menuData.mod] = i
-                        SetVehicleMod(state.handle, menuData.mod, state.Mods[menuData.mod], false)
-                    else
-                        state.Mods[menuData.mod] = -1
-                        SetVehicleMod(state.handle, menuData.mod, state.Mods[menuData.mod], false)
+            Items:CheckBox((GetLabelText(GetModTextLabel(state.handle, menuData.mod, i)) or "Mod") .. " (#" .. i .. ")",
+                nil,
+                state.Mods[menuData.mod] == i, {}, function(onSelected, Checked)
+                    if onSelected then
+                        if Checked then
+                            state.Mods[menuData.mod] = i
+                            SetVehicleMod(state.handle, menuData.mod, state.Mods[menuData.mod], false)
+                        else
+                            state.Mods[menuData.mod] = -1
+                            SetVehicleMod(state.handle, menuData.mod, state.Mods[menuData.mod], false)
+                        end
                     end
-                end
-            end)
+                end)
         end
     end, function()
 
