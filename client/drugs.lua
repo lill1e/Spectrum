@@ -52,6 +52,15 @@ RegisterNetEvent("Spectrum:Property:Action:Start", function(stage, time, fullLoc
     else
         actionLock = false
     end
+    if Config.Drugs.Types[Config.Drugs.Interiors[GetInteriorFromEntity(PlayerPedId())]].stages[stage].anim then
+        local anim = Config.Drugs.Types[Config.Drugs.Interiors[GetInteriorFromEntity(PlayerPedId())]].stages[stage].anim
+        RequestAnimDict(anim.dict)
+        while not HasAnimDictLoaded(anim.dict) do
+            Wait(0)
+        end
+        TaskPlayAnim(PlayerPedId(), anim.dict, anim.anim, 2.0, 2.0, anim.duration and anim.duration or -1,
+            anim.free and 50 or 0, 0, false, false, false)
+    end
 end)
 
 RegisterNetEvent("Spectrum:Property:Action:End", function(stage, notify)

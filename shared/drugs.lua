@@ -31,7 +31,11 @@ Config.Drugs = {
                         count = 5
                     },
                     threshold = 1,
-                    cooldown = 5000
+                    cooldown = 5000,
+                    anim = {
+                        dict = "random@domestic",
+                        anim = "pickup_low"
+                    }
                 },
                 pour = {
                     text = "~o~Pour Liquid Cocaine",
@@ -63,7 +67,13 @@ Config.Drugs = {
                     },
                     background = true,
                     threshold = 8,
-                    cooldown = 10000
+                    cooldown = 10000,
+                    anim = {
+                        dict = "gestures@f@standing@casual",
+                        anim = "gesture_hand_down",
+                        free = true,
+                        duration = 2000
+                    }
                     -- cooldown = 60000 * 2.5
                 },
                 mash = {
