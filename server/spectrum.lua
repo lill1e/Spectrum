@@ -7,6 +7,7 @@ Spectrum = {
     players = {},
     reports = {},
     tokens = {},
+    vId = "redacted",
     libs = {
         callbacks = {},
         callbackFunctions = {},
