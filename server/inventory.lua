@@ -39,8 +39,8 @@ RegisterNetEvent("Spectrum:Ammo", function(type, quantity)
     end
 end)
 
-function AddItem(source, item, quantity)
-    if HasItemSpace(source, item, quantity) then
+function AddItem(source, item, quantity, bypass)
+    if HasItemSpace(source, item, quantity) or bypass then
         Spectrum.players[source].items[item] = Spectrum.players[source].items[item] and
             Spectrum.players[source].items[item] + quantity or quantity
         TriggerClientEvent("Spectrum:Inventory", source, item, quantity, 1, 1)
