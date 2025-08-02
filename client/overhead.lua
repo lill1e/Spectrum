@@ -21,7 +21,7 @@ end
 Citizen.CreateThread(function()
     while true do
         Wait(0)
-        if Spectrum.PlayerData.staff >= Config.Permissions.Staff and Spectrum.StaffMenu.spectating and DrawingOverhead then
+        if not IsPlayerActive() and DrawingOverhead then
             goto bypass
         end
         for player, tag in pairs(gamertags) do
